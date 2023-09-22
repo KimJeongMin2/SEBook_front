@@ -8,8 +8,11 @@ import TableRow from "@mui/material/TableRow";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import { Box, Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-
+import BookIcon from '@mui/icons-material/Book';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
 // Generate Order Data
 function createData(id, title) {
   return { id, title };
@@ -70,15 +73,18 @@ export default function MyPage() {
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
       </Box>
-      <Box sx={{ display: "flex", mt: "5rem", ml: "30rem" }}>
+      <div style={{ marginTop: '20px', marginLeft: '350px', fontSize: '22px', fontWeight: 'bold' }}>
+        마이페이지
+      </div>
+      <Box sx={{ display: "flex", mt: "2rem", ml: "22rem" }}>
         <Box sx={{ width: "30%" }}>
           <Box sx={{ display: "flex" }}>
-            <Typography>내가 작성한 독후감</Typography>
+            <BookIcon style={{ color: "#F2BED1" }}></BookIcon>
+            <Typography> 내가 작성한 독후감</Typography>
             <Link color="primary" href="#" onClick={preventDefault}>
-              <AddIcon />
             </Link>
           </Box>
-          <Table size="small" sx={{ backgroundColor: "#F8E8EE" }}>
+          <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6" }}>
             <TableHead>
               <TableRow>
                 <TableCell>No.</TableCell>
@@ -102,17 +108,16 @@ export default function MyPage() {
             </TableBody>
           </Table>
           <Box sx={{ display: "flex" }}>
-            <Typography sx={{ mt: "5rem" }}>좋아요 누른 독후감</Typography>
+            <Typography sx={{ mt: "5rem" }}> <VolunteerActivismIcon style={{ color: "#F2BED1" }}></VolunteerActivismIcon>좋아요 누른 독후감</Typography>
             <Link
               color="primary"
               href="#"
               onClick={preventDefault}
               sx={{ mt: "5rem" }}
             >
-              <AddIcon />
             </Link>
           </Box>
-          <Table size="small" sx={{ backgroundColor: "#F8E8EE" }}>
+          <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6" }}>
             <TableHead>
               <TableRow>
                 <TableCell>No.</TableCell>
@@ -138,12 +143,12 @@ export default function MyPage() {
         </Box>
         <Box sx={{ width: "30%", ml: "5rem" }}>
           <Box sx={{ display: "flex" }}>
-            <Typography>좋아요 누른 도서</Typography>
+            <FavoriteIcon style={{ color: "#F2BED1" }}></FavoriteIcon>
+            <Typography> 좋아요 누른 도서</Typography>
             <Link color="primary" href="#" onClick={preventDefault}>
-              <AddIcon />
             </Link>
           </Box>
-          <Table size="small" sx={{ backgroundColor: "#F8E8EE" }}>
+          <Table size="small" sx={{ width: '350px', marginTop: '10px', backgroundColor: "#F9F5F6" }}>
             <TableHead>
               <TableRow>
                 <TableCell>No.</TableCell>
@@ -167,8 +172,8 @@ export default function MyPage() {
               ))}
             </TableBody>
           </Table>
-          <Typography sx={{ mt: "5rem" }}>내 정보</Typography>
-          <Card sx={{ maxWidth: 345}}>
+          <Typography sx={{ mt: "5rem", marginBottom: '10px' }}> <AccountBoxIcon style={{ color: "#F2BED1" }}></AccountBoxIcon>내 정보</Typography>
+          <Card sx={{ maxWidth: 345 }}>
             <CardActionArea>
               <CardMedia
                 component="img"
@@ -187,7 +192,7 @@ export default function MyPage() {
             </CardActionArea>
           </Card>
         </Box>
-      </Box>
-    </React.Fragment>
+      </Box >
+    </React.Fragment >
   );
 }

@@ -17,8 +17,8 @@ const Search = styled("div", {
   marginRight: 0,
   marginLeft: "auto", // 오른쪽 정렬 적용
   marginTop: "1ch",
-  marginRight: "5ch",
-  width: "40ch",
+  marginRight: "18ch",
+  width: "42ch",
   minWidth: "32ch", // 최소 가로 길이 조절
 }));
 
@@ -77,7 +77,7 @@ const cardData = [
     title: "앤서니 브라운 코끼리",
     author: "앤서니 브라운",
     image: "https://img.vogue.co.kr/vogue/2019/08/style_5d5cadfdadb7c.jpeg",
-    
+
   },
   {
     title: "1%를 읽는 힘",
@@ -112,16 +112,22 @@ function BookList() {
       <MainAppBar />
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
-
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="도서명 또는 작가명을 입력하세요."
-            inputProps={{ "aria-label": "search" }}
-          />
-        </Search>
+        <div style={{ display: 'flex' }}>
+          <div style={{
+            marginTop: '30px', marginLeft: '140px', fontSize: '22px', fontWeight: 'bold'
+          }}>
+            도서
+          </div>
+          <Search style={{ marginTop: '20px' }}>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="도서명 또는 작가명을 입력하세요."
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+        </div>
         <Grid container spacing={2} justifyContent="center">
           <Box
             sx={{
@@ -166,10 +172,10 @@ function BookList() {
                 </Card>
               </Grid>
             ))}
-            <Pagination count={10} color="secondary" />
+            <Pagination count={10} color="primary" style={{ margin: '20px 0 100px' }} />
           </Box>
         </Grid>
-        
+
       </Box>
     </>
   );
