@@ -43,32 +43,23 @@ function TabBar() {
 
   const navigate = useNavigate();
 
-  const [value, setValue] = React.useState('1');
+  const [value, setValue] = React.useState();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    if (newValue === 0) {
-      navigate("/BookList");
-    } else if (newValue === 1) {
-      navigate("/BookReportList");
-    } else if (newValue === 2) {
-      navigate("/Community");
-    } else if (newValue === 3) {
-      navigate("/MyPage");
-    }
   };
 
   return (
-    <Box sx={{ marginTop: '20px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+    <Box position="fixed" sx={{ marginTop: '20px', width: '100%', display: 'flex', justifyContent: 'center', backgroundColor: 'white' }}>
       <Tabs
         value={value}
         onChange={handleChange}
         indicatorColor="primary"
       >
-        <Tab label="도서" sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }} />
-        <Tab label="독후감" sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }} />
-        <Tab label="커뮤니티" sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }} />
-        <Tab label="마이페이지" sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }} />
+        <Tab label="도서" onClick={() => { navigate("/BookList") }} sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }} />
+        <Tab label="독후감" onClick={() => { navigate("/BookReportList") }} sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }} />
+        <Tab label="커뮤니티" onClick={() => { navigate("/Community") }} sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }} />
+        <Tab label="마이페이지" onClick={() => { navigate("/MyPage") }} sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }} />
       </Tabs>
     </Box >
   );

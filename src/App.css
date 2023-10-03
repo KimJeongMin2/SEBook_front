@@ -1,0 +1,11 @@
+body {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer and Edge */
+}
+
+/* Hide both vertical and horizontal scrollbars for WebKit (Chrome, Safari) */
+body::-webkit-scrollbar {
+    display: none;
+}

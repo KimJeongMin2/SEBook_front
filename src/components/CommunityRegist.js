@@ -31,7 +31,7 @@ function CommunityRegist() {
             <MainAppBar />
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
-                <div style={{ margin: '30px auto 5px', padding: '20px 100px', border: '1px solid #cccccc', width: '800px', height: '320px' }}>
+                <div style={{ margin: '90px auto 5px', padding: '20px 100px', border: '1px solid #cccccc', width: '800px', height: '320px' }}>
                     <div style={{ display: 'flex' }}>
                         <ImportContactsIcon style={{ fontSize: '27px', color: '#4169E1', marginRight: '10px' }}></ImportContactsIcon>
                         <div style={{ fontSize: '20px', fontWeight: 'bold' }}>인상 깊은 구절</div>
@@ -100,7 +100,7 @@ function CommunityRegist() {
                         >취소</Button>
                         <Button
                             variant="contained"
-                            style={{ marginTop: '10px', width: '100px', height: '30px', backgroundColor: '#F2BED1', color: '#ffffff' }}
+                            style={{ marginTop: '10px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
                         >등록</Button>
                     </Stack>
                 </div>

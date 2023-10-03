@@ -97,7 +97,7 @@ function Community() {
             <MainAppBar />
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', marginTop: '70px' }}>
                     <div style={{ marginTop: '20px', marginLeft: '180px', fontSize: '22px', fontWeight: 'bold' }}>
                         커뮤니티
                     </div>
@@ -117,6 +117,15 @@ function Community() {
                     style={{ display: "flex", maxWidth: "76%", margin: "10px 176px" }}
                 >
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead style={{ backgroundColor: "#F8E8EE" }}>
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell>title</TableCell>
+                                <TableCell>impressive phrase</TableCell>
+                                <TableCell>writer</TableCell>
+                                <TableCell>date</TableCell>
+                            </TableRow>
+                        </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
                             {displayRows.map((row) => (
                                 <TableRow
@@ -145,13 +154,13 @@ function Community() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "20px 532px 100px" }}
+                        style={{ margin: "20px 532px 20px" }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">
                         <Button
                             variant="contained"
-                            style={{ marginTop: '20px', width: '100px', height: '30px', backgroundColor: '#F2BED1', color: '#ffffff' }}
+                            style={{ marginTop: '20px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
                             onClick={() => { navigate('/CommunityRegist') }}
 
                         >등록하기</Button>

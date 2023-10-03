@@ -76,7 +76,7 @@ export default function MyPage() {
       <div style={{ marginTop: '20px', marginLeft: '350px', fontSize: '22px', fontWeight: 'bold' }}>
         마이페이지
       </div>
-      <Box sx={{ display: "flex", mt: "2rem", ml: "22rem" }}>
+      <Box sx={{ display: "flex", mt: "2rem", ml: "22rem", marginBottom: '20px' }}>
         <Box sx={{ width: "30%" }}>
           <Box sx={{ display: "flex" }}>
             <BookIcon style={{ color: "#F2BED1" }}></BookIcon>
@@ -97,8 +97,8 @@ export default function MyPage() {
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.title}</TableCell>
+                  <TableCell style={{ fontSize: '13px' }}>{row.id}</TableCell>
+                  <TableCell style={{ fontSize: '13px' }}>{row.title}</TableCell>
                   {/* <TableCell>{row.name}</TableCell>
               <TableCell>{row.shipTo}</TableCell>
               <TableCell>{row.paymentMethod}</TableCell>
@@ -108,20 +108,20 @@ export default function MyPage() {
             </TableBody>
           </Table>
           <Box sx={{ display: "flex" }}>
-            <Typography sx={{ mt: "5rem" }}> <VolunteerActivismIcon style={{ color: "#F2BED1" }}></VolunteerActivismIcon>좋아요 누른 독후감</Typography>
+            <Typography sx={{ mt: "2rem" }}> <VolunteerActivismIcon style={{ color: "#F2BED1" }}></VolunteerActivismIcon>좋아요 누른 독후감</Typography>
             <Link
               color="primary"
               href="#"
               onClick={preventDefault}
-              sx={{ mt: "5rem" }}
+              sx={{ mt: "2rem" }}
             >
             </Link>
           </Box>
           <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6" }}>
             <TableHead>
               <TableRow>
-                <TableCell>No.</TableCell>
-                <TableCell>Title</TableCell>
+                <TableCell style={{ fontSize: '13px' }}>No.</TableCell>
+                <TableCell style={{ fontSize: '13px' }}>Title</TableCell>
                 {/* <TableCell>Ship To</TableCell>
             <TableCell>Payment Method</TableCell>
             <TableCell align="right">Sale Amount</TableCell> */}
@@ -130,8 +130,8 @@ export default function MyPage() {
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.title}</TableCell>
+                  <TableCell style={{ fontSize: '13px' }}>{row.id}</TableCell>
+                  <TableCell style={{ fontSize: '13px' }}>{row.title}</TableCell>
                   {/* <TableCell>{row.name}</TableCell>
               <TableCell>{row.shipTo}</TableCell>
               <TableCell>{row.paymentMethod}</TableCell>
@@ -151,9 +151,9 @@ export default function MyPage() {
           <Table size="small" sx={{ width: '350px', marginTop: '10px', backgroundColor: "#F9F5F6" }}>
             <TableHead>
               <TableRow>
-                <TableCell>No.</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>author</TableCell>
+                <TableCell style={{ fontSize: '13px' }}>No.</TableCell>
+                <TableCell style={{ fontSize: '13px' }}>Title</TableCell>
+                <TableCell style={{ fontSize: '13px' }}>author</TableCell>
                 {/* <TableCell>Payment Method</TableCell>
             <TableCell align="right">Sale Amount</TableCell> */}
               </TableRow>
@@ -161,9 +161,9 @@ export default function MyPage() {
             <TableBody>
               {bookLikeList.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.title}</TableCell>
-                  <TableCell>{row.author}</TableCell>
+                  <TableCell style={{ fontSize: '13px' }}>{row.id}</TableCell>
+                  <TableCell style={{ fontSize: '13px' }}>{row.title}</TableCell>
+                  <TableCell style={{ fontSize: '13px' }}>{row.author}</TableCell>
                   {/* <TableCell>{row.name}</TableCell>
               <TableCell>{row.shipTo}</TableCell>
               <TableCell>{row.paymentMethod}</TableCell>
@@ -172,20 +172,20 @@ export default function MyPage() {
               ))}
             </TableBody>
           </Table>
-          <Typography sx={{ mt: "5rem", marginBottom: '10px' }}> <AccountBoxIcon style={{ color: "#F2BED1" }}></AccountBoxIcon>내 정보</Typography>
+          <Typography sx={{ mt: "2rem", marginBottom: '10px' }}> <AccountBoxIcon style={{ color: "#F2BED1" }}></AccountBoxIcon>내 정보</Typography>
           <Card sx={{ maxWidth: 345 }}>
             <CardActionArea>
               <CardMedia
                 component="img"
-                height="115"
+                height="110"
                 image="https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE="
                 alt="profile image"
               />
               <CardContent >
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h6" component="div">
                   홍길동
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body3" color="text.secondary">
                   abc@naver.com
                 </Typography>
               </CardContent>
