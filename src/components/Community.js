@@ -19,17 +19,16 @@ import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
 
 import { useNavigate } from "react-router-dom";
-import CloudCircleIcon from '@mui/icons-material/CloudCircle';
-function createData(title, paragraph, writer, date) {
-    return { title, paragraph, writer, date };
+function createData(id, title, paragraph, writer, date) {
+    return { id, title, paragraph, writer, date };
 }
 
 const initialRows = [
-    createData("도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
-    createData("도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
-    createData("도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
-    createData("도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
-    createData("도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
+    createData(1, "신데렐라", "잊지 말아야 할 것은, 인내와 선의가 항상 보상을 받는다는 것이다.", "김글쓴", "2023-03-21"),
+    createData(2, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
+    createData(3, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
+    createData(4, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
+    createData(5, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
 ];
 
 const Search = styled("div", {
@@ -41,8 +40,8 @@ const Search = styled("div", {
     marginRight: 0,
     marginLeft: "auto", // 오른쪽 정렬 적용
     marginTop: "1ch",
-    marginRight: "20ch",
-    width: "42ch",
+    marginRight: "31ch",
+    width: "35ch",
     minWidth: "32ch", // 최소 가로 길이 조절
 }));
 
@@ -98,7 +97,7 @@ function Community() {
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
                 <div style={{ display: 'flex', marginTop: '70px' }}>
-                    <div style={{ marginTop: '20px', marginLeft: '180px', fontSize: '22px', fontWeight: 'bold' }}>
+                    <div style={{ marginTop: '10px', marginLeft: '280px', fontSize: '22px', fontWeight: 'bold' }}>
                         커뮤니티
                     </div>
                     <Search style={{ marginTop: "20px" }}>
@@ -106,6 +105,7 @@ function Community() {
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
+                            style={{ fontSize: '13px' }}
                             placeholder="도서명을 입력하세요."
                             inputProps={{ "aria-label": "search" }}
                         />
@@ -114,12 +114,12 @@ function Community() {
 
                 <TableContainer
                     component={Paper}
-                    style={{ display: "flex", maxWidth: "76%", margin: "10px 176px" }}
+                    style={{ display: "flex", maxWidth: "65%", margin: "10px auto" }}
                 >
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table sx={{ minWidth: 500 }} aria-label="simple table">
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
                             <TableRow>
-                                <TableCell></TableCell>
+                                <TableCell >No</TableCell>
                                 <TableCell>title</TableCell>
                                 <TableCell>impressive phrase</TableCell>
                                 <TableCell>writer</TableCell>
@@ -131,16 +131,17 @@ function Community() {
                                 <TableRow
                                     key={row.title}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                                 >
-                                    <TableCell>
-                                        <CloudCircleIcon style={{ color: '#FDCEDF', fontSize: '20px' }}></CloudCircleIcon>
+                                    <TableCell component="th" scope="row" style={{ width: '10px', borderRight: '1px solid #F8E8EE' }}>
+                                        {row.id}
                                     </TableCell>
-                                    <TableCell component="th" scope="row" style={{ width: '220px', borderRight: '1px solid #F8E8EE' }}>
+                                    <TableCell component="th" scope="row" style={{ width: '230px', borderRight: '1px solid #F8E8EE' }}>
                                         {row.title}
                                     </TableCell>
                                     <TableCell style={{ width: '600px', borderRight: '1px solid #F8E8EE' }}>{row.paragraph}</TableCell>
                                     <TableCell style={{ width: '50px', borderRight: '1px solid #F8E8EE', textAlign: 'center' }}>{row.writer}</TableCell>
-                                    <TableCell style={{ width: '90px', textAlign: 'center' }}>{row.date}</TableCell>
+                                    <TableCell style={{ width: '80px', textAlign: 'center' }}>{row.date}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -154,7 +155,7 @@ function Community() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "20px 532px 20px" }}
+                        style={{ margin: "20px 527px 20px" }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">

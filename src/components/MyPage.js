@@ -12,7 +12,7 @@ import BookIcon from '@mui/icons-material/Book';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import ContactPageIcon from '@mui/icons-material/ContactPage';
+import AddIcon from '@mui/icons-material/Add';
 // Generate Order Data
 function createData(id, title) {
   return { id, title };
@@ -73,7 +73,7 @@ export default function MyPage() {
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
       </Box>
-      <div style={{ marginTop: '20px', marginLeft: '350px', fontSize: '22px', fontWeight: 'bold' }}>
+      <div style={{ margin: '80px 0 -15px 350px', fontSize: '22px', fontWeight: 'bold' }}>
         마이페이지
       </div>
       <Box sx={{ display: "flex", mt: "2rem", ml: "22rem", marginBottom: '20px' }}>
@@ -81,6 +81,7 @@ export default function MyPage() {
           <Box sx={{ display: "flex" }}>
             <BookIcon style={{ color: "#F2BED1" }}></BookIcon>
             <Typography> 내가 작성한 독후감</Typography>
+            <AddIcon style={{ marginLeft: '165px', color: "#F2BED1" }}></AddIcon>
             <Link color="primary" href="#" onClick={preventDefault}>
             </Link>
           </Box>
@@ -108,7 +109,10 @@ export default function MyPage() {
             </TableBody>
           </Table>
           <Box sx={{ display: "flex" }}>
-            <Typography sx={{ mt: "2rem" }}> <VolunteerActivismIcon style={{ color: "#F2BED1" }}></VolunteerActivismIcon>좋아요 누른 독후감</Typography>
+            <Typography sx={{ mt: "2rem" }}> <VolunteerActivismIcon style={{ color: "#F2BED1" }}>
+            </VolunteerActivismIcon>좋아요 누른 독후감
+              <AddIcon style={{ marginLeft: '165px', color: "#F2BED1" }}></AddIcon>
+            </Typography>
             <Link
               color="primary"
               href="#"
@@ -145,6 +149,7 @@ export default function MyPage() {
           <Box sx={{ display: "flex" }}>
             <FavoriteIcon style={{ color: "#F2BED1" }}></FavoriteIcon>
             <Typography> 좋아요 누른 도서</Typography>
+            <AddIcon style={{ marginLeft: '178px', color: "#F2BED1" }}></AddIcon>
             <Link color="primary" href="#" onClick={preventDefault}>
             </Link>
           </Box>

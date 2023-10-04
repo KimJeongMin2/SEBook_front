@@ -31,9 +31,9 @@ const Search = styled("div", {
   backgroundColor: "rgba(255, 182, 193, 0.4)", // 연핑크 배경색 적용
   marginRight: 0,
   marginLeft: "auto", // 오른쪽 정렬 적용
-  marginTop: "1ch",
-  marginRight: "5ch",
-  width: "40ch",
+  marginTop: "10ch",
+  marginRight: "20ch",
+  width: "35ch",
   minWidth: "32ch", // 최소 가로 길이 조절
 }));
 
@@ -180,12 +180,13 @@ function MainPage() {
             <SearchIcon />
           </SearchIconWrapper>
           <StyledInputBase
+            style={{ fontSize: '13px' }}
             placeholder="도서명 또는 작가명을 입력하세요."
             inputProps={{ "aria-label": "search" }}
           />
         </Search>
         <Typography
-          sx={{ fontWeight: "bold", marginLeft: "160px", fontSize: "20px" }}
+          sx={{ fontWeight: "bold", marginLeft: "160px", fontSize: "20px", marginTop: '-28px' }}
         >
           홍길동님, 맞춤 도서 추천
         </Typography>

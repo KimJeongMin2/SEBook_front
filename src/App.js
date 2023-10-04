@@ -10,6 +10,8 @@ import BookReportList from "./components/BookReportList";
 import BookReportRegist from "./components/BookReportRegist";
 import Community from "./components/Community";
 import CommunityRegist from "./components/CommunityRegist";
+import BookReportDetail from "./components/BookReportDetail";
+import CommunityDetail from "./components/CommunityDetail";
 
 function App() {
   return (
@@ -21,8 +23,10 @@ function App() {
         <Route path="/BookList" element={<BookList />} />
         <Route path="/BookDetail/:id" element={<BookDetail />} />
         <Route path="/BookReportList" element={<BookReportList />} />
+        <Route path="/BookReportDetail/:id" element={<BookReportDetail />} />
         <Route path="/BookReportRegist" element={<BookReportRegist />} />
         <Route path="/Community" element={<Community />} />
+        <Route path="/CommunityDetail/:id" element={<CommunityDetail />} />
         <Route path="/CommunityRegist" element={<CommunityRegist />} />
         <Route path="/MyPage" element={<MyPage />} />
 

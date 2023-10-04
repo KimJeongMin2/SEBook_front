@@ -15,12 +15,12 @@ const Search = styled("div", {
   position: "relative",
   borderRadius: "50px 50px 50px 50px", // 둥글게 만들기 위한 변경
   backgroundColor: "rgba(255, 182, 193, 0.4)", // 연핑크 배경색 적용
-  marginRight: 0,
   marginLeft: "auto", // 오른쪽 정렬 적용
   marginTop: "1ch",
   marginRight: "18ch",
-  width: "42ch",
+  width: "35ch",
   minWidth: "32ch", // 최소 가로 길이 조절
+  height: '35px'
 }));
 
 const SearchIconWrapper = styled("div", {
@@ -125,7 +125,7 @@ function BookList() {
         <TabBar />
         <div style={{ display: 'flex', marginTop: '60px' }}>
           <div style={{
-            marginTop: '30px', marginLeft: '140px', fontSize: '22px', fontWeight: 'bold'
+            marginTop: '30px', marginLeft: '150px', fontSize: '22px', fontWeight: 'bold'
           }}>
             도서
           </div>
@@ -134,6 +134,7 @@ function BookList() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              style={{ fontSize: '13px' }}
               placeholder="도서명 또는 작가명을 입력하세요."
               inputProps={{ "aria-label": "search" }}
             />
@@ -147,7 +148,7 @@ function BookList() {
               flexWrap: "wrap",
               justifyContent: "space-around",
               backgroundColor: "#F9F5F6",
-              marginTop: "50px",
+              marginTop: "30px",
             }}
           >
             {cardData.map((data) => (

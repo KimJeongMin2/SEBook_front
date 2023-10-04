@@ -20,17 +20,17 @@ import Button from '@mui/material/Button';
 
 import { useNavigate } from "react-router-dom";
 
-function createData(title, bookName, author, publisher, writer, date) {
-    return { title, bookName, author, publisher, writer, date };
+function createData(id, title, bookName, author, publisher, writer, date) {
+    return { id, title, bookName, author, publisher, writer, date };
 }
 
 const initialRows = [
-    createData("Frozen yoghurt를 읽고1", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData("Frozen yoghurt를 읽고2", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData("Frozen yoghurt를 읽고3", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData("Frozen yoghurt를 읽고4", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData("Frozen yoghurt를 읽고5", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData("Frozen yoghurt를 읽고나서", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
+    createData(1, "Frozen yoghurt를 읽고1", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
+    createData(2, "Frozen yoghurt를 읽고2", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
+    createData(3, "Frozen yoghurt를 읽고3", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
+    createData(4, "Frozen yoghurt를 읽고4", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
+    createData(5, "Frozen yoghurt를 읽고5", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
+    createData(6, "Frozen yoghurt를 읽고나서", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
 ];
 
 const Search = styled("div", {
@@ -43,7 +43,7 @@ const Search = styled("div", {
     marginLeft: "auto", // 오른쪽 정렬 적용
     marginTop: "1ch",
     marginRight: "20ch",
-    width: "42ch",
+    width: "35ch",
     minWidth: "32ch", // 최소 가로 길이 조절
 }));
 
@@ -80,7 +80,7 @@ function BookReportList() {
 
     const [rows, setRows] = useState(initialRows);
     const [page, setPage] = useState(0); // Current page
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(6);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -108,6 +108,7 @@ function BookReportList() {
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
+                            style={{ fontSize: '13px' }}
                             placeholder="도서명 또는 작가명을 입력하세요."
                             inputProps={{ "aria-label": "search" }}
                         />
@@ -116,17 +117,18 @@ function BookReportList() {
 
                 <TableContainer
                     component={Paper}
-                    style={{ display: "flex", maxWidth: "77%", margin: "10px 176px" }}
+                    style={{ display: "flex", maxWidth: "77%", margin: "20px 176px" }}
                 >
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
                             <TableRow>
+                                <TableCell style={{ width: '10px' }}>No</TableCell>
                                 <TableCell>title</TableCell>
                                 <TableCell>book name</TableCell>
-                                <TableCell>author</TableCell>
-                                <TableCell>publisher</TableCell>
-                                <TableCell>writer</TableCell>
-                                <TableCell>date</TableCell>
+                                <TableCell style={{ width: '50px' }}>author</TableCell>
+                                <TableCell style={{ width: '100px' }}>publisher</TableCell>
+                                <TableCell style={{ width: '50px' }}>writer</TableCell>
+                                <TableCell style={{ width: '90px' }}>date</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -134,7 +136,11 @@ function BookReportList() {
                                 <TableRow
                                     key={row.title}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    onClick={() => navigate(`/BookReportDetail/${row.id}`, { state: row })}
                                 >
+                                    <TableCell component="th" scope="row">
+                                        {row.id}
+                                    </TableCell>
                                     <TableCell component="th" scope="row">
                                         {row.title}
                                     </TableCell>
@@ -156,7 +162,7 @@ function BookReportList() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "20px 515px 20px" }}
+                        style={{ margin: "20px 573px 20px" }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">
