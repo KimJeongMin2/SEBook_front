@@ -120,7 +120,7 @@ function Community() {
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
                             <TableRow>
                                 <TableCell >No</TableCell>
-                                <TableCell>title</TableCell>
+                                <TableCell>book title</TableCell>
                                 <TableCell>impressive phrase</TableCell>
                                 <TableCell>writer</TableCell>
                                 <TableCell>date</TableCell>
@@ -136,7 +136,7 @@ function Community() {
                                     <TableCell component="th" scope="row" style={{ width: '10px', borderRight: '1px solid #F8E8EE' }}>
                                         {row.id}
                                     </TableCell>
-                                    <TableCell component="th" scope="row" style={{ width: '230px', borderRight: '1px solid #F8E8EE' }}>
+                                    <TableCell component="th" scope="row" style={{ width: '200px', borderRight: '1px solid #F8E8EE' }}>
                                         {row.title}
                                     </TableCell>
                                     <TableCell style={{ width: '600px', borderRight: '1px solid #F8E8EE' }}>{row.paragraph}</TableCell>

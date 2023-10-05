@@ -124,7 +124,7 @@ function BookReportList() {
                             <TableRow>
                                 <TableCell style={{ width: '10px' }}>No</TableCell>
                                 <TableCell>title</TableCell>
-                                <TableCell>book name</TableCell>
+                                <TableCell>book title</TableCell>
                                 <TableCell style={{ width: '50px' }}>author</TableCell>
                                 <TableCell style={{ width: '100px' }}>publisher</TableCell>
                                 <TableCell style={{ width: '50px' }}>writer</TableCell>

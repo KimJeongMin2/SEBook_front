@@ -73,7 +73,7 @@ function BookDetail() {
                 <TabBar />
                 <div style={{ display: 'flex', marginTop: '70px' }}>
 
-                    <Search style={{ marginTop: '20px', marginRight: '255px' }}>
+                    <Search style={{ marginTop: '20px', marginRight: '270px' }}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -84,7 +84,7 @@ function BookDetail() {
                         />
                     </Search>
                 </div>
-                <div style={{ display: 'flex', margin: '30px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '62%', height: '350px', }}>
+                <div style={{ display: 'flex', margin: '1   0px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '62%', height: '350px', }}>
                     <div style={{ width: '250px', padding: '10px', height: '330px', backgroundColor: '#F8E8EE' }}>
                         <img src={location.state.image} style={{ width: '250px', height: '330px' }} />
                     </div>

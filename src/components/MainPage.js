@@ -198,12 +198,12 @@ function MainPage() {
               flexWrap: "wrap",
               justifyContent: "space-around",
               backgroundColor: "#F9F5F6",
-              marginTop: "50px",
+              marginTop: "30px",
             }}
           >
             {cardData.map((data) => (
-              <Grid item xs={12} sm={6} md={2}>
-                <Card sx={{ maxWidth: 280, margin: 1 }}>
+              <Grid>
+                <Card sx={{ maxWidth: 280, margin: 1 }} style={{ width: '220px' }}>
                   <CardHeader
                     title={data.title}
                     subheader={data.author}
@@ -279,7 +279,7 @@ function MainPage() {
             fontWeight: "bold",
             marginLeft: "160px",
             fontSize: "20px",
-            marginTop: "20px",
+            marginTop: "50px",
           }}
         >
           베스트셀러 Top5!
@@ -288,16 +288,17 @@ function MainPage() {
           <Box
             sx={{
               width: "80%",
+              height: "350px",
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "space-around",
               backgroundColor: "#F9F5F6",
-              marginTop: "50px",
+              marginTop: "30px",
             }}
           >
             {bestCardData.map((data) => (
-              <Grid item xs={12} sm={6} md={2}>
-                <Card sx={{ maxWidth: 280, margin: 1 }}>
+              <Grid>
+                <Card sx={{ maxWidth: 280, margin: '10px' }} style={{ width: '220px' }}>
                   <CardHeader
                     title={data.title}
                     subheader={data.author}
@@ -335,7 +336,7 @@ function MainPage() {
             fontWeight: "bold",
             marginLeft: "160px",
             fontSize: "20px",
-            marginTop: "20px",
+            marginTop: "50px",
           }}
         >
           독후감 Top5!
@@ -348,12 +349,12 @@ function MainPage() {
               flexWrap: "wrap",
               justifyContent: "space-around",
               backgroundColor: "#F9F5F6",
-              marginTop: "50px",
+              margin: "30px 0 100px",
             }}
           >
             {bookReportData.map((data) => (
-              <Grid item xs={12} sm={6} md={2}>
-                <Card sx={{ maxWidth: 280, margin: 1 }}>
+              <Grid>
+                <Card sx={{ maxWidth: 280, margin: 1 }} style={{ width: '220px' }}>
                   <CardHeader
                     title={data.title}
                     subheader={data.writer}
