@@ -13,7 +13,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AddIcon from '@mui/icons-material/Add';
-import { useNavigate } from "react-router-dom";
+
 
 
 // Generate Order Data
@@ -87,7 +87,6 @@ export default function MyPage() {
             <Typography> 내가 작성한 독후감</Typography>
             <AddIcon style={{ marginLeft: '165px', color: "#F2BED1" }}
             ></AddIcon>
-
             <Link color="primary" href="#" onClick={preventDefault}>
             </Link>
           </Box>
@@ -224,8 +223,6 @@ export default function MyPage() {
               ))}
             </TableBody>
           </Table>
-
-
         </Box>
       </Box >
     </React.Fragment >
