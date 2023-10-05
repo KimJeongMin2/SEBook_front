@@ -84,7 +84,7 @@ function BookDetail() {
                         />
                     </Search>
                 </div>
-                <div style={{ display: 'flex', margin: '1   0px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '62%', height: '350px', }}>
+                <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '62%', height: '350px', }}>
                     <div style={{ width: '250px', padding: '10px', height: '330px', backgroundColor: '#F8E8EE' }}>
                         <img src={location.state.image} style={{ width: '250px', height: '330px' }} />
                     </div>
@@ -109,22 +109,25 @@ function BookDetail() {
                             <Stack spacing={0} direction="row">
                                 <Button
                                     variant="contained"
-                                    style={{ marginTop: '10px', marginRight: '5px', idth: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
+                                    style={{ marginTop: '10px', marginRight: '5px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
                                     onClick={() => { navigate('/') }}
 
                                 >구매하기</Button>
                                 <Button
                                     variant="contained"
-                                    style={{ marginTop: '10px', marginRight: '5px', idth: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
+                                    style={{ marginTop: '10px', marginRight: '5px', width: '120px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
                                     onClick={() => { navigate('/BookReportRegist') }}
 
                                 >독후감 작성</Button>
                             </Stack>
-                            <div style={{ margin: '5px 5px 0 0px' }}>
-                                {isSelectedLike ?
-                                    <FavoriteIcon style={{ fontSize: '40px' }} onClick={selectLike}></FavoriteIcon>
-                                    : <FavoriteBorderIcon style={{ fontSize: '40px' }} onClick={selectLike}></FavoriteBorderIcon>}
-                                <ShareIcon style={{ fontSize: '40px' }}></ShareIcon>
+                            <div style={{ display: 'flex', margin: '5px 5px 0 0px' }}>
+                                <div >
+                                    {isSelectedLike ?
+                                        <FavoriteIcon style={{ fontSize: '30px' }} onClick={selectLike}></FavoriteIcon>
+                                        : <FavoriteBorderIcon style={{ fontSize: '30px' }} onClick={selectLike}></FavoriteBorderIcon>}
+                                    <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>10</div>
+                                </div>
+                                <ShareIcon style={{ fontSize: '35px' }}></ShareIcon>
                             </div>
                         </div>
                     </div>

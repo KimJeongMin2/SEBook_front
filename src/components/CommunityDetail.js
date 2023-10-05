@@ -95,7 +95,7 @@ function CommunityDetail() {
                         </div>
                     </div>
                 </div>
-                <div style={{ display: 'flex', margin: '20px 330px' }}>
+                {/* <div style={{ display: 'flex', margin: '20px 330px' }}>
                     <input style={{ width: '800px', height: '35px', border: '1px solid #cccccc' }}></input>
                     <Stack spacing={2} direction="row">
                         <Button
@@ -122,7 +122,7 @@ function CommunityDetail() {
                     <div style={{ margin: '10px 0', padding: '0 10px', width: '857px', height: '45px', backgroundColor: '#F9F5F6', border: '1px solid #F8E8EE', borderRadius: '10px', lineHeight: '45px' }}>
                         어디에나 계모나 못된 언니들이 존재하는 것처럼 모두들 아름다운 신데렐라가 될 수 있길 바라요.
                     </div>
-                </div>
+                </div> */}
             </Box >
         </>
     )

@@ -48,7 +48,7 @@ function MainAppBar() {
             letterSpacing: '.1rem',
             color: 'black',
             textDecoration: 'none',
-            marginLeft: '670px'
+            marginLeft: '680px'
           }}
         >
           SEBook

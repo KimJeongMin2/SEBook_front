@@ -13,8 +13,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AddIcon from '@mui/icons-material/Add';
-
-
+import { useNavigate } from "react-router-dom";
 
 // Generate Order Data
 function createData(id, title) {
@@ -90,7 +89,7 @@ export default function MyPage() {
             <Link color="primary" href="#" onClick={preventDefault}>
             </Link>
           </Box>
-          <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6" }}>
+          <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6", borderRadius: '10px 10px 0 0' }}>
             <TableHead>
               <TableRow>
                 <TableCell>No.</TableCell>
@@ -127,7 +126,7 @@ export default function MyPage() {
             >
             </Link>
           </Box>
-          <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6" }}>
+          <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6", borderRadius: '10px 10px 0 0' }}>
             <TableHead>
               <TableRow>
                 <TableCell style={{ fontSize: '13px' }}>No.</TableCell>
@@ -161,7 +160,7 @@ export default function MyPage() {
             <Link color="primary" href="#" onClick={preventDefault}>
             </Link>
           </Box>
-          <Table size="small" sx={{ width: '350px', marginTop: '10px', backgroundColor: "#F9F5F6" }}>
+          <Table size="small" sx={{ width: '350px', marginTop: '10px', backgroundColor: "#F9F5F6", borderRadius: '10px 10px 0 0' }}>
             <TableHead>
               <TableRow>
                 <TableCell style={{ fontSize: '13px' }}>No.</TableCell>
@@ -198,7 +197,7 @@ export default function MyPage() {
             >
             </Link>
           </Box>
-          <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6" }}>
+          <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6", borderRadius: '10px 10px 0 0' }}>
             <TableHead>
               <TableRow>
                 <TableCell style={{ fontSize: '13px' }}>No.</TableCell>
