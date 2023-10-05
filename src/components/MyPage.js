@@ -13,6 +13,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from "react-router-dom";
+
+
 // Generate Order Data
 function createData(id, title) {
   return { id, title };
@@ -67,6 +70,7 @@ function preventDefault(event) {
 }
 
 export default function MyPage() {
+  const navigate = useNavigate();
   return (
     <React.Fragment>
       <MainAppBar />
@@ -81,7 +85,9 @@ export default function MyPage() {
           <Box sx={{ display: "flex" }}>
             <BookIcon style={{ color: "#F2BED1" }}></BookIcon>
             <Typography> 내가 작성한 독후감</Typography>
-            <AddIcon style={{ marginLeft: '165px', color: "#F2BED1" }}></AddIcon>
+            <AddIcon style={{ marginLeft: '165px', color: "#F2BED1" }}
+            ></AddIcon>
+            
             <Link color="primary" href="#" onClick={preventDefault}>
             </Link>
           </Box>
@@ -111,7 +117,8 @@ export default function MyPage() {
           <Box sx={{ display: "flex" }}>
             <Typography sx={{ mt: "2rem" }}> <VolunteerActivismIcon style={{ color: "#F2BED1" }}>
             </VolunteerActivismIcon>좋아요 누른 독후감
-              <AddIcon style={{ marginLeft: '165px', color: "#F2BED1" }}></AddIcon>
+              <AddIcon style={{ marginLeft: '165px', color: "#F2BED1" }}
+              ></AddIcon>
             </Typography>
             <Link
               color="primary"
@@ -149,7 +156,9 @@ export default function MyPage() {
           <Box sx={{ display: "flex" }}>
             <FavoriteIcon style={{ color: "#F2BED1" }}></FavoriteIcon>
             <Typography> 좋아요 누른 도서</Typography>
-            <AddIcon style={{ marginLeft: '178px', color: "#F2BED1" }}></AddIcon>
+            <AddIcon style={{ marginLeft: '178px', color: "#F2BED1" }}
+            onClick={() => { navigate('/MyLikedBookList') }}
+            ></AddIcon>
             <Link color="primary" href="#" onClick={preventDefault}>
             </Link>
           </Box>
@@ -177,25 +186,46 @@ export default function MyPage() {
               ))}
             </TableBody>
           </Table>
-          <Typography sx={{ mt: "2rem", marginBottom: '10px' }}> <AccountBoxIcon style={{ color: "#F2BED1" }}></AccountBoxIcon>내 정보</Typography>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                height="110"
-                image="https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE="
-                alt="profile image"
-              />
-              <CardContent >
-                <Typography gutterBottom variant="h6" component="div">
-                  홍길동
-                </Typography>
-                <Typography variant="body3" color="text.secondary">
-                  abc@naver.com
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+          <Box sx={{ display: "flex" }}>
+            <Typography sx={{ mt: "2rem" }}> <VolunteerActivismIcon style={{ color: "#F2BED1" }}>
+            </VolunteerActivismIcon>나의 인상 깊은 구절
+              <AddIcon style={{ marginLeft: '165px', color: "#F2BED1" }}></AddIcon>
+            </Typography>
+            <Link
+              color="primary"
+              href="#"
+              onClick={preventDefault}
+              sx={{ mt: "2rem" }}
+            >
+            </Link>
+          </Box>
+          <Table size="small" sx={{ marginTop: '10px', backgroundColor: "#F9F5F6" }}>
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontSize: '13px' }}>No.</TableCell>
+                <TableCell style={{ fontSize: '13px' }}>Title</TableCell>
+                <TableCell style={{ fontSize: '13px' }}>author</TableCell>
+                {/* <TableCell>Ship To</TableCell>
+            <TableCell>Payment Method</TableCell>
+            <TableCell align="right">Sale Amount</TableCell> */}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {bookLikeList.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell style={{ fontSize: '13px' }}>{row.id}</TableCell>
+                  <TableCell style={{ fontSize: '13px' }}>{row.title}</TableCell>
+                  <TableCell style={{ fontSize: '13px' }}>{row.author}</TableCell>
+                  {/* <TableCell>{row.name}</TableCell>
+              <TableCell>{row.shipTo}</TableCell>
+              <TableCell>{row.paymentMethod}</TableCell>
+              <TableCell align="right">{`$${row.amount}`}</TableCell> */}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          
+          
         </Box>
       </Box >
     </React.Fragment >

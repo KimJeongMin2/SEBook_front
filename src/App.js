@@ -12,6 +12,7 @@ import Community from "./components/Community";
 import CommunityRegist from "./components/CommunityRegist";
 import BookReportDetail from "./components/BookReportDetail";
 import CommunityDetail from "./components/CommunityDetail";
+import MyLikedBookList from "./components/MyLikedBookList";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/CommunityDetail/:id" element={<CommunityDetail />} />
         <Route path="/CommunityRegist" element={<CommunityRegist />} />
         <Route path="/MyPage" element={<MyPage />} />
+        <Route path="/MyLikedBookList" element={<MyLikedBookList/>}/>
 
       </Routes>
     </BrowserRouter>
