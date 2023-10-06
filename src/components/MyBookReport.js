@@ -101,7 +101,7 @@ function MyBookReport() {
                 <TabBar />
                 <div style={{ display: 'flex', marginTop: '70px' }}>
                     <div style={{ marginTop: '20px', marginLeft: '180px', fontSize: '22px', fontWeight: 'bold' }}>
-                        독후감
+                        나의 독후감
                     </div>
                 </div>
 
