@@ -113,6 +113,9 @@ export default function MyPage() {
               나의 독후감
               <AddIcon
                 style={{ marginLeft: "165px", color: "#F2BED1" }}
+                onClick={() => {
+                  navigate("/MyBookReport");
+                }}
               ></AddIcon>
             </Typography>
 
@@ -151,6 +154,9 @@ export default function MyPage() {
               나의 인상 깊은 구절
               <AddIcon
                 style={{ marginLeft: "165px", color: "#F2BED1" }}
+                onClick={() => {
+                  navigate("/MyParagraph");
+                }}
               ></AddIcon>
             </Typography>
             <Link
@@ -166,7 +172,6 @@ export default function MyPage() {
                 <TableRow>
                   <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
                   <TableCell style={{ fontSize: "13px" }}>Paragraph</TableCell>
-                  <TableCell style={{ fontSize: "13px" }}>user</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -176,9 +181,7 @@ export default function MyPage() {
                     <TableCell style={{ fontSize: "13px" }}>
                       {row.title}
                     </TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.author}
-                    </TableCell>
+
                   </TableRow>
                 ))}
               </TableBody>
@@ -195,6 +198,9 @@ export default function MyPage() {
               좋아요 누른 독후감
               <AddIcon
                 style={{ marginLeft: "165px", color: "#F2BED1" }}
+                onClick={() => {
+                  navigate("/MyLikedBookReport");
+                }}
               ></AddIcon>
             </Typography>
             <Link
@@ -273,7 +279,7 @@ export default function MyPage() {
               <AddIcon
                 style={{ marginLeft: "178px", color: "#F2BED1"}}
                 onClick={() => {
-                  navigate("/MyLikedBookList");
+                  navigate("/MyLikedParagraph");
                 }}
               ></AddIcon>
               <Link color="primary" href="#" onClick={preventDefault}></Link>
