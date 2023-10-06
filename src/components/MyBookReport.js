@@ -13,7 +13,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
+import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
@@ -118,6 +118,7 @@ function MyBookReport() {
                                 <TableCell style={{ width: '50px' }}>author</TableCell>
                                 <TableCell style={{ width: '100px' }}>publisher</TableCell>
                                 <TableCell style={{ width: '90px' }}>date</TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -137,6 +138,7 @@ function MyBookReport() {
                                     <TableCell>{row.author}</TableCell>
                                     <TableCell>{row.publisher}</TableCell>
                                     <TableCell>{row.date}</TableCell>
+                                    <TableCell><DeleteIcon /></TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
