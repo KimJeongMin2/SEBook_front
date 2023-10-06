@@ -17,7 +17,7 @@ const Search = styled("div", {
   backgroundColor: "rgba(255, 182, 193, 0.4)", // 연핑크 배경색 적용
   marginLeft: "auto", // 오른쪽 정렬 적용
   marginTop: "1ch",
-  marginRight: "18ch",
+  marginRight: "27ch",
   width: "35ch",
   minWidth: "32ch", // 최소 가로 길이 조절
   height: '35px'
@@ -121,11 +121,11 @@ function MyLikedBookList() {
   return (
     <>
       <MainAppBar />
-      <Box sx={{ paddingTop: "48px", marginBottom: '50px' }}>
+      <Box sx={{ paddingTop: "48px", marginBottom: '10px' }}>
         <TabBar />
         <div style={{ display: 'flex', marginTop: '60px' }}>
           <div style={{
-            marginTop: '30px', marginLeft: '150px', fontSize: '22px', fontWeight: 'bold'
+            marginTop: '30px', marginLeft: '220px', fontSize: '22px', fontWeight: 'bold'
           }}>
             공감한 도서
           </div>
@@ -143,7 +143,8 @@ function MyLikedBookList() {
         <Grid container spacing={2} justifyContent="center">
           <Box
             sx={{
-              width: "80%",
+              width: "70%",
+              height: '510px',
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "space-around",
@@ -152,8 +153,8 @@ function MyLikedBookList() {
             }}
           >
             {cardData.map((data) => (
-              <Grid item xs={12} sm={6} md={3}>
-                <Card sx={{ maxWidth: 280, margin: 1 }}
+              <Grid item xs={12} sm={3} md={0}>
+                <Card sx={{ maxWidth: 280, margin: 1 }} style={{ width: '220px', height: '220px' }}
                   onClick={() => navigate(`/BookDetail/${data.id}`, { state: data })}
                 >
                   <CardHeader
@@ -186,7 +187,7 @@ function MyLikedBookList() {
                 </Card>
               </Grid>
             ))}
-            <Pagination count={10} color="primary" style={{ margin: '10px 0' }} />
+            <Pagination count={10} color="primary" style={{ margin: '3px 0' }} />
           </Box>
         </Grid>
 

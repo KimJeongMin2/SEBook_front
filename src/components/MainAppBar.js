@@ -48,7 +48,7 @@ function MainAppBar() {
             letterSpacing: '.1rem',
             color: 'black',
             textDecoration: 'none',
-            marginLeft: '670px'
+            marginLeft: '680px'
           }}
         >
           SEBook
@@ -76,11 +76,15 @@ function MainAppBar() {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
+            <MenuItem key={1} onClick={handleCloseUserMenu}>
+              <div style={{ width: '200px', height: '100px' }}>
+                <div style={{ height: '50px', textAlign: 'center', lineHeight: '50px' }}>홍길동</div>
+                <div style={{ textAlign: 'center' }}>abc1234@naver.com</div>
+              </div>
+            </MenuItem>
+            <MenuItem key={2} onClick={handleCloseUserMenu}>
+              <Typography textAlign="center">LOGOUT</Typography>
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>

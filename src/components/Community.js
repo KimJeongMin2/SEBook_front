@@ -17,18 +17,22 @@ import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { useNavigate } from "react-router-dom";
-function createData(id, title, paragraph, writer, date) {
-    return { id, title, paragraph, writer, date };
+function createData(id, title, paragraph, writer, date, like) {
+    return { id, title, paragraph, writer, date, like };
 }
 
 const initialRows = [
-    createData(1, "신데렐라", "잊지 말아야 할 것은, 인내와 선의가 항상 보상을 받는다는 것이다.", "김글쓴", "2023-03-21"),
-    createData(2, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
-    createData(3, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
-    createData(4, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
-    createData(5, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21"),
+    createData(1, "신데렐라", "잊지 말아야 할 것은, 인내와 선의가 항상 보상을 받는다는 것이다.", "김글쓴", "2023-03-21", 10),
+    createData(2, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 122),
+    createData(3, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 10),
+    createData(4, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 30),
+    createData(5, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 32),
+    createData(6, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 2),
+    createData(7, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 1),
 ];
 
 const Search = styled("div", {
@@ -40,7 +44,7 @@ const Search = styled("div", {
     marginRight: 0,
     marginLeft: "auto", // 오른쪽 정렬 적용
     marginTop: "1ch",
-    marginRight: "31ch",
+    marginRight: "27ch",
     width: "35ch",
     minWidth: "32ch", // 최소 가로 길이 조절
 }));
@@ -90,6 +94,15 @@ function Community() {
 
     const displayRows = initialRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
+    const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
+
+    // Function to toggle the like status for a specific row
+    const toggleLike = (id) => {
+        setLikeStatus((prevStatus) => ({
+            ...prevStatus,
+            [id]: !prevStatus[id],
+        }));
+    };
 
     return (
         <>
@@ -97,7 +110,7 @@ function Community() {
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
                 <div style={{ display: 'flex', marginTop: '70px' }}>
-                    <div style={{ marginTop: '10px', marginLeft: '280px', fontSize: '22px', fontWeight: 'bold' }}>
+                    <div style={{ marginTop: '20px', marginLeft: '240px', fontSize: '22px', fontWeight: 'bold' }}>
                         커뮤니티
                     </div>
                     <Search style={{ marginTop: "20px" }}>
@@ -114,16 +127,17 @@ function Community() {
 
                 <TableContainer
                     component={Paper}
-                    style={{ display: "flex", maxWidth: "65%", margin: "10px auto" }}
+                    style={{ display: "flex", maxWidth: "70%", margin: "10px auto" }}
                 >
-                    <Table sx={{ minWidth: 500 }} aria-label="simple table">
+                    <Table sx={{ minWidth: 600 }} aria-label="simple table">
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
                             <TableRow>
                                 <TableCell >No</TableCell>
-                                <TableCell>title</TableCell>
+                                <TableCell>book title</TableCell>
                                 <TableCell>impressive phrase</TableCell>
                                 <TableCell>writer</TableCell>
                                 <TableCell>date</TableCell>
+                                <TableCell>Like</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -131,17 +145,25 @@ function Community() {
                                 <TableRow
                                     key={row.title}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                                 >
-                                    <TableCell component="th" scope="row" style={{ width: '10px', borderRight: '1px solid #F8E8EE' }}>
+                                    <TableCell component="th" scope="row" style={{ width: '10px', borderRight: '1px solid #F8E8EE', textAlign: 'center' }}>
                                         {row.id}
                                     </TableCell>
-                                    <TableCell component="th" scope="row" style={{ width: '230px', borderRight: '1px solid #F8E8EE' }}>
+                                    <TableCell component="th" scope="row" style={{ width: '180px', borderRight: '1px solid #F8E8EE' }}>
                                         {row.title}
                                     </TableCell>
                                     <TableCell style={{ width: '600px', borderRight: '1px solid #F8E8EE' }}>{row.paragraph}</TableCell>
                                     <TableCell style={{ width: '50px', borderRight: '1px solid #F8E8EE', textAlign: 'center' }}>{row.writer}</TableCell>
                                     <TableCell style={{ width: '80px', textAlign: 'center' }}>{row.date}</TableCell>
+                                    <TableCell style={{ width: '20px', textAlign: 'center', fontSize: '10px' }} >
+                                        {likeStatus[row.id] ? (
+                                            <FavoriteIcon onClick={() => toggleLike(row.id)} />
+                                        ) : (
+                                            <FavoriteBorderIcon onClick={() => toggleLike(row.id)} />
+                                        )}
+                                        {row.like}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -155,13 +177,13 @@ function Community() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "20px 527px 20px" }}
+                        style={{ margin: "10px 527px 20px" }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">
                         <Button
                             variant="contained"
-                            style={{ marginTop: '20px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
+                            style={{ marginTop: '10px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
                             onClick={() => { navigate('/CommunityRegist') }}
 
                         >등록하기</Button>
