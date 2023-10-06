@@ -129,16 +129,6 @@ function MyLikedBookList() {
           }}>
             공감한 도서
           </div>
-          <Search style={{ marginTop: '20px' }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              style={{ fontSize: '13px' }}
-              placeholder="도서명 또는 작가명을 입력하세요."
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
         </div>
         <Grid container spacing={2} justifyContent="center">
           <Box

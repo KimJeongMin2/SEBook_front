@@ -13,6 +13,10 @@ import CommunityRegist from "./components/CommunityRegist";
 import BookReportDetail from "./components/BookReportDetail";
 import CommunityDetail from "./components/CommunityDetail";
 import MyLikedBookList from "./components/MyLikedBookList";
+import MyBookReport from "./components/MyBookReport";
+import MyLikedBookReport from "./components/MyLikedBookReport.js";
+import MyParagraph from "./components/MyParagraph";
+import MyLikedParagraph from "./components/MyLikedParagraph";
 
 function App() {
   return (
@@ -31,7 +35,10 @@ function App() {
         <Route path="/CommunityRegist" element={<CommunityRegist />} />
         <Route path="/MyPage" element={<MyPage />} />
         <Route path="/MyLikedBookList" element={<MyLikedBookList />} />
-
+        <Route path="/MyBookReport" element={<MyBookReport/>}/>
+        <Route path="/MyLikedBookReport" element={<MyLikedBookReport/>}/>
+        <Route path="/MyParagraph" element={<MyParagraph/>}/>
+        <Route path="/MyLikedParagraph" element={<MyLikedParagraph/>}/>
       </Routes>
     </BrowserRouter>
   );
