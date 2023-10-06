@@ -128,7 +128,7 @@ function MyLikedParagraph() {
               fontWeight: "bold",
             }}
           >
-            나의 인상깊은 구절
+            좋아요 누른 구절
           </div>
         </div>
         <TableContainer
