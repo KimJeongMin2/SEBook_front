@@ -115,7 +115,7 @@ export default function MyPage() {
               <BookIcon style={{ color: "#F2BED1", marginBottom: '-7px' }}></BookIcon>
               나의 독후감
               <AddIcon
-                style={{ marginLeft: "220px", color: "#F2BED1" }}
+                style={{ marginLeft: "220px", color: "#F2BED1", marginBottom: '-5px' }}
                 onClick={() => {
                   navigate("/MyBookReport");
                 }}
@@ -156,7 +156,7 @@ export default function MyPage() {
               ></VolunteerActivismIcon>
               나의 인상 깊은 구절
               <AddIcon
-                style={{ marginLeft: "165px", color: "#F2BED1" }}
+                style={{ marginLeft: "165px", color: "#F2BED1", marginBottom: '-5px' }}
                 onClick={() => {
                   navigate("/MyParagraph");
                 }}
@@ -197,7 +197,7 @@ export default function MyPage() {
               ></PermIdentityIcon>
               내정보
               <AddIcon
-                style={{ marginLeft: "250px", color: "#F2BED1" }}
+                style={{ marginLeft: "250px", color: "#F2BED1", marginBottom: '-5px' }}
                 onClick={() => {
                   navigate("/MyParagraph");
                 }}
@@ -215,7 +215,7 @@ export default function MyPage() {
               ></ThumbUpAltIcon>
               좋아요 누른 독후감
               <AddIcon
-                style={{ marginLeft: "165px", color: "#F2BED1" }}
+                style={{ marginLeft: "165px", color: "#F2BED1", marginBottom: '-5px' }}
                 onClick={() => {
                   navigate("/MyLikedBookReport");
                 }}
@@ -257,7 +257,7 @@ export default function MyPage() {
               <MoodIcon style={{ color: "#F2BED1", marginBottom: '-7px' }}></MoodIcon>
               좋아요 누른 도서
               <AddIcon
-                style={{ marginLeft: "178px", color: "#F2BED1", mt: "2rem" }}
+                style={{ marginLeft: "178px", color: "#F2BED1", mt: "2rem", marginBottom: '-5px' }}
                 onClick={() => {
                   navigate("/MyLikedBookList");
                 }}
@@ -295,7 +295,7 @@ export default function MyPage() {
               <FavoriteIcon style={{ color: "#F2BED1", marginBottom: '-6px' }}></FavoriteIcon>
               좋아요 누른 구절
               <AddIcon
-                style={{ marginLeft: "178px", color: "#F2BED1" }}
+                style={{ marginLeft: "178px", color: "#F2BED1", marginBottom: '-5px' }}
                 onClick={() => {
                   navigate("/MyLikedParagraph");
                 }}
