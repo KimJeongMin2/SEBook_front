@@ -21,6 +21,9 @@ import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import MoodIcon from '@mui/icons-material/Mood';
 
 // Generate Order Data
 function createData(id, title) {
@@ -92,7 +95,7 @@ export default function MyPage() {
       </Box>
       <div
         style={{
-          margin: "80px 0 -15px 350px",
+          margin: "80px 0 -35px 170px",
           fontSize: "22px",
           fontWeight: "bold",
         }}
@@ -102,17 +105,17 @@ export default function MyPage() {
       <Box
         sx={{
           mt: "3rem",
-          alignItems:"center",
-          justifyContent:"center",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <Box sx={{ display: "flex",  justifyContent: "center"}}>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mr:"10rem"}} >
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
             <Typography>
-            <BookIcon style={{ color: "#F2BED1" }}></BookIcon>
+              <BookIcon style={{ color: "#F2BED1", marginBottom: '-7px' }}></BookIcon>
               나의 독후감
               <AddIcon
-                style={{ marginLeft: "165px", color: "#F2BED1" }}
+                style={{ marginLeft: "220px", color: "#F2BED1" }}
                 onClick={() => {
                   navigate("/MyBookReport");
                 }}
@@ -122,7 +125,7 @@ export default function MyPage() {
             <Link color="primary" href="#" onClick={preventDefault}></Link>
             <Table
               size="small"
-              sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
+              sx={{ marginTop: "10px", backgroundColor: "#F9F5F6", width: '350px' }}
             >
               <TableHead>
                 <TableRow>
@@ -146,10 +149,10 @@ export default function MyPage() {
               </TableBody>
             </Table>
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '40px' }}>
             <Typography>
               <VolunteerActivismIcon
-                style={{ color: "#F2BED1" }}
+                style={{ color: "#F2BED1", marginBottom: '-5px' }}
               ></VolunteerActivismIcon>
               나의 인상 깊은 구절
               <AddIcon
@@ -187,14 +190,29 @@ export default function MyPage() {
               </TableBody>
             </Table>
           </Box>
+          <Box>
+            <Typography>
+              <PermIdentityIcon
+                style={{ color: "#F2BED1", marginLeft: '40px', marginBottom: '-5px' }}
+              ></PermIdentityIcon>
+              내정보
+              <AddIcon
+                style={{ marginLeft: "250px", color: "#F2BED1" }}
+                onClick={() => {
+                  navigate("/MyParagraph");
+                }}
+              ></AddIcon>
+            </Typography>
+            <div style={{ marginTop: '10px', width: '350px', height: '190px', backgroundColor: '#F9F5F6', marginLeft: '40px' }}>
+            </div>
+          </Box>
         </Box>
-
-        <Box sx={{ display: "flex", justifyContent: "space-around", mt:"1rem"}}>
+        <Box sx={{ display: "flex", justifyContent: "space-around", mt: "1rem" }}>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
             <Typography>
-              <VolunteerActivismIcon
-                style={{ color: "#F2BED1" }}
-              ></VolunteerActivismIcon>
+              <ThumbUpAltIcon
+                style={{ color: "#F2BED1", marginBottom: '-6px' }}
+              ></ThumbUpAltIcon>
               좋아요 누른 독후감
               <AddIcon
                 style={{ marginLeft: "165px", color: "#F2BED1" }}
@@ -234,9 +252,9 @@ export default function MyPage() {
               </TableBody>
             </Table>
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '-300px' }}>
             <Typography>
-              <FavoriteIcon style={{ color: "#F2BED1" }}></FavoriteIcon>
+              <MoodIcon style={{ color: "#F2BED1", marginBottom: '-7px' }}></MoodIcon>
               좋아요 누른 도서
               <AddIcon
                 style={{ marginLeft: "178px", color: "#F2BED1", mt: "2rem" }}
@@ -272,12 +290,12 @@ export default function MyPage() {
               </TableBody>
             </Table>
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent:"center" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '-300px' }}>
             <Typography>
-              <FavoriteIcon style={{ color: "#F2BED1" }}></FavoriteIcon>
+              <FavoriteIcon style={{ color: "#F2BED1", marginBottom: '-6px' }}></FavoriteIcon>
               좋아요 누른 구절
               <AddIcon
-                style={{ marginLeft: "178px", color: "#F2BED1"}}
+                style={{ marginLeft: "178px", color: "#F2BED1" }}
                 onClick={() => {
                   navigate("/MyLikedParagraph");
                 }}
