@@ -162,13 +162,13 @@ function BookReportList() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "20px 573px 20px" }}
+                        style={{ margin: "0px 548px 20px" }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">
                         <Button
                             variant="contained"
-                            style={{ marginTop: '20px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
+                            style={{ marginTop: '10px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
                             onClick={() => { navigate('/BookReportRegist') }}
 
                         >등록하기</Button>

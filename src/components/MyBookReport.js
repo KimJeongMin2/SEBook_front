@@ -76,7 +76,7 @@ const StyledInputBase = styled(InputBase, {
 
 function MyBookReport() {
 
-    const navigate =  useNavigate();
+    const navigate = useNavigate();
 
     const [rows, setRows] = useState(initialRows);
     const [page, setPage] = useState(0); // Current page
@@ -107,7 +107,7 @@ function MyBookReport() {
 
                 <TableContainer
                     component={Paper}
-                    style={{ display: "flex", maxWidth: "77%", margin: "20px 176px" }}
+                    style={{ display: "flex", maxWidth: "70%", margin: "20px 176px" }}
                 >
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
@@ -117,8 +117,8 @@ function MyBookReport() {
                                 <TableCell>book title</TableCell>
                                 <TableCell style={{ width: '50px' }}>author</TableCell>
                                 <TableCell style={{ width: '100px' }}>publisher</TableCell>
-                                <TableCell style={{ width: '90px' }}>date</TableCell>
-                                <TableCell></TableCell>
+                                <TableCell style={{ width: '75px' }}>date</TableCell>
+                                <TableCell style={{ width: '10px' }}></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -138,12 +138,24 @@ function MyBookReport() {
                                     <TableCell>{row.author}</TableCell>
                                     <TableCell>{row.publisher}</TableCell>
                                     <TableCell>{row.date}</TableCell>
-                                    <TableCell><DeleteIcon /></TableCell>
+                                    <TableCell><DeleteIcon style={{ color: "#FF9999" }} /></TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <div style={{ display: "flex" }}>
+                    <Pagination
+                        component="div"
+                        count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
+                        page={page}
+                        onChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        style={{ margin: "0px 527px 20px" }}
+                        color="primary"
+                    />
+                </div>
             </Box>
         </>
     );

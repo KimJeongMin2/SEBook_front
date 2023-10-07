@@ -123,7 +123,7 @@ function MyParagraph() {
           <div
             style={{
               marginTop: "20px",
-              marginLeft: "240px",
+              marginLeft: "230px",
               fontSize: "22px",
               fontWeight: "bold",
             }}
@@ -150,7 +150,7 @@ function MyParagraph() {
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                 >
                   <TableCell
                     component="th"
@@ -185,7 +185,7 @@ function MyParagraph() {
                       fontSize: "10px",
                     }}
                   >
-                    <DeleteIcon />
+                    <DeleteIcon style={{ color: "#FF9999" }} />
                   </TableCell>
                 </TableRow>
               ))}

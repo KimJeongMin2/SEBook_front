@@ -123,8 +123,8 @@ function BookDetail() {
                             <div style={{ display: 'flex', margin: '5px 5px 0 0px' }}>
                                 <div >
                                     {isSelectedLike ?
-                                        <FavoriteIcon style={{ fontSize: '30px' }} onClick={selectLike}></FavoriteIcon>
-                                        : <FavoriteBorderIcon style={{ fontSize: '30px' }} onClick={selectLike}></FavoriteBorderIcon>}
+                                        <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteIcon>
+                                        : <FavoriteBorderIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteBorderIcon>}
                                     <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>10</div>
                                 </div>
                                 <ShareIcon style={{ fontSize: '35px' }}></ShareIcon>

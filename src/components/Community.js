@@ -158,11 +158,11 @@ function Community() {
                                     <TableCell style={{ width: '80px', textAlign: 'center' }}>{row.date}</TableCell>
                                     <TableCell style={{ width: '20px', textAlign: 'center', fontSize: '10px' }} >
                                         {likeStatus[row.id] ? (
-                                            <FavoriteIcon onClick={() => toggleLike(row.id)} />
+                                            <FavoriteIcon style={{ color: '#EF9A9A' }} onClick={() => toggleLike(row.id)} />
                                         ) : (
-                                            <FavoriteBorderIcon onClick={() => toggleLike(row.id)} />
+                                            <FavoriteBorderIcon style={{ color: '#EF9A9A' }} onClick={() => toggleLike(row.id)} />
                                         )}
-                                        {row.like}
+                                        <div style={{ marginTop: '-5px' }}>{row.like}</div>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -177,7 +177,7 @@ function Community() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "10px 527px 20px" }}
+                        style={{ margin: "10px 500px 20px" }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">

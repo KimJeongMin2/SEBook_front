@@ -123,7 +123,7 @@ function MyLikedParagraph() {
           <div
             style={{
               marginTop: "20px",
-              marginLeft: "240px",
+              marginLeft: "300px",
               fontSize: "22px",
               fontWeight: "bold",
             }}
@@ -133,7 +133,7 @@ function MyLikedParagraph() {
         </div>
         <TableContainer
           component={Paper}
-          style={{ display: "flex", maxWidth: "70%", margin: "10px auto" }}
+          style={{ display: "flex", maxWidth: "60%", margin: "10px auto" }}
         >
           <Table sx={{ minWidth: 600 }} aria-label="simple table">
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
@@ -141,8 +141,6 @@ function MyLikedParagraph() {
                 <TableCell>No</TableCell>
                 <TableCell>book title</TableCell>
                 <TableCell>impressive phrase</TableCell>
-                <TableCell>user</TableCell>
-                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -150,7 +148,7 @@ function MyLikedParagraph() {
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                 >
                   <TableCell
                     component="th"
@@ -174,17 +172,6 @@ function MyLikedParagraph() {
                     style={{ width: "600px", borderRight: "1px solid #F8E8EE" }}
                   >
                     {row.paragraph}
-                  </TableCell>
-                  <TableCell style={{ width: "80px"}}>
-                    {row.writer}
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      width: "20px",
-                      textAlign: "center",
-                      fontSize: "10px",
-                    }}
-                  >
                   </TableCell>
                 </TableRow>
               ))}

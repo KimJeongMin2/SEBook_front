@@ -100,14 +100,14 @@ function MyLikedBookReport() {
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
                 <div style={{ display: 'flex', marginTop: '70px' }}>
-                    <div style={{ marginTop: '20px', marginLeft: '180px', fontSize: '22px', fontWeight: 'bold' }}>
+                    <div style={{ marginTop: '20px', marginLeft: '220px', fontSize: '22px', fontWeight: 'bold' }}>
                         공감한 독후감
                     </div>
                 </div>
 
                 <TableContainer
                     component={Paper}
-                    style={{ display: "flex", maxWidth: "77%", margin: "20px 176px" }}
+                    style={{ display: "flex", maxWidth: "70%", margin: "20px auto" }}
                 >
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
@@ -117,7 +117,6 @@ function MyLikedBookReport() {
                                 <TableCell>book title</TableCell>
                                 <TableCell style={{ width: '50px' }}>author</TableCell>
                                 <TableCell style={{ width: '100px' }}>publisher</TableCell>
-                                <TableCell style={{ width: '50px' }}>writer</TableCell>
                                 <TableCell style={{ width: '90px' }}>date</TableCell>
                             </TableRow>
                         </TableHead>
@@ -137,7 +136,6 @@ function MyLikedBookReport() {
                                     <TableCell>{row.bookName}</TableCell>
                                     <TableCell>{row.author}</TableCell>
                                     <TableCell>{row.publisher}</TableCell>
-                                    <TableCell>{row.writer}</TableCell>
                                     <TableCell>{row.date}</TableCell>
                                 </TableRow>
                             ))}
@@ -155,14 +153,6 @@ function MyLikedBookReport() {
                         style={{ margin: "20px 573px 20px" }}
                         color="primary"
                     />
-                    <Stack spacing={2} direction="row">
-                        <Button
-                            variant="contained"
-                            style={{ marginTop: '20px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
-                            onClick={() => { navigate('/BookReportRegist') }}
-
-                        >등록하기</Button>
-                    </Stack>
                 </div>
             </Box>
         </>

@@ -97,11 +97,11 @@ function BookReportDetail() {
                             신데렐라는 결국 왕자와의 사랑을 통해 행복한 결말을 맞이합니다. 이것은 선의와 믿음이 결국 보상받는다는 교훈을 전합니다. 또한 신데렐라의 변화된 운명은 언제나 희망을 가져야 한다는 메시지를 전달합니다.
                             이 동화는 어린이들에게 희망과 선의, 가족의 중요성을 가르쳐주며, 어른들에게도 인내와 믿음의 힘을 상기시키는 좋은 이야기입니다. 신데렐라의 이야기는 시간이 흘러도 그 가치를 잃지 않고 계속해서 우리에게 교훈을 전달합니다.
                         </div>
-                        <div style={{ display: 'flex', margin: '5px 5px 0 790px' }}>
+                        <div style={{ display: 'flex', margin: '5px 5px 0 750px' }}>
                             <div >
                                 {isSelectedLike ?
-                                    <FavoriteIcon style={{ fontSize: '30px' }} onClick={selectLike}></FavoriteIcon>
-                                    : <FavoriteBorderIcon style={{ fontSize: '30px' }} onClick={selectLike}></FavoriteBorderIcon>}
+                                    <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteIcon>
+                                    : <FavoriteBorderIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteBorderIcon>}
                                 <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>10</div>
                             </div>
                             <ShareIcon style={{ fontSize: '35px' }}></ShareIcon>
