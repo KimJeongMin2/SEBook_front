@@ -110,10 +110,10 @@ function Community() {
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
                 <div style={{ display: 'flex', marginTop: '70px' }}>
-                    <div style={{ marginTop: '20px', marginLeft: '240px', fontSize: '22px', fontWeight: 'bold' }}>
+                    <div style={{ marginTop: '20px', marginLeft: '230px', fontSize: '22px', fontWeight: 'bold' }}>
                         커뮤니티
                     </div>
-                    <Search style={{ marginTop: "20px" }}>
+                    <Search style={{ marginTop: "20px", marginRight: '220px' }}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -177,7 +177,7 @@ function Community() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "10px 500px 20px" }}
+                        style={{ margin: "10px 493px 20px" }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">

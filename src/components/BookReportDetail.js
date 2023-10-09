@@ -73,7 +73,7 @@ function BookReportDetail() {
                 <TabBar />
                 <div style={{ display: 'flex', marginTop: '70px' }}>
 
-                    <Search style={{ marginTop: '20px', marginRight: '325px' }}>
+                    <Search style={{ marginTop: '20px', marginRight: '308px' }}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>

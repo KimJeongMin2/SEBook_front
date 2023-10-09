@@ -162,7 +162,7 @@ function BookReportList() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "0px 548px 20px" }}
+                        style={{ margin: "0px 543px 20px" }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">

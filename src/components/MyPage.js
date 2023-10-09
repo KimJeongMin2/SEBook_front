@@ -112,7 +112,7 @@ export default function MyPage() {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
             <Typography>
-              <BookIcon style={{ color: "#F2BED1", marginBottom: '-7px' }}></BookIcon>
+              <BookIcon style={{ color: "#F2BED1", marginBottom: '-7px', marginRight: '2px' }}></BookIcon>
               나의 독후감
               <AddIcon
                 style={{ marginLeft: "220px", color: "#F2BED1", marginBottom: '-5px' }}
@@ -149,10 +149,10 @@ export default function MyPage() {
               </TableBody>
             </Table>
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '40px' }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '31px' }}>
             <Typography>
               <VolunteerActivismIcon
-                style={{ color: "#F2BED1", marginBottom: '-5px' }}
+                style={{ color: "#F2BED1", marginBottom: '-5px', marginRight: '2px' }}
               ></VolunteerActivismIcon>
               나의 인상 깊은 구절
               <AddIcon
@@ -193,7 +193,7 @@ export default function MyPage() {
           <Box>
             <Typography>
               <PermIdentityIcon
-                style={{ color: "#F2BED1", marginLeft: '40px', marginBottom: '-5px' }}
+                style={{ color: "#F2BED1", marginLeft: '40px', marginBottom: '-5px', marginRight: '2px' }}
               ></PermIdentityIcon>
               내정보
               <AddIcon
@@ -203,7 +203,7 @@ export default function MyPage() {
                 }}
               ></AddIcon>
             </Typography>
-            <div style={{ marginTop: '10px', width: '350px', height: '190px', backgroundColor: '#F9F5F6', marginLeft: '40px' }}>
+            <div style={{ marginTop: '10px', width: '350px', height: '190px', backgroundColor: '#F9F5F6', marginLeft: '31px' }}>
             </div>
           </Box>
         </Box>
@@ -211,7 +211,7 @@ export default function MyPage() {
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
             <Typography>
               <ThumbUpAltIcon
-                style={{ color: "#F2BED1", marginBottom: '-6px' }}
+                style={{ color: "#F2BED1", marginBottom: '-6px', marginRight: '2px' }}
               ></ThumbUpAltIcon>
               좋아요 누른 독후감
               <AddIcon
@@ -254,7 +254,7 @@ export default function MyPage() {
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '-300px' }}>
             <Typography>
-              <MoodIcon style={{ color: "#F2BED1", marginBottom: '-7px' }}></MoodIcon>
+              <MoodIcon style={{ color: "#F2BED1", marginBottom: '-7px', marginRight: '2px' }}></MoodIcon>
               좋아요 누른 도서
               <AddIcon
                 style={{ marginLeft: "178px", color: "#F2BED1", mt: "2rem", marginBottom: '-5px' }}
@@ -292,7 +292,7 @@ export default function MyPage() {
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '-300px' }}>
             <Typography>
-              <FavoriteIcon style={{ color: "#F2BED1", marginBottom: '-6px' }}></FavoriteIcon>
+              <FavoriteIcon style={{ color: "#F2BED1", marginBottom: '-6px', marginRight: '2px' }}></FavoriteIcon>
               좋아요 누른 구절
               <AddIcon
                 style={{ marginLeft: "178px", color: "#F2BED1", marginBottom: '-5px' }}
