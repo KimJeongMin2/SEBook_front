@@ -90,246 +90,250 @@ export default function MyPage() {
   return (
     <React.Fragment>
       <MainAppBar />
-      <Box sx={{ paddingTop: "48px" }}>
-        <TabBar />
-      </Box>
-      <div
-        style={{
-          margin: "80px 0 -35px 170px",
-          fontSize: "22px",
-          fontWeight: "bold",
-        }}
-      >
-        마이페이지
+      <div>
+        <Box sx={{ paddingTop: "48px" }}>
+          <TabBar />
+        </Box>
+        <div
+          style={{
+            margin: "80px 0 -35px 200px",
+            fontSize: "22px",
+            fontWeight: "bold",
+          }}
+        >
+          마이페이지
+        </div>
+        <div style={{ width: '1200px', margin: '0 auto' }}>
+          <Box
+            sx={{
+              mt: "3rem",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
+                <Typography>
+                  <BookIcon style={{ color: "#F2BED1", marginBottom: '-7px', marginRight: '2px' }}></BookIcon>
+                  나의 독후감
+                  <AddIcon
+                    style={{ marginLeft: "220px", color: "#F2BED1", marginBottom: '-5px' }}
+                    onClick={() => {
+                      navigate("/MyBookReport");
+                    }}
+                  ></AddIcon>
+                </Typography>
+
+                <Link color="primary" href="#" onClick={preventDefault}></Link>
+                <Table
+                  size="small"
+                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6", width: '350px' }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>No.</TableCell>
+                      <TableCell>BookReport Title</TableCell>
+                      <TableCell>author</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {bookLikeList.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.title}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.author}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <Typography>
+                  <VolunteerActivismIcon
+                    style={{ color: "#F2BED1", marginBottom: '-5px', marginRight: '2px' }}
+                  ></VolunteerActivismIcon>
+                  나의 인상 깊은 구절
+                  <AddIcon
+                    style={{ marginLeft: "165px", color: "#F2BED1", marginBottom: '-5px' }}
+                    onClick={() => {
+                      navigate("/MyParagraph");
+                    }}
+                  ></AddIcon>
+                </Typography>
+                <Link
+                  color="primary"
+                  href="#"
+                  onClick={preventDefault}
+                ></Link>
+                <Table
+                  size="small"
+                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>Paragraph</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.title}
+                        </TableCell>
+
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+              <Box>
+                <Typography>
+                  <PermIdentityIcon
+                    style={{ color: "#F2BED1", marginBottom: '-5px', marginRight: '2px' }}
+                  ></PermIdentityIcon>
+                  내정보
+                  <AddIcon
+                    style={{ marginLeft: "250px", color: "#F2BED1", marginBottom: '-5px' }}
+                    onClick={() => {
+                      navigate("/MyParagraph");
+                    }}
+                  ></AddIcon>
+                </Typography>
+                <div style={{ marginTop: '10px', width: '350px', height: '190px', backgroundColor: '#F9F5F6' }}>
+                </div>
+              </Box>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-around", mt: "1rem" }}>
+              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <Typography>
+                  <ThumbUpAltIcon
+                    style={{ color: "#F2BED1", marginBottom: '-6px', marginRight: '2px' }}
+                  ></ThumbUpAltIcon>
+                  좋아요 누른 독후감
+                  <AddIcon
+                    style={{ marginLeft: "165px", color: "#F2BED1", marginBottom: '-5px' }}
+                    onClick={() => {
+                      navigate("/MyLikedBookReport");
+                    }}
+                  ></AddIcon>
+                </Typography>
+                <Link
+                  color="primary"
+                  href="#"
+                  onClick={preventDefault}
+                ></Link>
+                <Table
+                  size="small"
+                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>BookReport Title</TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>author</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {bookLikeList.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.title}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.author}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <Typography>
+                  <MoodIcon style={{ color: "#F2BED1", marginBottom: '-7px', marginRight: '2px' }}></MoodIcon>
+                  좋아요 누른 도서
+                  <AddIcon
+                    style={{ marginLeft: "178px", color: "#F2BED1", mt: "2rem", marginBottom: '-5px' }}
+                    onClick={() => {
+                      navigate("/MyLikedBookList");
+                    }}
+                  ></AddIcon>
+                  <Link color="primary" href="#" onClick={preventDefault}></Link>
+                </Typography>
+                <Table
+                  size="small"
+                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>Title</TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>author</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {bookLikeList.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.title}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.author}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <Typography>
+                  <FavoriteIcon style={{ color: "#F2BED1", marginBottom: '-6px', marginRight: '2px' }}></FavoriteIcon>
+                  좋아요 누른 구절
+                  <AddIcon
+                    style={{ marginLeft: "178px", color: "#F2BED1", marginBottom: '-5px' }}
+                    onClick={() => {
+                      navigate("/MyLikedParagraph");
+                    }}
+                  ></AddIcon>
+                  <Link color="primary" href="#" onClick={preventDefault}></Link>
+                </Typography>
+                <Table
+                  size="small"
+                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>Title</TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>author</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {bookLikeList.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.title}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.author}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Box>
+          </Box>
+        </div>
       </div>
-      <Box
-        sx={{
-          mt: "3rem",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
-            <Typography>
-              <BookIcon style={{ color: "#F2BED1", marginBottom: '-7px', marginRight: '2px' }}></BookIcon>
-              나의 독후감
-              <AddIcon
-                style={{ marginLeft: "220px", color: "#F2BED1", marginBottom: '-5px' }}
-                onClick={() => {
-                  navigate("/MyBookReport");
-                }}
-              ></AddIcon>
-            </Typography>
-
-            <Link color="primary" href="#" onClick={preventDefault}></Link>
-            <Table
-              size="small"
-              sx={{ marginTop: "10px", backgroundColor: "#F9F5F6", width: '350px' }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>No.</TableCell>
-                  <TableCell>BookReport Title</TableCell>
-                  <TableCell>author</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {bookLikeList.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.title}
-                    </TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.author}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '31px' }}>
-            <Typography>
-              <VolunteerActivismIcon
-                style={{ color: "#F2BED1", marginBottom: '-5px', marginRight: '2px' }}
-              ></VolunteerActivismIcon>
-              나의 인상 깊은 구절
-              <AddIcon
-                style={{ marginLeft: "165px", color: "#F2BED1", marginBottom: '-5px' }}
-                onClick={() => {
-                  navigate("/MyParagraph");
-                }}
-              ></AddIcon>
-            </Typography>
-            <Link
-              color="primary"
-              href="#"
-              onClick={preventDefault}
-            ></Link>
-            <Table
-              size="small"
-              sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
-                  <TableCell style={{ fontSize: "13px" }}>Paragraph</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.title}
-                    </TableCell>
-
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
-          <Box>
-            <Typography>
-              <PermIdentityIcon
-                style={{ color: "#F2BED1", marginLeft: '40px', marginBottom: '-5px', marginRight: '2px' }}
-              ></PermIdentityIcon>
-              내정보
-              <AddIcon
-                style={{ marginLeft: "250px", color: "#F2BED1", marginBottom: '-5px' }}
-                onClick={() => {
-                  navigate("/MyParagraph");
-                }}
-              ></AddIcon>
-            </Typography>
-            <div style={{ marginTop: '10px', width: '350px', height: '190px', backgroundColor: '#F9F5F6', marginLeft: '31px' }}>
-            </div>
-          </Box>
-        </Box>
-        <Box sx={{ display: "flex", justifyContent: "space-around", mt: "1rem" }}>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <Typography>
-              <ThumbUpAltIcon
-                style={{ color: "#F2BED1", marginBottom: '-6px', marginRight: '2px' }}
-              ></ThumbUpAltIcon>
-              좋아요 누른 독후감
-              <AddIcon
-                style={{ marginLeft: "165px", color: "#F2BED1", marginBottom: '-5px' }}
-                onClick={() => {
-                  navigate("/MyLikedBookReport");
-                }}
-              ></AddIcon>
-            </Typography>
-            <Link
-              color="primary"
-              href="#"
-              onClick={preventDefault}
-            ></Link>
-            <Table
-              size="small"
-              sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
-                  <TableCell style={{ fontSize: "13px" }}>BookReport Title</TableCell>
-                  <TableCell style={{ fontSize: "13px" }}>author</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {bookLikeList.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.title}
-                    </TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.author}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '-300px' }}>
-            <Typography>
-              <MoodIcon style={{ color: "#F2BED1", marginBottom: '-7px', marginRight: '2px' }}></MoodIcon>
-              좋아요 누른 도서
-              <AddIcon
-                style={{ marginLeft: "178px", color: "#F2BED1", mt: "2rem", marginBottom: '-5px' }}
-                onClick={() => {
-                  navigate("/MyLikedBookList");
-                }}
-              ></AddIcon>
-              <Link color="primary" href="#" onClick={preventDefault}></Link>
-            </Typography>
-            <Table
-              size="small"
-              sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
-                  <TableCell style={{ fontSize: "13px" }}>Title</TableCell>
-                  <TableCell style={{ fontSize: "13px" }}>author</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {bookLikeList.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.title}
-                    </TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.author}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: '-300px' }}>
-            <Typography>
-              <FavoriteIcon style={{ color: "#F2BED1", marginBottom: '-6px', marginRight: '2px' }}></FavoriteIcon>
-              좋아요 누른 구절
-              <AddIcon
-                style={{ marginLeft: "178px", color: "#F2BED1", marginBottom: '-5px' }}
-                onClick={() => {
-                  navigate("/MyLikedParagraph");
-                }}
-              ></AddIcon>
-              <Link color="primary" href="#" onClick={preventDefault}></Link>
-            </Typography>
-            <Table
-              size="small"
-              sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
-                  <TableCell style={{ fontSize: "13px" }}>Title</TableCell>
-                  <TableCell style={{ fontSize: "13px" }}>author</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {bookLikeList.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.title}
-                    </TableCell>
-                    <TableCell style={{ fontSize: "13px" }}>
-                      {row.author}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
-        </Box>
-      </Box>
     </React.Fragment>
   );
 }
