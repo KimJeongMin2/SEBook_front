@@ -175,7 +175,7 @@ function MainPage() {
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
 
-        <Search style={{ marginTop: '80px' }}>
+        <Search style={{ marginTop: '80px', marginLeft: '983px', width: '100px' }}>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>

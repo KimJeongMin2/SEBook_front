@@ -19,6 +19,7 @@ import MyParagraph from "./components/MyParagraph";
 import MyLikedParagraph from "./components/MyLikedParagraph";
 
 function App() {
+  <link href="https://font.elice.io/css?family=Elice+DX+Neolli" rel="stylesheet"></link>
   return (
     <BrowserRouter>
       <Routes>
@@ -35,10 +36,10 @@ function App() {
         <Route path="/CommunityRegist" element={<CommunityRegist />} />
         <Route path="/MyPage" element={<MyPage />} />
         <Route path="/MyLikedBookList" element={<MyLikedBookList />} />
-        <Route path="/MyBookReport" element={<MyBookReport/>}/>
-        <Route path="/MyLikedBookReport" element={<MyLikedBookReport/>}/>
-        <Route path="/MyParagraph" element={<MyParagraph/>}/>
-        <Route path="/MyLikedParagraph" element={<MyLikedParagraph/>}/>
+        <Route path="/MyBookReport" element={<MyBookReport />} />
+        <Route path="/MyLikedBookReport" element={<MyLikedBookReport />} />
+        <Route path="/MyParagraph" element={<MyParagraph />} />
+        <Route path="/MyLikedParagraph" element={<MyLikedParagraph />} />
       </Routes>
     </BrowserRouter>
   );
