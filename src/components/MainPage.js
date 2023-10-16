@@ -1,15 +1,12 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import {
-  Avatar,
   Box,
   Card,
   CardActions,
-  CardContent,
   CardHeader,
   CardMedia,
-  Collapse,
   Grid,
   IconButton,
   InputBase,
@@ -17,11 +14,10 @@ import {
 } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import axios from 'axios';
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -161,6 +157,7 @@ const bookReportData = [
   },
 ];
 
+
 function MainPage() {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false); // expanded 상태값 추가
@@ -168,6 +165,18 @@ function MainPage() {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  const [recommendBook, setRecommendBook] = useState([])
+
+  useEffect(() => {
+    axios.get('/recommend/', {
+        params: {
+            user_book: '해리 포터와 혼혈왕자 1 (무선)'
+        }
+    })
+    .then(response => setRecommendBook(response.data.recommended_books))
+    .catch(error => console.error(error));
+}, []);
 
   return (
     <>
@@ -201,7 +210,7 @@ function MainPage() {
               marginTop: "30px",
             }}
           >
-            {cardData.map((data) => (
+            {recommendBook.map((data) => (
               <Grid>
                 <Card sx={{ maxWidth: 280, margin: 1 }} style={{ width: '220px' }}>
                   <CardHeader
