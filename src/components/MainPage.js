@@ -7,6 +7,7 @@ import {
   CardActions,
   CardHeader,
   CardMedia,
+  Collapse,
   Grid,
   IconButton,
   InputBase,
@@ -15,6 +16,7 @@ import {
 import { styled, useTheme } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
@@ -159,29 +161,37 @@ const bookReportData = [
 
 function MainPage() {
   const theme = useTheme();
-  const [expanded, setExpanded] = useState(false); // expanded 상태값 추가
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const [expandedId, setExpandedId] = useState(-1);
+  const [likeStatus, setLikeStatus] = useState({});
+  const handleExpandClick = (id) => {
+    setExpandedId(expandedId === id ? -1 : id);
   };
 
   const [recommendBook, setRecommendBook] = useState([]);
 
   useEffect(() => {
     console.time();
-    axios.get('http://172.30.66.199:8000/test/recommendBook', {
+    axios
+      .get("http://172.30.66.199:8000/test/recommendBook", {
         params: {
-            user_book: '더 로드 1'
-        }
-    })
+          user_book: "시인의 계곡",
+        },
+      })
       .then((response) => {
         console.timeEnd();
         console.log(response.data); // 전체 응답 출력
-        
+
         setRecommendBook(response.data.recommendations);
       })
       .catch((error) => console.error(error));
   }, []);
+
+  const toggleLike = (id) => {
+    setLikeStatus((prevStatus) => ({
+      ...prevStatus,
+      [id]: !prevStatus[id],
+    }));
+  };
 
   return (
     <>
@@ -222,7 +232,7 @@ function MainPage() {
               marginTop: "30px",
             }}
           >
-            {recommendBook.map((data) => (
+            {recommendBook.map((data, index) => (
               <Grid>
                 <Card
                   sx={{ maxWidth: 280, margin: 1 }}
@@ -242,19 +252,43 @@ function MainPage() {
                   />
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
+                      {likeStatus[data.id] ? (
+                        <FavoriteIcon
+                          style={{ color: "#EF9A9A" }}
+                          onClick={() => toggleLike(data.id)}
+                        />
+                      ) : (
+                        <FavoriteBorderIcon
+                          style={{ color: "#EF9A9A" }}
+                          onClick={() => toggleLike(data.id)}
+                        />
+                      )}
+                      <div style={{ marginTop: "-5px" }}>{data.like}</div>
                     </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon />
                     </IconButton>
                     <IconButton
-                      aria-expanded={expanded}
+                      aria-expanded={expandedId === index}
                       aria-label="show more"
-                      onClick={handleExpandClick}
+                      onClick={() => handleExpandClick(index)}
                     >
                       <ExpandMoreIcon />
                     </IconButton>
                   </CardActions>
+                  {expandedId === index && (
+                    <>
+                      {data.description && (
+                        <>
+                          {
+                            <Collapse in timeout="auto" unmountOnExit>
+                              {data.description}
+                            </Collapse>
+                          }
+                        </>
+                      )}
+                    </>
+                  )}
                 </Card>
               </Grid>
             ))}
@@ -320,7 +354,7 @@ function MainPage() {
               marginTop: "30px",
             }}
           >
-            {bestCardData.map((data) => (
+            {bestCardData.map((data, index) => (
               <Grid>
                 <Card
                   sx={{ maxWidth: 280, margin: "10px" }}
@@ -346,9 +380,9 @@ function MainPage() {
                       <ShareIcon />
                     </IconButton>
                     <IconButton
-                      aria-expanded={expanded}
+                      aria-expanded={expandedId}
                       aria-label="show more"
-                      onClick={handleExpandClick}
+                      onClick={() => handleExpandClick(index)}
                     >
                       <ExpandMoreIcon />
                     </IconButton>
@@ -405,7 +439,7 @@ function MainPage() {
                       <ShareIcon />
                     </IconButton>
                     <IconButton
-                      aria-expanded={expanded}
+                      aria-expanded={expandedId}
                       aria-label="show more"
                       onClick={handleExpandClick}
                     >
