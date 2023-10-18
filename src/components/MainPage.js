@@ -17,7 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import axios from 'axios';
+import axios from "axios";
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -157,7 +157,6 @@ const bookReportData = [
   },
 ];
 
-
 function MainPage() {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false); // expanded 상태값 추가
@@ -166,17 +165,23 @@ function MainPage() {
     setExpanded(!expanded);
   };
 
-  const [recommendBook, setRecommendBook] = useState([])
+  const [recommendBook, setRecommendBook] = useState([]);
 
   useEffect(() => {
-    axios.get('/recommend/', {
+    console.time();
+    axios.get('http://172.30.66.199:8000/test/recommendBook', {
         params: {
-            user_book: '해리 포터와 혼혈왕자 1 (무선)'
+            user_book: '더 로드 1'
         }
     })
-    .then(response => setRecommendBook(response.data.recommended_books))
-    .catch(error => console.error(error));
-}, []);
+      .then((response) => {
+        console.timeEnd();
+        console.log(response.data); // 전체 응답 출력
+        
+        setRecommendBook(response.data.recommendations);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   return (
     <>
@@ -184,18 +189,25 @@ function MainPage() {
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
 
-        <Search style={{ marginTop: '80px', marginLeft: '983px', width: '100px' }}>
+        <Search
+          style={{ marginTop: "80px", marginLeft: "983px", width: "100px" }}
+        >
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
           <StyledInputBase
-            style={{ fontSize: '13px' }}
+            style={{ fontSize: "13px" }}
             placeholder="도서명 또는 작가명을 입력하세요."
             inputProps={{ "aria-label": "search" }}
           />
         </Search>
         <Typography
-          sx={{ fontWeight: "bold", marginLeft: "160px", fontSize: "20px", marginTop: '-28px' }}
+          sx={{
+            fontWeight: "bold",
+            marginLeft: "160px",
+            fontSize: "20px",
+            marginTop: "-28px",
+          }}
         >
           홍길동님, 맞춤 도서 추천
         </Typography>
@@ -212,7 +224,10 @@ function MainPage() {
           >
             {recommendBook.map((data) => (
               <Grid>
-                <Card sx={{ maxWidth: 280, margin: 1 }} style={{ width: '220px' }}>
+                <Card
+                  sx={{ maxWidth: 280, margin: 1 }}
+                  style={{ width: "220px" }}
+                >
                   <CardHeader
                     title={data.title}
                     subheader={data.author}
@@ -222,7 +237,7 @@ function MainPage() {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={data.image}
+                    image={data.cover}
                     alt="Paella dish"
                   />
                   <CardActions disableSpacing>
@@ -307,7 +322,10 @@ function MainPage() {
           >
             {bestCardData.map((data) => (
               <Grid>
-                <Card sx={{ maxWidth: 280, margin: '10px' }} style={{ width: '220px' }}>
+                <Card
+                  sx={{ maxWidth: 280, margin: "10px" }}
+                  style={{ width: "220px" }}
+                >
                   <CardHeader
                     title={data.title}
                     subheader={data.author}
@@ -363,7 +381,10 @@ function MainPage() {
           >
             {bookReportData.map((data) => (
               <Grid>
-                <Card sx={{ maxWidth: 280, margin: 1 }} style={{ width: '220px' }}>
+                <Card
+                  sx={{ maxWidth: 280, margin: 1 }}
+                  style={{ width: "220px" }}
+                >
                   <CardHeader
                     title={data.title}
                     subheader={data.writer}
