@@ -42,9 +42,9 @@ const Search = styled("div", {
     marginRight: 0,
     marginLeft: "auto", // 오른쪽 정렬 적용
     marginTop: "1ch",
-    marginRight: "20ch",
     width: "35ch",
     minWidth: "32ch", // 최소 가로 길이 조절
+
 }));
 
 const SearchIconWrapper = styled("div", {
@@ -99,8 +99,8 @@ function BookReportList() {
             <MainAppBar />
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
-                <div style={{ display: 'flex', marginTop: '70px' }}>
-                    <div style={{ marginTop: '20px', marginLeft: '180px', fontSize: '22px', fontWeight: 'bold' }}>
+                <div style={{ display: 'flex', margin: '70px auto 0', maxWidth: '77%', marginTop: '70px', justifyContent: 'space-between' }}>
+                    <div style={{ marginTop: '20px', fontSize: '22px', fontWeight: 'bold' }}>
                         독후감
                     </div>
                     <Search style={{ marginTop: "20px" }}>
@@ -154,7 +154,7 @@ function BookReportList() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', margin: '0 auto', maxWidth: "77%", justifyContent: 'space-between' }}>
                     <Pagination
                         component="div"
                         count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
@@ -162,19 +162,19 @@ function BookReportList() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "0px 543px 20px" }}
+                        style={{ margin: '0 auto' }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">
                         <Button
                             variant="contained"
-                            style={{ marginTop: '10px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
+                            style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
                             onClick={() => { navigate('/BookReportRegist') }}
 
                         >등록하기</Button>
                     </Stack>
                 </div>
-            </Box>
+            </Box >
         </>
     );
 }

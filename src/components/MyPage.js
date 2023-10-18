@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import MoodIcon from '@mui/icons-material/Mood';
-
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 // Generate Order Data
 function createData(id, title) {
   return { id, title };
@@ -198,14 +198,12 @@ export default function MyPage() {
                     style={{ color: "#F2BED1", marginBottom: '-5px', marginRight: '2px' }}
                   ></PermIdentityIcon>
                   내정보
-                  <AddIcon
-                    style={{ marginLeft: "250px", color: "#F2BED1", marginBottom: '-5px' }}
-                    onClick={() => {
-                      navigate("/MyParagraph");
-                    }}
-                  ></AddIcon>
                 </Typography>
-                <div style={{ marginTop: '10px', width: '350px', height: '190px', backgroundColor: '#F9F5F6' }}>
+                <div style={{ padding: '10px', marginTop: '10px', width: '330px', height: '175px', backgroundColor: '#F9F5F6' }}>
+                  <div style={{ padding: '10px 0', width: '120px', height: '115px', backgroundColor: '#F2BED1' }}>
+                    <AssignmentIndIcon style={{ fontSize: '120px' }}></AssignmentIndIcon>
+                    <div style={{ margin: '15px 25px' }}>홍길동 님</div>
+                  </div>
                 </div>
               </Box>
             </Box>
