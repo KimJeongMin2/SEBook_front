@@ -44,7 +44,6 @@ const Search = styled("div", {
     marginRight: 0,
     marginLeft: "auto", // 오른쪽 정렬 적용
     marginTop: "1ch",
-    marginRight: "27ch",
     width: "35ch",
     minWidth: "32ch", // 최소 가로 길이 조절
 }));
@@ -109,11 +108,11 @@ function Community() {
             <MainAppBar />
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
-                <div style={{ display: 'flex', marginTop: '70px' }}>
-                    <div style={{ marginTop: '20px', marginLeft: '230px', fontSize: '22px', fontWeight: 'bold' }}>
+                <div style={{ display: 'flex', maxWidth: '70%', marginTop: '70px', margin: '70px auto 0', justifyContent: 'space-between' }}>
+                    <div style={{ marginTop: '20px', fontSize: '22px', fontWeight: 'bold' }}>
                         커뮤니티
                     </div>
-                    <Search style={{ marginTop: "20px", marginRight: '220px' }}>
+                    <Search style={{ marginTop: "20px" }}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -169,7 +168,7 @@ function Community() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', maxWidth: '70%', margin: '0 auto' }}>
                     <Pagination
                         component="div"
                         count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
@@ -177,13 +176,13 @@ function Community() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "10px 493px 20px" }}
+                        style={{ margin: "0 auto" }}
                         color="primary"
                     />
                     <Stack spacing={2} direction="row">
                         <Button
                             variant="contained"
-                            style={{ marginTop: '10px', width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
+                            style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
                             onClick={() => { navigate('/CommunityRegist') }}
 
                         >등록하기</Button>

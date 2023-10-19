@@ -60,7 +60,7 @@ export default function SignUp() {
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              marginTop: 10,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -121,7 +121,7 @@ export default function SignUp() {
                     autoComplete="reconfirm password"
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ margin: '-10px 0 -20px' }}>
                   <FormControlLabel
                     control={
                       <Checkbox value="allowExtraEmails" color="primary" />
@@ -147,7 +147,7 @@ export default function SignUp() {
               </Grid>
             </Box>
           </Box>
-          <Copyright sx={{ mt: 5 }} />
+          <Copyright sx={{ mt: 4 }} />
         </Container>
       </ThemeProvider>
     </>

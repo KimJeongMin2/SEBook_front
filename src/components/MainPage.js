@@ -1,5 +1,6 @@
 import { React, useEffect, useState } from "react";
 import MainAppBar from "./MainAppBar";
+import { motion } from "framer-motion";
 import TabBar from "./TabBar";
 import {
   Box,
@@ -198,7 +199,6 @@ function MainPage() {
       <MainAppBar />
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
-
         <Search
           style={{ marginTop: "80px", marginLeft: "983px", width: "100px" }}
         >
@@ -244,11 +244,14 @@ function MainPage() {
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                   />
-                  <CardMedia
+                  <motion.img
                     component="img"
+                    width='220px'
                     height="200"
-                    image={data.cover}
+                    src={data.cover}
                     alt="Paella dish"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 1 }}
                   />
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
@@ -366,12 +369,16 @@ function MainPage() {
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                   />
-                  <CardMedia
+                  <motion.img
                     component="img"
+                    width='220px'
                     height="200"
-                    image={data.image}
+                    src={data.image}
                     alt="Paella dish"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 1 }}
                   />
+
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
                       <FavoriteIcon />
@@ -425,11 +432,15 @@ function MainPage() {
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                   />
-                  <CardMedia
+
+                  <motion.img
                     component="img"
+                    width='220px'
                     height="200"
-                    image={data.image}
+                    src={data.image}
                     alt="Paella dish"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                   />
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
