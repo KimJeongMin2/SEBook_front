@@ -109,7 +109,7 @@ function BookReportList() {
                         </SearchIconWrapper>
                         <StyledInputBase
                             style={{ fontSize: '13px' }}
-                            placeholder="도서명 또는 작가명을 입력하세요."
+                            placeholder="도서명을 입력하세요."
                             inputProps={{ "aria-label": "search" }}
                         />
                     </Search>
