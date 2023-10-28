@@ -123,12 +123,12 @@ function BookReportList() {
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
                             <TableRow>
                                 <TableCell style={{ width: '10px' }}>No</TableCell>
-                                <TableCell>title</TableCell>
-                                <TableCell>book title</TableCell>
-                                <TableCell style={{ width: '50px' }}>author</TableCell>
-                                <TableCell style={{ width: '100px' }}>publisher</TableCell>
-                                <TableCell style={{ width: '50px' }}>writer</TableCell>
-                                <TableCell style={{ width: '90px' }}>date</TableCell>
+                                <TableCell>제목</TableCell>
+                                <TableCell>도서명</TableCell>
+                                <TableCell style={{ width: '50px' }}>작가</TableCell>
+                                <TableCell style={{ width: '100px' }}>출판사</TableCell>
+                                <TableCell style={{ width: '50px' }}>작가</TableCell>
+                                <TableCell style={{ width: '90px' }}>등록일</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
