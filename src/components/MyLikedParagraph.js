@@ -139,8 +139,8 @@ function MyLikedParagraph() {
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
               <TableRow>
                 <TableCell>No</TableCell>
-                <TableCell>book title</TableCell>
-                <TableCell>impressive phrase</TableCell>
+                <TableCell>도서명</TableCell>
+                <TableCell>인상깊은 구절</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>

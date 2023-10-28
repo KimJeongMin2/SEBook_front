@@ -17,9 +17,11 @@ import {
 import { styled, useTheme } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+
 import axios from "axios";
 
 const Search = styled("div", {
@@ -62,6 +64,18 @@ const StyledInputBase = styled(InputBase, {
     },
   },
 }));
+const StyledSelect = styled(Select, {
+  shouldForwardProp: (prop) => prop !== "theme",
+})(({ theme }) => ({
+  width: "5ch",
+  color: "inherit",
+  backgroundColor: "rgba(255, 182, 193, 0.4)", 
+  borderRadius: "50px 50px 50px 50px", 
+  border: "none",
+  [theme.breakpoints.up("md")]: {
+    width: "20ch",
+  },
+}));
 
 const cardData = [
   {
@@ -96,30 +110,35 @@ const cardData = [
 
 const bestCardData = [
   {
+    id: 1,
     title: "1%를 읽는 힘",
     author: "메르",
     image:
       "https://image.aladin.co.kr/product/32289/45/cover500/k852834850_1.jpg",
   },
   {
+    id: 2,
     title: "아메리칸 프로메테우스",
     author: "카이 버드",
     image:
       "https://image.aladin.co.kr/product/31892/3/cover500/k342833636_1.jpg",
   },
   {
+    id: 3,
     title: "슈퍼노멀",
     author: "주언규",
     image:
       "https://image.aladin.co.kr/product/32308/43/cover500/890127437x_1.jpg",
   },
   {
+    id: 4,
     title: "세이노의 가르침",
     author: "세이노",
     image:
       "https://image.aladin.co.kr/product/30929/51/cover500/s302832892_1.jpg",
   },
   {
+    id: 5,
     title: "우리 대화는 밤새도록 끝",
     author: "허휘수",
     image:
@@ -163,12 +182,14 @@ const bookReportData = [
 function MainPage() {
   const theme = useTheme();
   const [expandedId, setExpandedId] = useState(-1);
-  const [likeStatus, setLikeStatus] = useState({});
   const handleExpandClick = (id) => {
     setExpandedId(expandedId === id ? -1 : id);
   };
 
   const [recommendBook, setRecommendBook] = useState([]);
+
+  const [likes, setLikes] = useState({});
+  const [searchType, setSearchType] = useState("도서명");
 
   useEffect(() => {
     console.time();
@@ -188,10 +209,10 @@ function MainPage() {
   }, []);
 
   const toggleLike = (id) => {
-    setLikeStatus((prevStatus) => ({
-      ...prevStatus,
-      [id]: !prevStatus[id],
-    }));
+    setLikes({
+      ...likes,
+      [id]: !likes[id],
+    });
   };
 
   return (
@@ -199,18 +220,41 @@ function MainPage() {
       <MainAppBar />
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
-        <Search
-          style={{ marginTop: "80px", marginLeft: "983px", width: "100px" }}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "20px",
+            marginRight: "5ch",
+          }}
         >
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            style={{ fontSize: "13px" }}
-            placeholder="도서명 또는 작가명을 입력하세요."
-            inputProps={{ "aria-label": "search" }}
-          />
-        </Search>
+          <StyledSelect
+            sx={{ marginTop: "80px", marginLeft: "770px", height: "30px"}}
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
+            defaultValue={"도서명"}
+          >
+            <MenuItem value={"도서명"}>도서명</MenuItem>
+            <MenuItem value={"작가명"}>작가명</MenuItem>
+          </StyledSelect>
+          <Search
+            style={{
+              marginTop: "80px",
+              marginLeft: "10px",
+              width: "100px",
+            }}
+          >
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              style={{ fontSize: "13px" }}
+              placeholder="도서명 또는 작가명을 입력하세요."
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+        </Box>
+
         <Typography
           sx={{
             fontWeight: "bold",
@@ -246,7 +290,7 @@ function MainPage() {
                   />
                   <motion.img
                     component="img"
-                    width='220px'
+                    width="220px"
                     height="200"
                     src={data.cover}
                     alt="Paella dish"
@@ -254,20 +298,10 @@ function MainPage() {
                     whileTap={{ scale: 1 }}
                   />
                   <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                      {likeStatus[data.id] ? (
-                        <FavoriteIcon
-                          style={{ color: "#EF9A9A" }}
-                          onClick={() => toggleLike(data.id)}
-                        />
-                      ) : (
-                        <FavoriteBorderIcon
-                          style={{ color: "#EF9A9A" }}
-                          onClick={() => toggleLike(data.id)}
-                        />
-                      )}
-                      <div style={{ marginTop: "-5px" }}>{data.like}</div>
-                    </IconButton>
+                    <FavoriteIcon
+                      style={{ color: "#EF9A9A" }}
+                      // onClick={() => toggleLike(data.id)}
+                    />
                     <IconButton aria-label="share">
                       <ShareIcon />
                     </IconButton>
@@ -371,7 +405,7 @@ function MainPage() {
                   />
                   <motion.img
                     component="img"
-                    width='220px'
+                    width="220px"
                     height="200"
                     src={data.image}
                     alt="Paella dish"
@@ -381,7 +415,10 @@ function MainPage() {
 
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
+                      <FavoriteIcon
+                        style={{ color: likes[data.id] ? "#EF9A9A" : "gray" }}
+                        onClick={() => toggleLike(data.id)}
+                      />
                     </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon />
@@ -435,7 +472,7 @@ function MainPage() {
 
                   <motion.img
                     component="img"
-                    width='220px'
+                    width="220px"
                     height="200"
                     src={data.image}
                     alt="Paella dish"

@@ -132,11 +132,11 @@ function Community() {
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
                             <TableRow>
                                 <TableCell >No</TableCell>
-                                <TableCell>book title</TableCell>
-                                <TableCell>impressive phrase</TableCell>
-                                <TableCell>writer</TableCell>
-                                <TableCell>date</TableCell>
-                                <TableCell>Like</TableCell>
+                                <TableCell>도서명</TableCell>
+                                <TableCell>인상깊은 구절</TableCell>
+                                <TableCell>작가</TableCell>
+                                <TableCell>등록일</TableCell>
+                                <TableCell>좋아요</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -155,7 +155,7 @@ function Community() {
                                     <TableCell style={{ width: '600px', borderRight: '1px solid #F8E8EE' }}>{row.paragraph}</TableCell>
                                     <TableCell style={{ width: '50px', borderRight: '1px solid #F8E8EE', textAlign: 'center' }}>{row.writer}</TableCell>
                                     <TableCell style={{ width: '80px', textAlign: 'center' }}>{row.date}</TableCell>
-                                    <TableCell style={{ width: '20px', textAlign: 'center', fontSize: '10px' }} >
+                                    <TableCell style={{ width: '45px', textAlign: 'center' }} >
                                         {likeStatus[row.id] ? (
                                             <FavoriteIcon style={{ color: '#EF9A9A' }} onClick={() => toggleLike(row.id)} />
                                         ) : (

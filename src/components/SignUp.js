@@ -70,7 +70,7 @@ export default function SignUp() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign up
+              회원가입
             </Typography>
             <Box
               component="form"
@@ -86,7 +86,7 @@ export default function SignUp() {
                     required
                     fullWidth
                     id="Name"
-                    label="Name"
+                    label="이름"
                     autoFocus
                   />
                 </Grid>
@@ -95,7 +95,7 @@ export default function SignUp() {
                     required
                     fullWidth
                     id="identification"
-                    label="identification"
+                    label="아이디"
                     name="identification"
                     autoComplete="family-name"
                   />
@@ -105,7 +105,7 @@ export default function SignUp() {
                     required
                     fullWidth
                     name="password"
-                    label="Password"
+                    label="비밀번호"
                     type="password"
                     id="password"
                     autoComplete="new-password"
@@ -116,7 +116,7 @@ export default function SignUp() {
                     required
                     fullWidth
                     id="reconfirm password"
-                    label="reconfirm password"
+                    label="비밀번호 재확인"
                     name="reconfirm passwordl"
                     autoComplete="reconfirm password"
                   />
@@ -136,12 +136,12 @@ export default function SignUp() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2, backgroundColor: "#F8E8EE" }}
               >
-                <Typography sx={{ color: "black" }}>Sign In</Typography>
+                <Typography sx={{ color: "black" }}>등록</Typography>
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <Link href="/SignIn" variant="body2">
-                    Already have an account? Sign in
+                    이미 계정이 있으신가요? 로그인 하러 가기
                   </Link>
                 </Grid>
               </Grid>

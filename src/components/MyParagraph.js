@@ -139,9 +139,9 @@ function MyParagraph() {
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
               <TableRow>
                 <TableCell>No</TableCell>
-                <TableCell>book title</TableCell>
-                <TableCell>impressive phrase</TableCell>
-                <TableCell>date</TableCell>
+                <TableCell>도서명</TableCell>
+                <TableCell>인상깊은 구절</TableCell>
+                <TableCell>등록일</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>

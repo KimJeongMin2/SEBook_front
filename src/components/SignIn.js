@@ -68,7 +68,7 @@ export default function SignIn() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              로그인
             </Typography>
             <Box
               component="form"
@@ -81,7 +81,7 @@ export default function SignIn() {
                 required
                 fullWidth
                 id="id"
-                label="id"
+                label="아이디를 입력하세요."
                 name="id"
                 autoComplete="id"
                 autoFocus
@@ -91,14 +91,14 @@ export default function SignIn() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="비밀번호를 입력하세요."
                 type="password"
                 id="password"
                 autoComplete="current-password"
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                label="내 정보 기억하기"
               />
               <Button
                 type="submit"
@@ -107,18 +107,18 @@ export default function SignIn() {
                 sx={{ mt: 3, mb: 2, backgroundColor: "#F8E8EE"}}
               >
                 <Typography sx={{color:"black"}}>
-                Sign In
+                로그인
                 </Typography>
               </Button>
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
-                    Forgot password?
+                    비밀번호를 잊어 버렸나요?
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                    {"계정이 없으신가요? 회원가입"}
                   </Link>
                 </Grid>
               </Grid>
