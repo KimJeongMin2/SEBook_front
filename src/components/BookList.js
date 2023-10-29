@@ -1,6 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppBar, Box, Card, CardActions, CardHeader, CardMedia, Grid, IconButton, InputBase, Pagination, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Card,
+  CardActions,
+  CardHeader,
+  CardMedia,
+  Grid,
+  IconButton,
+  InputBase,
+  Pagination,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import TabBar from "./TabBar";
 import MainAppBar from "./MainAppBar";
 import SearchIcon from "@mui/icons-material/Search";
@@ -10,6 +23,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import axios from "axios";
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -22,7 +36,7 @@ const Search = styled("div", {
   marginRight: "27ch",
   width: "35ch",
   minWidth: "32ch", // 최소 가로 길이 조절
-  height: '35px'
+  height: "35px",
 }));
 
 const SearchIconWrapper = styled("div", {
@@ -85,7 +99,6 @@ const cardData = [
     title: "앤서니 브라운 코끼리",
     author: "앤서니 브라운",
     image: "https://img.vogue.co.kr/vogue/2019/08/style_5d5cadfdadb7c.jpeg",
-
   },
   {
     id: 6,
@@ -123,41 +136,88 @@ const StyledSelect = styled(Select, {
 }));
 
 function BookList() {
-
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
+
+  const [bookList, setBookList] = useState([]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
   const [searchType, setSearchType] = useState("도서명");
 
+  const [likes, setLikes] = useState({});
+
+  useEffect(() => {
+    axios
+      .get("http://172.30.66.199:8000/book/bookListRead")
+      .then((response) => {
+        setBookList(response.data.bookList);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const sendLikeBook = (isbn13) => {
+    axios.post("http://172.30.66.099.8000/book/bookLike", {
+      isbn13: isbn13,
+      userNum: 1
+    })
+    .then((response)=>{
+      console.log(response);
+    })
+    .catch((error)=> {
+      console.log(error);
+    });
+  }
+
+  const toggleLike = (id) => {
+    setLikes({
+      ...likes,
+      [id]: !likes[id],
+    });
+  };
+
+
   return (
     <>
       <MainAppBar />
-      <Box sx={{ paddingTop: "48px", marginBottom: '10px' }}>
+      <Box sx={{ paddingTop: "48px", marginBottom: "10px" }}>
         <TabBar />
-        <div style={{ display: 'flex', marginTop: '60px' }}>
-          <div style={{
-            marginTop: '30px', marginLeft: '230px', fontSize: '22px', fontWeight: 'bold'
-          }}>
+        <div style={{ display: "flex", marginTop: "60px" }}>
+          <div
+            style={{
+              marginTop: "30px",
+              marginLeft: "230px",
+              fontSize: "22px",
+              fontWeight: "bold",
+            }}
+          >
             도서
           </div>
           <StyledSelect
-            sx={{ marginTop: "30px", marginLeft: "575px", height: "35px", fontSize: "13px" }}
+            sx={{
+              marginTop: "30px",
+              marginLeft: "575px",
+              height: "35px",
+              fontSize: "13px",
+            }}
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
             defaultValue={"도서명"}
           >
-            <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>도서명</MenuItem>
-            <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>작가명</MenuItem>
+            <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>
+              도서명
+            </MenuItem>
+            <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>
+              작가명
+            </MenuItem>
           </StyledSelect>
-          <Search style={{ marginTop: '30px', height: '35px' }}>
+          <Search style={{ marginTop: "30px", height: "35px" }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              style={{ fontSize: '13px' }}
+              style={{ fontSize: "13px" }}
               placeholder="도서명 또는 작가명을 입력하세요."
               inputProps={{ "aria-label": "search" }}
             />
@@ -167,7 +227,7 @@ function BookList() {
           <Box
             sx={{
               width: "70%",
-              height: '510px',
+              height: "510px",
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "space-around",
@@ -177,20 +237,38 @@ function BookList() {
           >
             {cardData.map((data) => (
               <Grid item xs={12} sm={3} md={0}>
-                <Card sx={{ maxWidth: 280, margin: 1 }} style={{ width: '220px', height: '220px' }}
-                  onClick={() => navigate(`/BookDetail/${data.id}`, { state: data })}
+                <Card
+                  sx={{ maxWidth: 280, margin: 1 }}
+                  style={{ width: "220px", height: "220px" }}
                 >
                   <CardHeader
                     title={data.title}
+                    action={
+                      <IconButton 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(data.id);
+                          sendLikeBook(data.id);
+                        }}
+                      >
+                        <FavoriteIcon style={{ color: likes[data.id] ? "#EF9A9A" : "gray"}} />
+                      </IconButton>
+                    }
                     subheader={data.author}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
+                    onClick={() =>
+                      navigate(`/BookDetail/${data.id}`, { state: data })
+                    }
                   />
                   <CardMedia
                     component="img"
                     height="200"
                     image={data.image}
                     alt="Paella dish"
+                    onClick={() =>
+                      navigate(`/BookDetail/${data.id}`, { state: data })
+                    }
                   />
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
@@ -210,10 +288,13 @@ function BookList() {
                 </Card>
               </Grid>
             ))}
-            <Pagination count={10} color="primary" style={{ margin: '3px 0' }} />
+            <Pagination
+              count={10}
+              color="primary"
+              style={{ margin: "3px 0" }}
+            />
           </Box>
         </Grid>
-
       </Box>
     </>
   );
