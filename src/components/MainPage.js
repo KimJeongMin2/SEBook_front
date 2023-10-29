@@ -69,8 +69,8 @@ const StyledSelect = styled(Select, {
 })(({ theme }) => ({
   width: "5ch",
   color: "inherit",
-  backgroundColor: "rgba(255, 182, 193, 0.4)", 
-  borderRadius: "50px 50px 50px 50px", 
+  backgroundColor: "rgba(255, 182, 193, 0.4)",
+  borderRadius: "50px 50px 50px 50px",
   border: "none",
   [theme.breakpoints.up("md")]: {
     width: "20ch",
@@ -229,13 +229,13 @@ function MainPage() {
           }}
         >
           <StyledSelect
-            sx={{ marginTop: "80px", marginLeft: "770px", height: "30px"}}
+            sx={{ marginTop: "80px", marginLeft: "770px", height: "35px", fontSize: "13px" }}
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
             defaultValue={"도서명"}
           >
-            <MenuItem value={"도서명"}>도서명</MenuItem>
-            <MenuItem value={"작가명"}>작가명</MenuItem>
+            <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>도서명</MenuItem>
+            <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>작가명</MenuItem>
           </StyledSelect>
           <Search
             style={{
@@ -300,7 +300,7 @@ function MainPage() {
                   <CardActions disableSpacing>
                     <FavoriteIcon
                       style={{ color: "#EF9A9A" }}
-                      // onClick={() => toggleLike(data.id)}
+                    // onClick={() => toggleLike(data.id)}
                     />
                     <IconButton aria-label="share">
                       <ShareIcon />
@@ -374,7 +374,7 @@ function MainPage() {
             fontWeight: "bold",
             marginLeft: "160px",
             fontSize: "20px",
-            marginTop: "50px",
+            marginTop: "10px",
           }}
         >
           베스트셀러 Top5!

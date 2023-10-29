@@ -100,14 +100,14 @@ function MyBookReport() {
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
                 <div style={{ display: 'flex', marginTop: '70px' }}>
-                    <div style={{ marginTop: '20px', marginLeft: '180px', fontSize: '22px', fontWeight: 'bold' }}>
+                    <div style={{ marginTop: '20px', marginLeft: '230px', fontSize: '22px', fontWeight: 'bold' }}>
                         나의 독후감
                     </div>
                 </div>
 
                 <TableContainer
                     component={Paper}
-                    style={{ display: "flex", maxWidth: "70%", margin: "20px 176px" }}
+                    style={{ display: "flex", maxWidth: "70%", margin: "20px auto" }}
                 >
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
@@ -152,7 +152,7 @@ function MyBookReport() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "0px 527px 20px" }}
+                        style={{ margin: "0px auto 20px" }}
                         color="primary"
                     />
                 </div>

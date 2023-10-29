@@ -8,6 +8,8 @@ import { styled, useTheme } from "@mui/material/styles";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -107,6 +109,18 @@ const cardData = [
       "https://image.aladin.co.kr/product/32308/43/cover500/890127437x_1.jpg",
   },
 ];
+const StyledSelect = styled(Select, {
+  shouldForwardProp: (prop) => prop !== "theme",
+})(({ theme }) => ({
+  width: "5ch",
+  color: "inherit",
+  backgroundColor: "rgba(255, 182, 193, 0.4)",
+  borderRadius: "50px 50px 50px 50px",
+  border: "none",
+  [theme.breakpoints.up("md")]: {
+    width: "20ch",
+  },
+}));
 
 function BookList() {
 
@@ -116,7 +130,7 @@ function BookList() {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
+  const [searchType, setSearchType] = useState("도서명");
 
   return (
     <>
@@ -129,7 +143,16 @@ function BookList() {
           }}>
             도서
           </div>
-          <Search style={{ marginTop: '20px' }}>
+          <StyledSelect
+            sx={{ marginTop: "30px", marginLeft: "575px", height: "35px", fontSize: "13px" }}
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
+            defaultValue={"도서명"}
+          >
+            <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>도서명</MenuItem>
+            <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>작가명</MenuItem>
+          </StyledSelect>
+          <Search style={{ marginTop: '30px', height: '35px' }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>

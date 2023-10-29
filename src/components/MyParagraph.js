@@ -133,7 +133,7 @@ function MyParagraph() {
         </div>
         <TableContainer
           component={Paper}
-          style={{ display: "flex", maxWidth: "70%", margin: "10px auto" }}
+          style={{ display: "flex", maxWidth: "70%", margin: "20px auto" }}
         >
           <Table sx={{ minWidth: 600 }} aria-label="simple table">
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
@@ -141,7 +141,9 @@ function MyParagraph() {
                 <TableCell>No</TableCell>
                 <TableCell>도서명</TableCell>
                 <TableCell>인상깊은 구절</TableCell>
+                <TableCell>작성자</TableCell>
                 <TableCell>등록일</TableCell>
+                <TableCell>좋아요</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -171,12 +173,18 @@ function MyParagraph() {
                     {row.title}
                   </TableCell>
                   <TableCell
-                    style={{ width: "600px", borderRight: "1px solid #F8E8EE" }}
+                    style={{ width: "500px", borderRight: "1px solid #F8E8EE" }}
                   >
                     {row.paragraph}
                   </TableCell>
+                  <TableCell style={{ width: "50px", textAlign: "center" }}>
+                    {row.writer}
+                  </TableCell>
                   <TableCell style={{ width: "80px", textAlign: "center" }}>
                     {row.date}
+                  </TableCell>
+                  <TableCell style={{ width: "50px", textAlign: "center" }}>
+                    {row.like}
                   </TableCell>
                   <TableCell
                     style={{
@@ -200,7 +208,7 @@ function MyParagraph() {
             onChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            style={{ margin: "10px 527px 20px" }}
+            style={{ margin: "10px auto 20px" }}
             color="primary"
           />
         </div>

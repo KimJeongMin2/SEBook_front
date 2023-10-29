@@ -20,17 +20,17 @@ import Button from '@mui/material/Button';
 
 import { useNavigate } from "react-router-dom";
 
-function createData(id, title, bookName, author, publisher, writer, date) {
-    return { id, title, bookName, author, publisher, writer, date };
+function createData(id, title, bookName, author, publisher, writer, date, like) {
+    return { id, title, bookName, author, publisher, writer, date, like };
 }
 
 const initialRows = [
-    createData(1, "Frozen yoghurt를 읽고1", "Frozen yoghurt", "김작가", "김나라출판", "김정민", "2023-03-21"),
-    createData(2, "Frozen yoghurt를 읽고2", "Frozen yoghurt", "이작가", "김나라출판", "신영옥", "2023-05-12"),
-    createData(3, "Frozen yoghurt를 읽고3", "Frozen yoghurt", "정작가", "김나라출판", "정채연", "2023-08-23"),
-    createData(4, "Frozen yoghurt를 읽고4", "Frozen yoghurt", "신작가", "김나라출판", "박글쓴", "2023-11-07"),
-    createData(5, "Frozen yoghurt를 읽고5", "Frozen yoghurt", "박작가", "김나라출판", "최글쓴", "2023-11-21"),
-    createData(6, "Frozen yoghurt를 읽고나서", "Frozen yoghurt", "최작가", "김나라출판", "이글쓴", "2023-12-24"),
+    createData(1, "Frozen yoghurt를 읽고1", "Frozen yoghurt", "김작가", "김나라출판", "김정민", "2023-03-21", 12),
+    createData(2, "Frozen yoghurt를 읽고2", "Frozen yoghurt", "이작가", "김나라출판", "신영옥", "2023-05-12", 12),
+    createData(3, "Frozen yoghurt를 읽고3", "Frozen yoghurt", "정작가", "김나라출판", "정채연", "2023-08-23", 12),
+    createData(4, "Frozen yoghurt를 읽고4", "Frozen yoghurt", "신작가", "김나라출판", "박글쓴", "2023-11-07", 12),
+    createData(5, "Frozen yoghurt를 읽고5", "Frozen yoghurt", "박작가", "김나라출판", "최글쓴", "2023-11-21", 12),
+    createData(6, "Frozen yoghurt를 읽고나서", "Frozen yoghurt", "최작가", "김나라출판", "이글쓴", "2023-12-24", 12),
 ];
 
 const Search = styled("div", {
@@ -100,7 +100,7 @@ function MyLikedBookReport() {
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
                 <div style={{ display: 'flex', marginTop: '70px' }}>
-                    <div style={{ marginTop: '20px', marginLeft: '220px', fontSize: '22px', fontWeight: 'bold' }}>
+                    <div style={{ marginTop: '20px', marginLeft: '230px', fontSize: '22px', fontWeight: 'bold' }}>
                         공감한 독후감
                     </div>
                 </div>
@@ -118,6 +118,7 @@ function MyLikedBookReport() {
                                 <TableCell style={{ width: '50px' }}>작가</TableCell>
                                 <TableCell style={{ width: '100px' }}>출판사</TableCell>
                                 <TableCell style={{ width: '90px' }}>등록일</TableCell>
+                                <TableCell style={{ width: '45px' }}>좋아요</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -137,6 +138,7 @@ function MyLikedBookReport() {
                                     <TableCell>{row.author}</TableCell>
                                     <TableCell>{row.publisher}</TableCell>
                                     <TableCell>{row.date}</TableCell>
+                                    <TableCell style={{ textAlign: 'center' }}>{row.like}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -150,7 +152,7 @@ function MyLikedBookReport() {
                         onChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "20px 573px 20px" }}
+                        style={{ margin: "20px auto 20px" }}
                         color="primary"
                     />
                 </div>

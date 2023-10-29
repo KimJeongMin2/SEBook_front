@@ -123,7 +123,7 @@ function MyLikedParagraph() {
           <div
             style={{
               marginTop: "20px",
-              marginLeft: "300px",
+              marginLeft: "270px",
               fontSize: "22px",
               fontWeight: "bold",
             }}
@@ -133,14 +133,17 @@ function MyLikedParagraph() {
         </div>
         <TableContainer
           component={Paper}
-          style={{ display: "flex", maxWidth: "60%", margin: "10px auto" }}
+          style={{ display: "flex", maxWidth: "65%", margin: "20px auto" }}
         >
-          <Table sx={{ minWidth: 600 }} aria-label="simple table">
+          <Table sx={{ minWidth: 700 }} aria-label="simple table">
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
               <TableRow>
                 <TableCell>No</TableCell>
                 <TableCell>도서명</TableCell>
                 <TableCell>인상깊은 구절</TableCell>
+                <TableCell>작가</TableCell>
+                <TableCell>등록일</TableCell>
+                <TableCell>좋아요</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -173,6 +176,21 @@ function MyLikedParagraph() {
                   >
                     {row.paragraph}
                   </TableCell>
+                  <TableCell
+                    style={{ width: "60px", borderRight: "1px solid #F8E8EE" }}
+                  >
+                    {row.writer}
+                  </TableCell>
+                  <TableCell
+                    style={{ width: "100px", borderRight: "1px solid #F8E8EE" }}
+                  >
+                    {row.date}
+                  </TableCell>
+                  <TableCell
+                    style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
+                  >
+                    {row.like}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -186,7 +204,7 @@ function MyLikedParagraph() {
             onChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            style={{ margin: "10px 527px 20px" }}
+            style={{ margin: "10px auto 20px" }}
             color="primary"
           />
         </div>

@@ -58,6 +58,7 @@ function MainAppBar() {
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <div style={{ marginLeft: '10px', fontSize: '15px' }}>홍길동</div>
             </IconButton>
           </Tooltip>
           <Menu

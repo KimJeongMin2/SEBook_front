@@ -199,10 +199,13 @@ export default function MyPage() {
                   ></PermIdentityIcon>
                   내정보
                 </Typography>
-                <div style={{ padding: '10px', marginTop: '10px', width: '330px', height: '175px', backgroundColor: '#F9F5F6' }}>
-                  <div style={{ padding: '10px 0', width: '120px', height: '115px', backgroundColor: '#F2BED1' }}>
-                    <AssignmentIndIcon style={{ fontSize: '120px' }}></AssignmentIndIcon>
-                    <div style={{ margin: '15px 25px' }}>홍길동 님</div>
+                <div style={{ display: 'flex', padding: '10px', marginTop: '10px', width: '330px', height: '175px', backgroundColor: '#F9F5F6' }}>
+                  <AssignmentIndIcon style={{ margin: 'auto 0', fontSize: '150px' }}></AssignmentIndIcon>
+                  <div style={{ margin: '20px 0' }}>
+                    <div style={{ margin: '10px' }}>이름 : 홍길동</div>
+                    <div style={{ margin: '10px' }}>아이디 : abc1234</div>
+                    <div style={{ margin: '1px 10px' }}>이메일 : </div>
+                    <div style={{ margin: '1px 10px' }}>abc1234@naver.com</div>
                   </div>
                 </div>
               </Box>

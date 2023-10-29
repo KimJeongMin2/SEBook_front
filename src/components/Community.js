@@ -13,13 +13,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
+import Select from "@mui/material/Select";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
+import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 function createData(id, title, paragraph, writer, date, like) {
     return { id, title, paragraph, writer, date, like };
@@ -74,6 +74,21 @@ const StyledInputBase = styled(InputBase, {
         },
     },
 }));
+
+const StyledSelect = styled(Select, {
+    shouldForwardProp: (prop) => prop !== "theme",
+})(({ theme }) => ({
+    width: "5ch",
+    color: "inherit",
+    backgroundColor: "rgba(255, 182, 193, 0.4)",
+    borderRadius: "50px 50px 50px 50px",
+    border: "none",
+    [theme.breakpoints.up("md")]: {
+        width: "20ch",
+    },
+}));
+
+
 function Community() {
 
     const navigate = new useNavigate();
@@ -102,7 +117,7 @@ function Community() {
             [id]: !prevStatus[id],
         }));
     };
-
+    const [searchType, setSearchType] = useState("도서명");
     return (
         <>
             <MainAppBar />
@@ -112,6 +127,15 @@ function Community() {
                     <div style={{ marginTop: '20px', fontSize: '22px', fontWeight: 'bold' }}>
                         커뮤니티
                     </div>
+                    <StyledSelect
+                        sx={{ marginTop: "20px", marginLeft: "535px", height: "35px", fontSize: "13px" }}
+                        value={searchType}
+                        onChange={(e) => setSearchType(e.target.value)}
+                        defaultValue={"도서명"}
+                    >
+                        <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>도서명</MenuItem>
+                        <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>작가명</MenuItem>
+                    </StyledSelect>
                     <Search style={{ marginTop: "20px" }}>
                         <SearchIconWrapper>
                             <SearchIcon />

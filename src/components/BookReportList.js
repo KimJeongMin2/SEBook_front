@@ -17,9 +17,9 @@ import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
-
+import Select from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
-
+import MenuItem from "@mui/material/MenuItem";
 function createData(id, title, bookName, author, publisher, writer, date) {
     return { id, title, bookName, author, publisher, writer, date };
 }
@@ -73,6 +73,18 @@ const StyledInputBase = styled(InputBase, {
         },
     },
 }));
+const StyledSelect = styled(Select, {
+    shouldForwardProp: (prop) => prop !== "theme",
+})(({ theme }) => ({
+    width: "5ch",
+    color: "inherit",
+    backgroundColor: "rgba(255, 182, 193, 0.4)",
+    borderRadius: "50px 50px 50px 50px",
+    border: "none",
+    [theme.breakpoints.up("md")]: {
+        width: "20ch",
+    },
+}));
 
 function BookReportList() {
 
@@ -92,7 +104,7 @@ function BookReportList() {
     };
 
     const displayRows = initialRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
-
+    const [searchType, setSearchType] = useState("도서명");
 
     return (
         <>
@@ -103,6 +115,15 @@ function BookReportList() {
                     <div style={{ marginTop: '20px', fontSize: '22px', fontWeight: 'bold' }}>
                         독후감
                     </div>
+                    <StyledSelect
+                        sx={{ marginTop: "20px", marginLeft: "665px", height: "35px", fontSize: "13px" }}
+                        value={searchType}
+                        onChange={(e) => setSearchType(e.target.value)}
+                        defaultValue={"도서명"}
+                    >
+                        <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>도서명</MenuItem>
+                        <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>작가명</MenuItem>
+                    </StyledSelect>
                     <Search style={{ marginTop: "20px" }}>
                         <SearchIconWrapper>
                             <SearchIcon />
