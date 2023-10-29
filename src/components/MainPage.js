@@ -210,9 +210,8 @@ function MainPage() {
 
   const sendLikeBook = (isbn13) => {
     axios.post("http://172.30.66.099.8000/book/bookLike", {
-      params:{
-        isbn13:isbn13
-      }
+      isbn13: isbn13,
+      userNum: 1
     })
     .then((response)=>{
       console.log(response);
@@ -221,8 +220,6 @@ function MainPage() {
       console.log(error);
     });
   }
-
-  
 
   const toggleLike = (id) => {
     setLikes({
