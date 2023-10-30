@@ -251,12 +251,12 @@ function BookList() {
           <Box
             sx={{
               width: "70%",
-              height: "510px",
+              height: '510px',
               display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "space-around",
+              flexWrap: 'wrap',
               backgroundColor: "#F9F5F6",
               marginTop: "30px",
+              position: 'relative'
             }}
           >
             {getPageData().map((data) => (
@@ -316,7 +316,12 @@ function BookList() {
             <Pagination
               count={Math.ceil(bookList.length / itemsPerPage)}
               color="primary"
-              style={{ margin: "3px 0" }}
+              style={{
+              margin: '-7px 0', 
+              position: 'absolute',
+              bottom: 0,
+              left: '50%',
+              transform: 'translateX(-50%)' }}
               onChange={handleChangePage}
             />
           </Box>
