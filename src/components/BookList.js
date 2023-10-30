@@ -183,7 +183,7 @@ function BookList() {
       <MainAppBar />
       <Box sx={{ paddingTop: "48px", marginBottom: "10px" }}>
         <TabBar />
-        <div style={{ display: "flex", marginTop: "60px" }}>
+        <div style={{ display: "flex", marginTop: "60px", alignItems: "center" }}>
           <div
             style={{
               marginTop: "30px",
@@ -194,10 +194,11 @@ function BookList() {
           >
             도서
           </div>
+          <div style={{ marginLeft:"auto", display:"flex"}}>
           <StyledSelect
             sx={{
               marginTop: "30px",
-              marginLeft: "575px",
+              marginRight:"10px",
               height: "35px",
               fontSize: "13px",
             }}
@@ -212,7 +213,7 @@ function BookList() {
               작가명
             </MenuItem>
           </StyledSelect>
-          <Search style={{ marginTop: "30px", height: "35px" }}>
+          <Search style={{ marginTop: "30px", height: "35px",marginLeft:"auto" }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -222,6 +223,7 @@ function BookList() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
+          </div>
         </div>
         <Grid container spacing={2} justifyContent="center">
           <Box
