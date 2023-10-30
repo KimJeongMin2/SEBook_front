@@ -97,14 +97,14 @@ function BookDetail() {
                         </div>
                         <div style={{ display: 'flex', margin: '5px', justifyContent: 'space-between' }}>
                             <div style={{ fontSize: '18px' }}>부제</div>
-                            <div>국내도서</div>
+                            <div>{location.state.depth1}</div>
                         </div>
                         <div style={{ display: 'flex', margin: '5px', justifyContent: 'space-between' }}>
                             <div>{location.state.author} | 출판사 | 2023-01-01</div>
-                            <div>정가 : 12,000원</div>
+                            <div>{location.state.priceStandard} 원</div>
                         </div>
                         <div style={{ marginTop: '20px', padding: '10px', width: '96%', height: '180px', backgroundColor: '#F8E8EE' }}>
-                            도서 설명
+                            <div>{location.state.description}</div>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <div style={{ margin: '20px 10px 0 0', fontSize: '12px', color: '#cccccc' }}>도서 DB 제공 : 알라딘 인터넷 서점(www.aladin.co.kr)</div>
