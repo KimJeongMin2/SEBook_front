@@ -170,7 +170,7 @@ function BookList() {
   }, []);
 
   const sendLikeBook = (isbn13) => {
-    axios.post("http://172.30.66.099.8000/book/bookLike", {
+    axios.post("http://172.30.66.199:8000/book/bookLike", {
       isbn13: isbn13,
       userNum: 1
     })
@@ -271,18 +271,18 @@ function BookList() {
                       <IconButton
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleLike(data.id);
-                          sendLikeBook(data.id);
+                          toggleLike(data.isbn13);
+                          sendLikeBook(data.isbn13);
                         }}
                       >
-                        <FavoriteIcon style={{ color: likes[data.id] ? "#EF9A9A" : "gray" }} />
+                        <FavoriteIcon style={{ color: likes[data.isbn13] ? "#EF9A9A" : "gray" }} />
                       </IconButton>
                     }
                     subheader={data.author}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                     onClick={() =>
-                      navigate(`/BookDetail/${data.id}`, { state: data })
+                      navigate(`/BookDetail/${data.isbn13}`, { state: data })
                     }
                   />
                   <CardMedia
@@ -291,7 +291,7 @@ function BookList() {
                     image={data.cover}
                     alt="Paella dish"
                     onClick={() =>
-                      navigate(`/BookDetail/${data.id}`, { state: data })
+                      navigate(`/BookDetail/${data.isbn13}`, { state: data })
                     }
                   />
                   <CardActions disableSpacing>
