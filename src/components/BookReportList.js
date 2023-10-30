@@ -86,16 +86,6 @@ const initialRows = [
     "2023-03-21",
     10
   ),
-  createData(
-    6,
-    "Frozen yoghurt를 읽고나서",
-    "Frozen yoghurt",
-    "김작가",
-    "김나라출판",
-    "정채연",
-    "2023-03-21",
-    10
-  ),
 ];
 
 const Search = styled("div", {
@@ -247,7 +237,7 @@ function BookReportList() {
                 <TableCell style={{ width: "50px" }}>작가</TableCell>
                 <TableCell style={{ width: "100px" }}>출판사</TableCell>
                 <TableCell style={{ width: "50px" }}>작가</TableCell>
-                <TableCell style={{ width: "50px" }}>등록일</TableCell>
+                <TableCell style={{ width: "90px" }}>등록일</TableCell>
                 <TableCell style={{ width: "50px" }}>좋아요</TableCell>
               </TableRow>
             </TableHead>
@@ -305,7 +295,7 @@ function BookReportList() {
             onChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            style={{ margin: "0 auto" }}
+            style={{ margin: "-10px auto" }}
             color="primary"
           />
           <Stack spacing={2} direction="row">
@@ -316,6 +306,7 @@ function BookReportList() {
                 height: "30px",
                 backgroundColor: "#EF9A9A",
                 color: "#ffffff",
+                marginTop: '-10px'
               }}
               onClick={() => {
                 navigate("/BookReportRegist");
