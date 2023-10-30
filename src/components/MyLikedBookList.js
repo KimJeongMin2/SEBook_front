@@ -122,6 +122,14 @@ function MyLikedBookList() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
+  const totalData = readLikeBook.length;
+  const totalPages = Math.ceil(totalData / itemsPerPage);
+
+  const handleChangePage = (event, value) => {
+    setCurrentPage(value);
+  };
+
+
   useEffect(() => {
     axios
       .get("http://172.30.66.199:8000/book/likeBookListRead",{
@@ -160,10 +168,10 @@ function MyLikedBookList() {
               width: "70%",
               height: '510px',
               display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "space-around",
+              flexWrap: 'wrap',
               backgroundColor: "#F9F5F6",
               marginTop: "30px",
+              position: 'relative'
             }}
           >
             {getPageData().map((data) => (
@@ -201,7 +209,16 @@ function MyLikedBookList() {
                 </Card>
               </Grid>
             ))}
-            <Pagination count={10} color="primary" style={{ margin: '3px 0' }} />
+            <Pagination count={totalPages} color="primary" 
+            style={{ 
+                margin: '3px 0', 
+                position: 'absolute',
+                bottom: 0,
+                left: '50%',
+                transform: 'translateX(-50%)'
+            }}
+            onChange={handleChangePage}
+             />
           </Box>
         </Grid>
 
