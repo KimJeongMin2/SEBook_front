@@ -64,7 +64,6 @@ function BookDetail() {
 
     const selectLike = () => {
         setIsSelectedLike(!isSelectedLike)
-        console.log(location);
     }
 
     return (
@@ -87,7 +86,7 @@ function BookDetail() {
                 </div>
                 <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '62%', height: '350px', }}>
                     <div style={{ width: '250px', padding: '10px', height: '330px', backgroundColor: '#F8E8EE' }}>
-                        <motion.img src={location.state.cover} style={{ width: '250px', height: '330px' }}
+                        <motion.img src={location.state.image} style={{ width: '250px', height: '330px' }}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }} />
                     </div>
@@ -97,7 +96,7 @@ function BookDetail() {
                             <div>카테고리</div>
                         </div>
                         <div style={{ display: 'flex', margin: '5px', justifyContent: 'space-between' }}>
-
+                            <div style={{ fontSize: '18px' }}>부제</div>
                             <div>국내도서</div>
                         </div>
                         <div style={{ display: 'flex', margin: '5px', justifyContent: 'space-between' }}>
