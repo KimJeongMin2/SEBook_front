@@ -69,8 +69,8 @@ const StyledSelect = styled(Select, {
 })(({ theme }) => ({
   width: "5ch",
   color: "inherit",
-  backgroundColor: "rgba(255, 182, 193, 0.4)", 
-  borderRadius: "50px 50px 50px 50px", 
+  backgroundColor: "rgba(255, 182, 193, 0.4)",
+  borderRadius: "50px 50px 50px 50px",
   border: "none",
   [theme.breakpoints.up("md")]: {
     width: "20ch",
@@ -213,12 +213,12 @@ function MainPage() {
       isbn13: isbn13,
       userNum: 1
     })
-    .then((response)=>{
-      console.log(response);
-    })
-    .catch((error)=> {
-      console.log(error);
-    });
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   const toggleLike = (id) => {
@@ -238,11 +238,11 @@ function MainPage() {
             display: "flex",
             justifyContent: "flex-end",
             marginTop: "20px",
-            marginRight: "5ch",
+            marginRight: "4ch",
           }}
         >
           <StyledSelect
-             sx={{ marginTop: "80px", marginLeft: "770px", height: "35px", fontSize: "13px" }}
+            sx={{ marginTop: "80px", marginLeft: "780px", height: "35px", fontSize: "13px" }}
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
             defaultValue={"도서명"}
@@ -254,6 +254,7 @@ function MainPage() {
             style={{
               marginTop: "80px",
               marginLeft: "10px",
+              marginRight: '125px',
               width: "100px",
             }}
           >
@@ -313,7 +314,7 @@ function MainPage() {
                   <CardActions disableSpacing>
                     <FavoriteIcon
                       style={{ color: "#EF9A9A" }}
-                      // onClick={() => toggleLike(data.id)}
+                    // onClick={() => toggleLike(data.id)}
                     />
                     <IconButton aria-label="share">
                       <ShareIcon />
