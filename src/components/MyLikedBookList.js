@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppBar, Box, Card, CardActions, CardHeader, CardMedia, Grid, IconButton, InputBase, Pagination, Toolbar, Typography } from "@mui/material";
 import TabBar from "./TabBar";
@@ -8,6 +8,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import axios from "axios";
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -113,10 +114,33 @@ function MyLikedBookList() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
 
+  const [readLikeBook, setReadLikeBook] = useState([]);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  useEffect(() => {
+    axios
+      .get("http://172.30.66.199:8000/book/likeBookListRead",{
+        params: {
+          userNum:1
+        },
+      })
+      .then((response) => {
+        console.log(response.data.likeBookList);
+        setReadLikeBook(response.data.likeBookList);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const getPageData = () => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return readLikeBook.slice(start, end);
+  };
 
   return (
     <>
@@ -142,21 +166,21 @@ function MyLikedBookList() {
               marginTop: "30px",
             }}
           >
-            {cardData.map((data) => (
+            {getPageData().map((data) => (
               <Grid item xs={12} sm={3} md={0}>
                 <Card sx={{ maxWidth: 280, margin: 1 }} style={{ width: '220px', height: '220px' }}
                   onClick={() => navigate(`/BookDetail/${data.id}`, { state: data })}
                 >
                   <CardHeader
-                    title={data.title}
-                    subheader={data.author}
+                    title={readLikeBook.title}
+                    subheader={readLikeBook.author}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                   />
                   <CardMedia
                     component="img"
                     height="200"
-                    image={data.image}
+                    image={readLikeBook.cover}
                     alt="Paella dish"
                   />
                   <CardActions disableSpacing>
