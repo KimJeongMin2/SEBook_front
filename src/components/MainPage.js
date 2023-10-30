@@ -196,7 +196,7 @@ function MainPage() {
     axios
       .get("http://172.30.66.199:8000/book/recommendBook", {
         params: {
-          user_book: "시인의 계곡",
+          userNum: 1
         },
       })
       .then((response) => {
