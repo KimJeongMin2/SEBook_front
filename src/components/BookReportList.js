@@ -197,7 +197,7 @@ function BookReportList() {
           }}
         >
           <div
-            style={{ marginTop: "20px", fontSize: "22px", fontWeight: "bold" }}
+            style={{ marginTop: "35px", fontSize: "22px", fontWeight: "bold" }}
           >
             독후감
           </div>
@@ -247,7 +247,8 @@ function BookReportList() {
                 <TableCell style={{ width: "50px" }}>작가</TableCell>
                 <TableCell style={{ width: "100px" }}>출판사</TableCell>
                 <TableCell style={{ width: "50px" }}>작가</TableCell>
-                <TableCell style={{ width: "90px" }}>등록일</TableCell>
+                <TableCell style={{ width: "80px" }}>등록일</TableCell>
+                <TableCell>좋아요</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>

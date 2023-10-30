@@ -141,7 +141,7 @@ function Community() {
           }}
         >
           <div
-            style={{ marginTop: "20px", fontSize: "22px", fontWeight: "bold" }}
+            style={{ marginTop: "35px", fontSize: "22px", fontWeight: "bold" }}
           >
             커뮤니티
           </div>
@@ -199,7 +199,7 @@ function Community() {
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                 >
                   <TableCell
                     component="th"

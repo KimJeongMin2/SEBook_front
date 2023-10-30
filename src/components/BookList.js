@@ -194,7 +194,7 @@ function BookList() {
         <div style={{ display: "flex", marginTop: "60px", alignItems: "center" }}>
           <div
             style={{
-              marginTop: "30px",
+              marginTop: "35px",
               marginLeft: "230px",
               fontSize: "22px",
               fontWeight: "bold",
@@ -202,35 +202,35 @@ function BookList() {
           >
             도서
           </div>
-          <div style={{ marginLeft:"auto", display:"flex"}}>
-          <StyledSelect
-            sx={{
-              marginTop: "30px",
-              marginRight:"10px",
-              height: "35px",
-              fontSize: "13px",
-            }}
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-            defaultValue={"도서명"}
-          >
-            <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>
-              도서명
-            </MenuItem>
-            <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>
-              작가명
-            </MenuItem>
-          </StyledSelect>
-          <Search style={{ marginTop: "30px", height: "35px",marginLeft:"auto" }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              style={{ fontSize: "13px" }}
-              placeholder="도서명 또는 작가명을 입력하세요."
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+          <div style={{ marginLeft: "auto", display: "flex" }}>
+            <StyledSelect
+              sx={{
+                marginTop: "30px",
+                marginRight: "10px",
+                height: "35px",
+                fontSize: "13px",
+              }}
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+              defaultValue={"도서명"}
+            >
+              <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>
+                도서명
+              </MenuItem>
+              <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>
+                작가명
+              </MenuItem>
+            </StyledSelect>
+            <Search style={{ marginTop: "30px", height: "35px", marginLeft: "auto" }}>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                style={{ fontSize: "13px" }}
+                placeholder="도서명 또는 작가명을 입력하세요."
+                inputProps={{ "aria-label": "search" }}
+              />
+            </Search>
           </div>
         </div>
         <Grid container spacing={2} justifyContent="center">
