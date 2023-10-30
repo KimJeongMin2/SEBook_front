@@ -169,18 +169,18 @@ function MyLikedBookList() {
             {getPageData().map((data) => (
               <Grid item xs={12} sm={3} md={0}>
                 <Card sx={{ maxWidth: 280, margin: 1 }} style={{ width: '220px', height: '220px' }}
-                  onClick={() => navigate(`/BookDetail/${data.id}`, { state: data })}
+                  onClick={() => navigate(`/BookDetail/${data.isbn13}`, { state: data })}
                 >
                   <CardHeader
-                    title={readLikeBook.title}
-                    subheader={readLikeBook.author}
+                    title={data.title}
+                    subheader={data.author}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                   />
                   <CardMedia
                     component="img"
                     height="200"
-                    image={readLikeBook.cover}
+                    image={data.cover}
                     alt="Paella dish"
                   />
                   <CardActions disableSpacing>
