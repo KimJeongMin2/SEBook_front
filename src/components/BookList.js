@@ -156,10 +156,14 @@ function BookList() {
 
   const [likes, setLikes] = useState({});
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
   useEffect(() => {
     axios
       .get("http://172.30.66.199:8000/book/bookListRead")
       .then((response) => {
+        console.log(response.data.bookList);
         setBookList(response.data.bookList);
       })
       .catch((error) => console.error(error));
@@ -183,6 +187,16 @@ function BookList() {
       ...likes,
       [id]: !likes[id],
     });
+  };
+
+  const handleChangePage = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  const getPageData = () => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return bookList.slice(start, end);
   };
 
 
@@ -245,7 +259,7 @@ function BookList() {
               marginTop: "30px",
             }}
           >
-            {cardData.map((data) => (
+            {getPageData().map((data) => (
               <Grid item xs={12} sm={3} md={0}>
                 <Card
                   sx={{ maxWidth: 280, margin: 1 }}
@@ -274,7 +288,7 @@ function BookList() {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={data.image}
+                    image={data.cover}
                     alt="Paella dish"
                     onClick={() =>
                       navigate(`/BookDetail/${data.id}`, { state: data })
@@ -300,9 +314,10 @@ function BookList() {
               </Grid>
             ))}
             <Pagination
-              count={10}
+              count={Math.ceil(bookList.length / itemsPerPage)}
               color="primary"
               style={{ margin: "3px 0" }}
+              onChange={handleChangePage}
             />
           </Box>
         </Grid>

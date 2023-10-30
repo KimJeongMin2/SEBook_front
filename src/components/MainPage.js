@@ -194,7 +194,7 @@ function MainPage() {
   useEffect(() => {
     console.time();
     axios
-      .get("http://172.30.66.199:8000/test/recommendBook", {
+      .get("http://172.30.66.199:8000/book/recommendBook", {
         params: {
           user_book: "시인의 계곡",
         },
