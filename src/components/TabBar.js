@@ -5,6 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { useLocation } from 'react-router-dom';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -41,10 +42,43 @@ function a11yProps(index) {
 
 function TabBar() {
   const navigate = useNavigate();
-  const [value, setValue] = useState(); // Set an initial value for the active tab
+
+  const location = useLocation();
+  const [value, setValue] = useState(getInitialTab());
+
+  function getInitialTab() {
+    switch (location.pathname) {
+      case "/BookList":
+        return 0;
+      case "/BookReportList":
+        return 1;
+      case "/Community":
+        return 2;
+      case "/MyPage":
+        return 3;
+      default:
+        return 0;
+    }
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    switch (newValue) {
+      case 0:
+        navigate("/BookList");
+        break;
+      case 1:
+        navigate("/BookReportList");
+        break;
+      case 2:
+        navigate("/Community");
+        break;
+      case 3:
+        navigate("/MyPage");
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -65,34 +99,18 @@ function TabBar() {
       >
         <Tab
           label="도서"
-          onClick={() => {
-            setValue(0);
-            navigate("/BookList");
-          }}
           sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }}
         />
         <Tab
           label="독후감"
-          onClick={() => {
-            setValue(1);
-            navigate("/BookReportList");
-          }}
           sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }}
         />
         <Tab
           label="커뮤니티"
-          onClick={() => {
-            setValue(2);
-            navigate("/Community");
-          }}
           sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }}
         />
         <Tab
           label="마이페이지"
-          onClick={() => {
-            setValue(3);
-            navigate("/MyPage");
-          }}
           sx={{ color: "black", marginLeft: "1em", marginRight: "1em", fontSize: '16px' }}
         />
       </Tabs>
