@@ -20,17 +20,19 @@ import Button from '@mui/material/Button';
 import Select from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
-function createData(id, title, bookName, author, publisher, writer, date) {
-    return { id, title, bookName, author, publisher, writer, date };
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+function createData(id, title, bookName, author, publisher, writer, date, like) {
+    return { id, title, bookName, author, publisher, writer, date, like };
 }
 
 const initialRows = [
-    createData(1, "Frozen yoghurt를 읽고1", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(2, "Frozen yoghurt를 읽고2", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(3, "Frozen yoghurt를 읽고3", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(4, "Frozen yoghurt를 읽고4", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(5, "Frozen yoghurt를 읽고5", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(6, "Frozen yoghurt를 읽고나서", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
+    createData(1, "Frozen yoghurt를 읽고1", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21", 10),
+    createData(2, "Frozen yoghurt를 읽고2", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21", 10),
+    createData(3, "Frozen yoghurt를 읽고3", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21", 10),
+    createData(4, "Frozen yoghurt를 읽고4", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21", 10),
+    createData(5, "Frozen yoghurt를 읽고5", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21", 10),
+    createData(6, "Frozen yoghurt를 읽고나서", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21", 10),
 ];
 
 const Search = styled("div", {
@@ -106,6 +108,16 @@ function BookReportList() {
     const displayRows = initialRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
     const [searchType, setSearchType] = useState("도서명");
 
+    const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
+
+    // Function to toggle the like status for a specific row
+    const toggleLike = (id) => {
+        setLikeStatus((prevStatus) => ({
+            ...prevStatus,
+            [id]: !prevStatus[id],
+        }));
+    };
+
     return (
         <>
             <MainAppBar />
@@ -150,6 +162,7 @@ function BookReportList() {
                                 <TableCell style={{ width: '100px' }}>출판사</TableCell>
                                 <TableCell style={{ width: '50px' }}>작가</TableCell>
                                 <TableCell style={{ width: '90px' }}>등록일</TableCell>
+                                <TableCell>좋아요</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -170,6 +183,9 @@ function BookReportList() {
                                     <TableCell>{row.publisher}</TableCell>
                                     <TableCell>{row.writer}</TableCell>
                                     <TableCell>{row.date}</TableCell>
+                                    <TableCell style={{ width: '50px', textAlign: 'center' }} >
+                                        {row.like}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
