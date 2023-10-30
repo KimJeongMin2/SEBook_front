@@ -247,8 +247,6 @@ function BookReportList() {
                 <TableCell style={{ width: "50px" }}>작가</TableCell>
                 <TableCell style={{ width: "100px" }}>출판사</TableCell>
                 <TableCell style={{ width: "50px" }}>작가</TableCell>
-                <TableCell style={{ width: "80px" }}>등록일</TableCell>
-                <TableCell>좋아요</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -272,7 +270,18 @@ function BookReportList() {
                   <TableCell>{row.writer}</TableCell>
                   <TableCell>{row.date}</TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    {row.like}
+                    {likeStatus[row.id] ? (
+                      <FavoriteIcon
+                        style={{ color: "#EF9A9A" }}
+                        onClick={() => toggleLike(row.id)}
+                      />
+                    ) : (
+                      <FavoriteBorderIcon
+                        style={{ color: "#EF9A9A" }}
+                        onClick={() => toggleLike(row.id)}
+                      />
+                    )}
+                    <div style={{ marginTop: "-5px" }}>{row.like}</div>
                   </TableCell>
                 </TableRow>
               ))}
