@@ -20,6 +20,8 @@ import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 function createData(id, title, bookName, author, publisher, writer, date) {
   return { id, title, bookName, author, publisher, writer, date };
 }
@@ -32,7 +34,8 @@ const initialRows = [
     "김작가",
     "김나라출판",
     "정채연",
-    "2023-03-21"
+    "2023-03-21",
+    10
   ),
   createData(
     2,
@@ -41,7 +44,8 @@ const initialRows = [
     "김작가",
     "김나라출판",
     "정채연",
-    "2023-03-21"
+    "2023-03-21",
+    10
   ),
   createData(
     3,
@@ -50,7 +54,8 @@ const initialRows = [
     "김작가",
     "김나라출판",
     "정채연",
-    "2023-03-21"
+    "2023-03-21",
+    10
   ),
   createData(
     4,
@@ -59,7 +64,8 @@ const initialRows = [
     "김작가",
     "김나라출판",
     "정채연",
-    "2023-03-21"
+    "2023-03-21",
+    10
   ),
   createData(
     5,
@@ -68,7 +74,8 @@ const initialRows = [
     "김작가",
     "김나라출판",
     "정채연",
-    "2023-03-21"
+    "2023-03-21",
+    10
   ),
   createData(
     6,
@@ -77,7 +84,8 @@ const initialRows = [
     "김작가",
     "김나라출판",
     "정채연",
-    "2023-03-21"
+    "2023-03-21",
+    10
   ),
 ];
 
@@ -139,6 +147,7 @@ function BookReportList() {
   const [rows, setRows] = useState(initialRows);
   const [page, setPage] = useState(0); // Current page
   const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -154,6 +163,13 @@ function BookReportList() {
     (page + 1) * rowsPerPage
   );
   const [searchType, setSearchType] = useState("도서명");
+
+  const toggleLike = (id) => {
+    setLikeStatus((prevStatus) => ({
+      ...prevStatus,
+      [id]: !prevStatus[id],
+    }));
+  };
 
   return (
     <>
@@ -244,6 +260,9 @@ function BookReportList() {
                   <TableCell>{row.publisher}</TableCell>
                   <TableCell>{row.writer}</TableCell>
                   <TableCell>{row.date}</TableCell>
+                  <TableCell style={{ width: "50px", textAlign: "center" }}>
+                    {row.like}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
