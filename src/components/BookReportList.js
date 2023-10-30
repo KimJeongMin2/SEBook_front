@@ -22,8 +22,17 @@ import { useNavigate } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-function createData(id, title, bookName, author, publisher, writer, date) {
-  return { id, title, bookName, author, publisher, writer, date };
+function createData(
+  id,
+  title,
+  bookName,
+  author,
+  publisher,
+  writer,
+  date,
+  like
+) {
+  return { id, title, bookName, author, publisher, writer, date, like };
 }
 
 const initialRows = [
@@ -147,7 +156,6 @@ function BookReportList() {
   const [rows, setRows] = useState(initialRows);
   const [page, setPage] = useState(0); // Current page
   const [rowsPerPage, setRowsPerPage] = useState(6);
-  const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -164,6 +172,9 @@ function BookReportList() {
   );
   const [searchType, setSearchType] = useState("도서명");
 
+  const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
+
+  // Function to toggle the like status for a specific row
   const toggleLike = (id) => {
     setLikeStatus((prevStatus) => ({
       ...prevStatus,
@@ -223,7 +234,6 @@ function BookReportList() {
             </Search>
           </div>
         </div>
-
         <TableContainer
           component={Paper}
           style={{ display: "flex", maxWidth: "77%", margin: "20px 176px" }}

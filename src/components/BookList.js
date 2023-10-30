@@ -72,6 +72,7 @@ const cardData = [
     title: "어린왕자",
     author: "생텍쥐베리",
     image: "https://www.munhak.com/data/book/img_201807275280055_b.jpg",
+    like: 1
   },
   {
     id: 2,
@@ -79,6 +80,7 @@ const cardData = [
     author: "야코프 그림",
     image:
       "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788965671527.jpg",
+    like: 1
   },
   {
     id: 3,
@@ -86,6 +88,7 @@ const cardData = [
     author: "한스 크리스티안 안데르센",
     image:
       "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788939570504.jpg",
+    like: 1
   },
   {
     id: 4,
@@ -93,12 +96,14 @@ const cardData = [
     author: "샤를 페르",
     image:
       "https://image.aladin.co.kr/product/1634/30/cover500/8965671566_1.jpg",
+    like: 1
   },
   {
     id: 5,
     title: "앤서니 브라운 코끼리",
     author: "앤서니 브라운",
     image: "https://img.vogue.co.kr/vogue/2019/08/style_5d5cadfdadb7c.jpeg",
+    like: 1
   },
   {
     id: 6,
@@ -106,6 +111,7 @@ const cardData = [
     author: "메르",
     image:
       "https://image.aladin.co.kr/product/32289/45/cover500/k852834850_1.jpg",
+    like: 1
   },
   {
     id: 7,
@@ -113,6 +119,7 @@ const cardData = [
     author: "카이 버드",
     image:
       "https://image.aladin.co.kr/product/31892/3/cover500/k342833636_1.jpg",
+    like: 1
   },
   {
     id: 8,
@@ -120,6 +127,7 @@ const cardData = [
     author: "주언규",
     image:
       "https://image.aladin.co.kr/product/32308/43/cover500/890127437x_1.jpg",
+    like: 1
   },
 ];
 const StyledSelect = styled(Select, {
@@ -162,12 +170,12 @@ function BookList() {
       isbn13: isbn13,
       userNum: 1
     })
-    .then((response)=>{
-      console.log(response);
-    })
-    .catch((error)=> {
-      console.log(error);
-    });
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   const toggleLike = (id) => {
@@ -241,19 +249,19 @@ function BookList() {
               <Grid item xs={12} sm={3} md={0}>
                 <Card
                   sx={{ maxWidth: 280, margin: 1 }}
-                  style={{ width: "220px", height: "220px" }}
+                  style={{ width: "230px", height: "220px" }}
                 >
                   <CardHeader
                     title={data.title}
                     action={
-                      <IconButton 
+                      <IconButton
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleLike(data.id);
                           sendLikeBook(data.id);
                         }}
                       >
-                        <FavoriteIcon style={{ color: likes[data.id] ? "#EF9A9A" : "gray"}} />
+                        <FavoriteIcon style={{ color: likes[data.id] ? "#EF9A9A" : "gray" }} />
                       </IconButton>
                     }
                     subheader={data.author}
@@ -275,6 +283,7 @@ function BookList() {
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
                       <FavoriteIcon />
+                      {data.like}
                     </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon />
