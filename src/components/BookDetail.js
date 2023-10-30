@@ -64,6 +64,7 @@ function BookDetail() {
 
     const selectLike = () => {
         setIsSelectedLike(!isSelectedLike)
+        console.log(location);
     }
 
     return (
@@ -96,7 +97,7 @@ function BookDetail() {
                             <div>카테고리</div>
                         </div>
                         <div style={{ display: 'flex', margin: '5px', justifyContent: 'space-between' }}>
-                            <div style={{ fontSize: '18px' }}>부제</div>
+
                             <div>국내도서</div>
                         </div>
                         <div style={{ display: 'flex', margin: '5px', justifyContent: 'space-between' }}>
