@@ -57,7 +57,7 @@ function TabBar() {
       case "/MyPage":
         return 3;
       default:
-        return 0;
+        return 4;
     }
   }
 
