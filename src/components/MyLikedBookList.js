@@ -51,63 +51,63 @@ const StyledInputBase = styled(InputBase, {
   },
 }));
 
-const cardData = [
-  {
-    id: 1,
-    title: "어린왕자",
-    author: "생텍쥐베리",
-    image: "https://www.munhak.com/data/book/img_201807275280055_b.jpg",
-  },
-  {
-    id: 2,
-    title: "백설공주",
-    author: "야코프 그림",
-    image:
-      "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788965671527.jpg",
-  },
-  {
-    id: 3,
-    title: "인어공주",
-    author: "한스 크리스티안 안데르센",
-    image:
-      "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788939570504.jpg",
-  },
-  {
-    id: 4,
-    title: "신데렐라",
-    author: "샤를 페르",
-    image:
-      "https://image.aladin.co.kr/product/1634/30/cover500/8965671566_1.jpg",
-  },
-  {
-    id: 5,
-    title: "앤서니 브라운 코끼리",
-    author: "앤서니 브라운",
-    image: "https://img.vogue.co.kr/vogue/2019/08/style_5d5cadfdadb7c.jpeg",
+// const cardData = [
+//   {
+//     id: 1,
+//     title: "어린왕자",
+//     author: "생텍쥐베리",
+//     image: "https://www.munhak.com/data/book/img_201807275280055_b.jpg",
+//   },
+//   {
+//     id: 2,
+//     title: "백설공주",
+//     author: "야코프 그림",
+//     image:
+//       "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788965671527.jpg",
+//   },
+//   {
+//     id: 3,
+//     title: "인어공주",
+//     author: "한스 크리스티안 안데르센",
+//     image:
+//       "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788939570504.jpg",
+//   },
+//   {
+//     id: 4,
+//     title: "신데렐라",
+//     author: "샤를 페르",
+//     image:
+//       "https://image.aladin.co.kr/product/1634/30/cover500/8965671566_1.jpg",
+//   },
+//   {
+//     id: 5,
+//     title: "앤서니 브라운 코끼리",
+//     author: "앤서니 브라운",
+//     image: "https://img.vogue.co.kr/vogue/2019/08/style_5d5cadfdadb7c.jpeg",
 
-  },
-  {
-    id: 6,
-    title: "1%를 읽는 힘",
-    author: "메르",
-    image:
-      "https://image.aladin.co.kr/product/32289/45/cover500/k852834850_1.jpg",
-  },
-  {
-    id: 7,
-    title: "아메리칸 프로메테우스",
-    author: "카이 버드",
-    image:
-      "https://image.aladin.co.kr/product/31892/3/cover500/k342833636_1.jpg",
-  },
-  {
-    id: 8,
-    title: "슈퍼노멀",
-    author: "주언규",
-    image:
-      "https://image.aladin.co.kr/product/32308/43/cover500/890127437x_1.jpg",
-  },
-];
+//   },
+//   {
+//     id: 6,
+//     title: "1%를 읽는 힘",
+//     author: "메르",
+//     image:
+//       "https://image.aladin.co.kr/product/32289/45/cover500/k852834850_1.jpg",
+//   },
+//   {
+//     id: 7,
+//     title: "아메리칸 프로메테우스",
+//     author: "카이 버드",
+//     image:
+//       "https://image.aladin.co.kr/product/31892/3/cover500/k342833636_1.jpg",
+//   },
+//   {
+//     id: 8,
+//     title: "슈퍼노멀",
+//     author: "주언규",
+//     image:
+//       "https://image.aladin.co.kr/product/32308/43/cover500/890127437x_1.jpg",
+//   },
+// ];
 
 function MyLikedBookList() {
 
