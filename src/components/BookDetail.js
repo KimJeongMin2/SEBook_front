@@ -86,7 +86,7 @@ function BookDetail() {
                 </div>
                 <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '62%', height: '350px', }}>
                     <div style={{ width: '250px', padding: '10px', height: '330px', backgroundColor: '#F8E8EE' }}>
-                        <motion.img src={location.state.image} style={{ width: '250px', height: '330px' }}
+                        <motion.img src={location.state.cover} style={{ width: '250px', height: '330px' }}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }} />
                     </div>
@@ -100,7 +100,7 @@ function BookDetail() {
                             <div>{location.state.depth1}</div>
                         </div>
                         <div style={{ display: 'flex', margin: '5px', justifyContent: 'space-between' }}>
-                            <div>{location.state.author} | 출판사 | 2023-01-01</div>
+                            <div>{location.state.author} | 출판사 | {location.state.pubDate}</div>
                             <div>{location.state.priceStandard} 원</div>
                         </div>
                         <div style={{ marginTop: '20px', padding: '10px', width: '96%', height: '180px', backgroundColor: '#F8E8EE' }}>

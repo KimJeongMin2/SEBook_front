@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "@mui/material/Link";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,6 +7,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
+import axios from "axios";
+
 import {
   Box,
   Card,
@@ -21,10 +23,10 @@ import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import MoodIcon from '@mui/icons-material/Mood';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import MoodIcon from "@mui/icons-material/Mood";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 // Generate Order Data
 function createData(id, title) {
   return { id, title };
@@ -87,6 +89,22 @@ function preventDefault(event) {
 
 export default function MyPage() {
   const navigate = useNavigate();
+
+  const [readLikeBook, setReadLikeBook] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://172.30.66.199:8000/book/likeBookListRead", {
+        params: {
+          userNum: 1,
+        },
+      })
+      .then((response) => {
+        console.log(response.data.likeBookList);
+        setReadLikeBook(response.data.likeBookList);
+      })
+      .catch((error) => console.error(error));
+  }, []);
   return (
     <React.Fragment>
       <MainAppBar />
@@ -103,7 +121,7 @@ export default function MyPage() {
         >
           마이페이지
         </div>
-        <div style={{ width: '1200px', margin: '0 auto' }}>
+        <div style={{ width: "1200px", margin: "0 auto" }}>
           <Box
             sx={{
               mt: "3rem",
@@ -112,12 +130,28 @@ export default function MyPage() {
             }}
           >
             <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
                 <Typography>
-                  <BookIcon style={{ color: "#F2BED1", marginBottom: '-7px', marginRight: '2px' }}></BookIcon>
+                  <BookIcon
+                    style={{
+                      color: "#F2BED1",
+                      marginBottom: "-7px",
+                      marginRight: "2px",
+                    }}
+                  ></BookIcon>
                   나의 독후감
                   <AddIcon
-                    style={{ marginLeft: "220px", color: "#F2BED1", marginBottom: '-5px' }}
+                    style={{
+                      marginLeft: "220px",
+                      color: "#F2BED1",
+                      marginBottom: "-5px",
+                    }}
                     onClick={() => {
                       navigate("/MyBookReport");
                     }}
@@ -127,7 +161,11 @@ export default function MyPage() {
                 <Link color="primary" href="#" onClick={preventDefault}></Link>
                 <Table
                   size="small"
-                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6", width: '350px' }}
+                  sx={{
+                    marginTop: "10px",
+                    backgroundColor: "#F9F5F6",
+                    width: "350px",
+                  }}
                 >
                   <TableHead>
                     <TableRow>
@@ -137,9 +175,11 @@ export default function MyPage() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {bookLikeList.map((row) => (
+                    {bookLikeList.slice(0, 5).map((row) => (
                       <TableRow key={row.id}>
-                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.id}
+                        </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
                           {row.title}
                         </TableCell>
@@ -151,24 +191,35 @@ export default function MyPage() {
                   </TableBody>
                 </Table>
               </Box>
-              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Typography>
                   <VolunteerActivismIcon
-                    style={{ color: "#F2BED1", marginBottom: '-5px', marginRight: '2px' }}
+                    style={{
+                      color: "#F2BED1",
+                      marginBottom: "-5px",
+                      marginRight: "2px",
+                    }}
                   ></VolunteerActivismIcon>
                   나의 인상 깊은 구절
                   <AddIcon
-                    style={{ marginLeft: "165px", color: "#F2BED1", marginBottom: '-5px' }}
+                    style={{
+                      marginLeft: "165px",
+                      color: "#F2BED1",
+                      marginBottom: "-5px",
+                    }}
                     onClick={() => {
                       navigate("/MyParagraph");
                     }}
                   ></AddIcon>
                 </Typography>
-                <Link
-                  color="primary"
-                  href="#"
-                  onClick={preventDefault}
-                ></Link>
+                <Link color="primary" href="#" onClick={preventDefault}></Link>
                 <Table
                   size="small"
                   sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
@@ -176,17 +227,20 @@ export default function MyPage() {
                   <TableHead>
                     <TableRow>
                       <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>Paragraph</TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>
+                        Paragraph
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {data.map((row) => (
                       <TableRow key={row.id}>
-                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.id}
+                        </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
                           {row.title}
                         </TableCell>
-
                       </TableRow>
                     ))}
                   </TableBody>
@@ -195,55 +249,92 @@ export default function MyPage() {
               <Box>
                 <Typography>
                   <PermIdentityIcon
-                    style={{ color: "#F2BED1", marginBottom: '-5px', marginRight: '2px' }}
+                    style={{
+                      color: "#F2BED1",
+                      marginBottom: "-5px",
+                      marginRight: "2px",
+                    }}
                   ></PermIdentityIcon>
                   내정보
                 </Typography>
-                <div style={{ display: 'flex', padding: '10px', marginTop: '10px', width: '330px', height: '175px', backgroundColor: '#F9F5F6' }}>
-                  <AssignmentIndIcon style={{ margin: 'auto 0', fontSize: '150px' }}></AssignmentIndIcon>
-                  <div style={{ margin: '20px 0' }}>
-                    <div style={{ margin: '10px' }}>이름 : 홍길동</div>
-                    <div style={{ margin: '10px' }}>아이디 : abc1234</div>
-                    <div style={{ margin: '1px 10px' }}>이메일 : </div>
-                    <div style={{ margin: '1px 10px' }}>abc1234@naver.com</div>
+                <div
+                  style={{
+                    display: "flex",
+                    padding: "10px",
+                    marginTop: "10px",
+                    width: "330px",
+                    height: "175px",
+                    backgroundColor: "#F9F5F6",
+                  }}
+                >
+                  <AssignmentIndIcon
+                    style={{ margin: "auto 0", fontSize: "150px" }}
+                  ></AssignmentIndIcon>
+                  <div style={{ margin: "20px 0" }}>
+                    <div style={{ margin: "10px" }}>이름 : 홍길동</div>
+                    <div style={{ margin: "10px" }}>아이디 : abc1234</div>
+                    <div style={{ margin: "1px 10px" }}>이메일 : </div>
+                    <div style={{ margin: "1px 10px" }}>abc1234@naver.com</div>
                   </div>
                 </div>
               </Box>
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "space-around", mt: "1rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-around",
+                mt: "1rem",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Typography>
                   <ThumbUpAltIcon
-                    style={{ color: "#F2BED1", marginBottom: '-6px', marginRight: '2px' }}
+                    style={{
+                      color: "#F2BED1",
+                      marginBottom: "-6px",
+                      marginRight: "2px",
+                    }}
                   ></ThumbUpAltIcon>
                   좋아요 누른 독후감
                   <AddIcon
-                    style={{ marginLeft: "165px", color: "#F2BED1", marginBottom: '-5px' }}
+                    style={{
+                      marginLeft: "165px",
+                      color: "#F2BED1",
+                      marginBottom: "-5px",
+                    }}
                     onClick={() => {
                       navigate("/MyLikedBookReport");
                     }}
                   ></AddIcon>
                 </Typography>
-                <Link
-                  color="primary"
-                  href="#"
-                  onClick={preventDefault}
-                ></Link>
+                <Link color="primary" href="#" onClick={preventDefault}></Link>
                 <Table
                   size="small"
+                  style={{ width: '400px', height: '200px' }}
                   sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
                 >
                   <TableHead>
                     <TableRow>
                       <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>BookReport Title</TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>
+                        BookReport Title
+                      </TableCell>
                       <TableCell style={{ fontSize: "13px" }}>author</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {bookLikeList.map((row) => (
                       <TableRow key={row.id}>
-                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.id}
+                        </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
                           {row.title}
                         </TableCell>
@@ -255,20 +346,43 @@ export default function MyPage() {
                   </TableBody>
                 </Table>
               </Box>
-              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Typography>
-                  <MoodIcon style={{ color: "#F2BED1", marginBottom: '-7px', marginRight: '2px' }}></MoodIcon>
+                  <MoodIcon
+                    style={{
+                      color: "#F2BED1",
+                      marginBottom: "-7px",
+                      marginRight: "2px",
+                    }}
+                  ></MoodIcon>
                   좋아요 누른 도서
                   <AddIcon
-                    style={{ marginLeft: "178px", color: "#F2BED1", mt: "2rem", marginBottom: '-5px' }}
+                    style={{
+                      marginLeft: "178px",
+                      color: "#F2BED1",
+                      mt: "2rem",
+                      marginBottom: "-5px",
+                    }}
                     onClick={() => {
                       navigate("/MyLikedBookList");
                     }}
                   ></AddIcon>
-                  <Link color="primary" href="#" onClick={preventDefault}></Link>
+                  <Link
+                    color="primary"
+                    href="#"
+                    onClick={preventDefault}
+                  ></Link>
                 </Typography>
                 <Table
                   size="small"
+                  style={{ width: '400px', height: '200px' }}
                   sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
                 >
                   <TableHead>
@@ -279,9 +393,11 @@ export default function MyPage() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {bookLikeList.map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                    {readLikeBook.slice(-5).reverse().map((row, index) => (
+                      <TableRow key={row.isbn13}>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {index + 1}
+                        </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
                           {row.title}
                         </TableCell>
@@ -293,17 +409,38 @@ export default function MyPage() {
                   </TableBody>
                 </Table>
               </Box>
-              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Typography>
-                  <FavoriteIcon style={{ color: "#F2BED1", marginBottom: '-6px', marginRight: '2px' }}></FavoriteIcon>
+                  <FavoriteIcon
+                    style={{
+                      color: "#F2BED1",
+                      marginBottom: "-6px",
+                      marginRight: "2px",
+                    }}
+                  ></FavoriteIcon>
                   좋아요 누른 구절
                   <AddIcon
-                    style={{ marginLeft: "178px", color: "#F2BED1", marginBottom: '-5px' }}
+                    style={{
+                      marginLeft: "178px",
+                      color: "#F2BED1",
+                      marginBottom: "-5px",
+                    }}
                     onClick={() => {
                       navigate("/MyLikedParagraph");
                     }}
                   ></AddIcon>
-                  <Link color="primary" href="#" onClick={preventDefault}></Link>
+                  <Link
+                    color="primary"
+                    href="#"
+                    onClick={preventDefault}
+                  ></Link>
                 </Typography>
                 <Table
                   size="small"
@@ -319,7 +456,9 @@ export default function MyPage() {
                   <TableBody>
                     {bookLikeList.map((row) => (
                       <TableRow key={row.id}>
-                        <TableCell style={{ fontSize: "13px" }}>{row.id}</TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {row.id}
+                        </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
                           {row.title}
                         </TableCell>
