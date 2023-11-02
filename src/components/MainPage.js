@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useRef } from "react";
 import MainAppBar from "./MainAppBar";
 import { motion } from "framer-motion";
 import TabBar from "./TabBar";
@@ -21,8 +21,11 @@ import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-
+import Slider from "react-slick";
 import axios from "axios";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -191,35 +194,44 @@ function MainPage() {
   const [likes, setLikes] = useState({});
   const [searchType, setSearchType] = useState("도서명");
 
+
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 5,
+  };
+
   useEffect(() => {
     console.time();
     axios
-      .get("http://172.30.66.199:8000/book/recommendBook", {
+      .get("http://192.168.0.8:8000/book/recommendBook", {
         params: {
-          userNum: 1
+          userNum: 1,
         },
       })
       .then((response) => {
-        console.timeEnd();
         console.log(response.data);
-
         setRecommendBook(response.data.recommendations);
       })
       .catch((error) => console.error(error));
   }, []);
 
   const sendLikeBook = (isbn13) => {
-    axios.post("http://172.30.66.099.8000/book/bookLike", {
-      isbn13: isbn13,
-      userNum: 1
-    })
+    axios
+      .post("http://192.168.0.8.8000/book/bookLike", {
+        isbn13: isbn13,
+        userNum: 1,
+      })
       .then((response) => {
         console.log(response);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   const toggleLike = (id) => {
     setLikes({
@@ -242,19 +254,28 @@ function MainPage() {
           }}
         >
           <StyledSelect
-            sx={{ marginTop: "80px", marginLeft: "780px", height: "35px", fontSize: "13px" }}
+            sx={{
+              marginTop: "80px",
+              marginLeft: "780px",
+              height: "35px",
+              fontSize: "13px",
+            }}
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
             defaultValue={"도서명"}
           >
-            <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>도서명</MenuItem>
-            <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>작가명</MenuItem>
+            <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>
+              도서명
+            </MenuItem>
+            <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>
+              작가명
+            </MenuItem>
           </StyledSelect>
           <Search
             style={{
               marginTop: "80px",
               marginLeft: "10px",
-              marginRight: '125px',
+              marginRight: "125px",
               width: "100px",
             }}
           >
@@ -290,59 +311,63 @@ function MainPage() {
               marginTop: "30px",
             }}
           >
-            {recommendBook.map((data, index) => (
-              <Grid>
-                <Card
-                  sx={{ maxWidth: 280, margin: 1 }}
-                  style={{ width: "220px" }}
-                >
-                  <CardHeader
-                    title={data.title}
-                    subheader={data.author}
-                    titleTypographyProps={{ variant: "body1" }}
-                    subheaderTypographyProps={{ variant: "body2" }}
-                  />
-                  <motion.img
-                    component="img"
-                    width="220px"
-                    height="200"
-                    src={data.cover}
-                    alt="Paella dish"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 1 }}
-                  />
-                  <CardActions disableSpacing>
-                    <FavoriteIcon
-                      style={{ color: "#EF9A9A" }}
-                    // onClick={() => toggleLike(data.id)}
-                    />
-                    <IconButton aria-label="share">
-                      <ShareIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-expanded={expandedId === index}
-                      aria-label="show more"
-                      onClick={() => handleExpandClick(index)}
+            <Slider {...settings}>
+              {recommendBook.map((data, index) => (
+                <Box width={280}>
+                  <Grid>
+                    <Card
+                      sx={{ maxWidth: 280, margin: 1 }}
+                      style={{ width: "220px" }}
                     >
-                      <ExpandMoreIcon />
-                    </IconButton>
-                  </CardActions>
-                  {expandedId === index && (
-                    <>
-                      {data.description && (
+                      <CardHeader
+                        title={data.title}
+                        subheader={data.author}
+                        titleTypographyProps={{ variant: "body1" }}
+                        subheaderTypographyProps={{ variant: "body2" }}
+                      />
+                      <motion.img
+                        component="img"
+                        width="220px"
+                        height="200"
+                        src={data.cover}
+                        alt="Paella dish"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 1 }}
+                      />
+                      <CardActions disableSpacing>
+                        <FavoriteIcon
+                          style={{ color: "#EF9A9A" }}
+                          // onClick={() => toggleLike(data.id)}
+                        />
+                        <IconButton aria-label="share">
+                          <ShareIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-expanded={expandedId === index}
+                          aria-label="show more"
+                          onClick={() => handleExpandClick(index)}
+                        >
+                          <ExpandMoreIcon />
+                        </IconButton>
+                      </CardActions>
+                      {expandedId === index && (
                         <>
-                          {
-                            <Collapse in timeout="auto" unmountOnExit>
-                              {data.description}
-                            </Collapse>
-                          }
+                          {data.description && (
+                            <>
+                              {
+                                <Collapse in timeout="auto" unmountOnExit>
+                                  {data.description}
+                                </Collapse>
+                              }
+                            </>
+                          )}
                         </>
                       )}
-                    </>
-                  )}
-                </Card>
-              </Grid>
-            ))}
+                    </Card>
+                  </Grid>
+                </Box>
+              ))}
+              </Slider>
           </Box>
         </Grid>
         {/* <CardContent>
