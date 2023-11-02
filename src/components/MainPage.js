@@ -207,7 +207,7 @@ function MainPage() {
   useEffect(() => {
     console.time();
     axios
-      .get("http://192.168.0.8:8000/book/recommendBook", {
+      .get("http://172.30.66.199:8000/book/recommendBook", {
         params: {
           userNum: 1,
         },
@@ -221,7 +221,7 @@ function MainPage() {
 
   const sendLikeBook = (isbn13) => {
     axios
-      .post("http://192.168.0.8.8000/book/bookLike", {
+      .post("http://172.30.66.199.8000/book/bookLike", {
         isbn13: isbn13,
         userNum: 1,
       })
@@ -311,7 +311,6 @@ function MainPage() {
               marginTop: "30px",
             }}
           >
-            <Slider {...settings}>
               {recommendBook.map((data, index) => (
                 <Box width={280}>
                   <Grid>
@@ -367,7 +366,6 @@ function MainPage() {
                   </Grid>
                 </Box>
               ))}
-              </Slider>
           </Box>
         </Grid>
         {/* <CardContent>
