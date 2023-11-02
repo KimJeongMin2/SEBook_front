@@ -275,11 +275,10 @@ export default function MyPage() {
                   <AssignmentIndIcon
                     style={{ margin: "auto 0", fontSize: "150px" }}
                   ></AssignmentIndIcon>
-                  <div style={{ margin: "20px 0" }}>
+                  <div style={{ margin: "30px 0" }}>
                     <div style={{ margin: "10px" }}>이름 : 홍길동</div>
+                    <div style={{ margin: "10px" }}>닉네임 : 동길홍</div>
                     <div style={{ margin: "10px" }}>아이디 : abc1234</div>
-                    <div style={{ margin: "1px 10px" }}>이메일 : </div>
-                    <div style={{ margin: "1px 10px" }}>abc1234@naver.com</div>
                   </div>
                 </div>
               </Box>
