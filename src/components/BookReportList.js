@@ -22,6 +22,8 @@ import { useNavigate } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import "../bookReportList.css";
+
 function createData(
   id,
   title,
@@ -244,6 +246,7 @@ function BookReportList() {
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
               {displayRows.map((row) => (
                 <TableRow
+                  className="bookReportTable"
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   onClick={() =>
