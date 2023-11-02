@@ -93,7 +93,7 @@ function BookDetail() {
                     <div style={{ margin: '0 0px 0 20px', width: '620px' }}>
                         <div style={{ display: 'flex', margin: '5px', justifyContent: 'space-between' }}>
                             <div style={{ fontSize: '22px' }}>{location.state.title}</div>
-                            <div>카테고리</div>
+                            <div>{location.state.categoryName}</div>
                         </div>
                         <div style={{ display: 'flex', margin: '5px', justifyContent: 'space-between' }}>
                             <div style={{ fontSize: '18px' }}>부제</div>
