@@ -87,6 +87,11 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
+const truncate = (str, n) => {
+  return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+};
+
+
 export default function MyPage() {
   const navigate = useNavigate();
 
@@ -181,10 +186,10 @@ export default function MyPage() {
                           {row.id}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.title}
+                          {truncate(row.title, 10)}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.author}
+                          {truncate(row.author, 10)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -239,7 +244,7 @@ export default function MyPage() {
                           {row.id}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.title}
+                          {truncate(row.title, 15)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -317,8 +322,8 @@ export default function MyPage() {
                 <Link color="primary" href="#" onClick={preventDefault}></Link>
                 <Table
                   size="small"
-                  style={{ width: '400px', height: '200px' }}
-                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
+                  style={{ width: '350px', height: '200px' }}
+                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6", marginLeft: '8px' }}
                 >
                   <TableHead>
                     <TableRow>
@@ -336,10 +341,10 @@ export default function MyPage() {
                           {row.id}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.title}
+                          {truncate(row.title, 10)}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.author}
+                          {truncate(row.author, 10)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -360,6 +365,7 @@ export default function MyPage() {
                       color: "#F2BED1",
                       marginBottom: "-7px",
                       marginRight: "2px",
+
                     }}
                   ></MoodIcon>
                   좋아요 누른 도서
@@ -382,7 +388,7 @@ export default function MyPage() {
                 </Typography>
                 <Table
                   size="small"
-                  style={{ width: '400px', height: '200px' }}
+                  style={{ width: '360px', height: '200px' }}
                   sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
                 >
                   <TableHead>
@@ -399,10 +405,10 @@ export default function MyPage() {
                           {index + 1}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.title}
+                          {truncate(row.title, 10)}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.author}
+                          {truncate(row.author, 10)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -460,10 +466,10 @@ export default function MyPage() {
                           {row.id}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.title}
+                          {truncate(row.title, 10)}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.author}
+                          {truncate(row.author, 10)}
                         </TableCell>
                       </TableRow>
                     ))}
