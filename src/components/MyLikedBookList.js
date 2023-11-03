@@ -153,8 +153,10 @@ function MyLikedBookList() {
 
   const sendLikeBook = (isbn13) => {
     axios.delete("http://172.30.66.199:8000/book/bookLike", {
-      isbn13: isbn13,
-      userNum: 1
+      params: {
+        isbn13: isbn13,
+        userNum: 1
+      }
     })
       .then((response) => {
         console.log(response);
