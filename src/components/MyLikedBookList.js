@@ -53,55 +53,55 @@ const StyledInputBase = styled(InputBase, {
 
 // const cardData = [
 //   {
-//     id: 1,
+//     isbn13: 1,
 //     title: "어린왕자",
 //     author: "생텍쥐베리",
 //     image: "https://www.munhak.com/data/book/img_201807275280055_b.jpg",
 //   },
 //   {
-//     id: 2,
+//     isbn13: 2,
 //     title: "백설공주",
 //     author: "야코프 그림",
 //     image:
 //       "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788965671527.jpg",
 //   },
 //   {
-//     id: 3,
+//     isbn13: 3,
 //     title: "인어공주",
 //     author: "한스 크리스티안 안데르센",
 //     image:
 //       "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788939570504.jpg",
 //   },
 //   {
-//     id: 4,
+//     isbn13: 4,
 //     title: "신데렐라",
 //     author: "샤를 페르",
 //     image:
 //       "https://image.aladin.co.kr/product/1634/30/cover500/8965671566_1.jpg",
 //   },
 //   {
-//     id: 5,
+//     isbn13: 5,
 //     title: "앤서니 브라운 코끼리",
 //     author: "앤서니 브라운",
 //     image: "https://img.vogue.co.kr/vogue/2019/08/style_5d5cadfdadb7c.jpeg",
 
 //   },
 //   {
-//     id: 6,
+//     isbn13: 6,
 //     title: "1%를 읽는 힘",
 //     author: "메르",
 //     image:
 //       "https://image.aladin.co.kr/product/32289/45/cover500/k852834850_1.jpg",
 //   },
 //   {
-//     id: 7,
+//     isbn13: 7,
 //     title: "아메리칸 프로메테우스",
 //     author: "카이 버드",
 //     image:
 //       "https://image.aladin.co.kr/product/31892/3/cover500/k342833636_1.jpg",
 //   },
 //   {
-//     id: 8,
+//     isbn13: 8,
 //     title: "슈퍼노멀",
 //     author: "주언규",
 //     image:
@@ -132,9 +132,9 @@ function MyLikedBookList() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.66.199:8000/book/likeBookListRead",{
+      .get("http://172.30.66.199:8000/book/likeBookListRead", {
         params: {
-          userNum:1
+          userNum: 1
         },
       })
       .then((response) => {
@@ -148,6 +148,28 @@ function MyLikedBookList() {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     return readLikeBook.slice(start, end);
+  };
+  const [likes, setLikes] = useState({});
+
+  const sendLikeBook = (isbn13) => {
+    axios.delete("http://172.30.66.199:8000/book/bookLike", {
+      isbn13: isbn13,
+      userNum: 1
+    })
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const toggleLike = (id) => {
+    setLikes({
+      ...likes,
+      [id]: !likes[id],
+    });
   };
 
   return (
@@ -181,9 +203,23 @@ function MyLikedBookList() {
                 >
                   <CardHeader
                     title={data.title}
+                    action={
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(data.isbn13);
+                          sendLikeBook(data.isbn13);
+                        }}
+                      >
+                        <FavoriteIcon style={{ color: likes[data.isbn13] ? "#EF9A9A" : "gray" }} />
+                      </IconButton>
+                    }
                     subheader={data.author}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
+                    onClick={() =>
+                      navigate(`/BookDetail/${data.isbn13}`, { state: data })
+                    }
                   />
                   <CardMedia
                     component="img"
@@ -209,16 +245,16 @@ function MyLikedBookList() {
                 </Card>
               </Grid>
             ))}
-            <Pagination count={totalPages} color="primary" 
-            style={{ 
-                margin: '3px 0', 
+            <Pagination count={totalPages} color="primary"
+              style={{
+                margin: '3px 0',
                 position: 'absolute',
                 bottom: 0,
                 left: '50%',
                 transform: 'translateX(-50%)'
-            }}
-            onChange={handleChangePage}
-             />
+              }}
+              onChange={handleChangePage}
+            />
           </Box>
         </Grid>
 
