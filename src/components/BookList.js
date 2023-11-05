@@ -143,6 +143,11 @@ const StyledSelect = styled(Select, {
   },
 }));
 
+const truncate = (str, n) => {
+  return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+};
+
+
 function BookList() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
@@ -173,31 +178,36 @@ function BookList() {
 
   const sendLikeBook = (isbn13) => {
     axios.post("http://192.168.219.103:8000/book/bookLike", {
-     
         isbn13: isbn13,
         userNum: 1
-   
     })
-      .then((response) => {
+    .then((response) => {
         console.log(response);
-      })
-      .catch((error) => {
+    })
+    .catch((error) => {
         console.log(error);
-      });
-  }
+    });
+}
 
-  const searchBookByAuthor = () => {
-    axios.get(`http://192.168.219.103:8000/book/searchBookByAuthor`, {
-        params: {
-            author: searchTerm
-        }
-    })
-    .then(response => {
-        console.log(response.data.author);
-        setBookList(response.data);
-    })
-    .catch(error => console.log(error));
+
+const searchBookByAuthor = () => {
+  axios.get(`http://192.168.219.103:8000/book/searchBookByAuthor`, {
+      params: {
+          author: searchTerm
+      }
+  })
+  .then(response => {
+      setBookList(response.data);
+  })
+  .catch(error => {
+      if (error.response.status === 404) {
+          alert("해당 검색어에 맞는 결과가 없습니다.");
+      } else {
+          console.log(error);
+      }
+  });
 };
+
 
   
   const toggleLike = (id) => {
@@ -301,7 +311,7 @@ function BookList() {
                   style={{ width: "230px", height: "220px" }}
                 >
                   <CardHeader
-                    title={data.title}
+                    title={truncate(data.title, 15)}
                     action={
                       <IconButton
                         onClick={(e) => {
@@ -313,7 +323,7 @@ function BookList() {
                         <FavoriteIcon style={{ color: likes[data.isbn13] ? "#EF9A9A" : "gray" }} />
                       </IconButton>
                     }
-                    subheader={data.author}
+                    subheader={truncate(data.author, 10)}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                     onClick={() =>
