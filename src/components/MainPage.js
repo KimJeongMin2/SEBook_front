@@ -13,6 +13,11 @@ import {
   IconButton,
   InputBase,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -27,17 +32,8 @@ import axios from "axios";
 import Slider from "react-slick";
 import "../slick.css";
 import "../slick-theme.css";
-import { display } from "@mui/system";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Navigation } from 'swiper';
-import "swiper/css";
-import 'swiper/css/navigation';
-import 'swiper/swiper-bundle.css';
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-
-// SwiperCore.use([Navigation]);
+import { useHistory } from "react-router-dom";
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -200,9 +196,11 @@ const bookReportData = [
   },
 ];
 
+const truncate = (str, n) => {
+  return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+};
+
 function MainPage() {
-  const theme = useTheme();
-  const swiperRef = useRef(null);
   const [expandedId, setExpandedId] = useState(-1);
   const handleExpandClick = (id) => {
     setExpandedId(expandedId === id ? -1 : id);
@@ -212,15 +210,21 @@ function MainPage() {
 
   const [likes, setLikes] = useState({});
   const [searchType, setSearchType] = useState("도서명");
-  
-  const settings = {
 
-    arrows:true,
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [bookList, setBookList] = useState([]);
+
+  const [open, setOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+
+  const settings = {
+    arrows: true,
     infinite: true,
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 5,
-    };
+  };
 
   useEffect(() => {
     axios
@@ -231,6 +235,19 @@ function MainPage() {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  const searchBookByAuthor = () => {
+    axios
+      .get(`http://192.168.219.103:8000/book/searchBookByAuthor`, {
+        params: {
+          author: searchTerm,
+        },
+      })
+      .then((response) => {
+        setBookList(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   const sendLikeBook = (isbn13) => {
     axios
@@ -246,13 +263,35 @@ function MainPage() {
       });
   };
 
-  
+  const handleSearchKeyPress = (event) => {
+    if (event.key === "Enter") {
+      if (searchType === "작가명") {
+        searchBookByAuthor();
+      } else if (searchType === "도서명") {
+        // searchBookByTitle();
+      }
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
   const toggleLike = (id) => {
     setLikes({
       ...likes,
       [id]: !likes[id],
     });
+  };
+
+  const handleOpen = (book) => {
+    setSelectedBook(book);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setSelectedBook(null);
+    setOpen(false);
   };
 
   return (
@@ -301,6 +340,9 @@ function MainPage() {
               style={{ fontSize: "13px" }}
               placeholder="도서명 또는 작가명을 입력하세요."
               inputProps={{ "aria-label": "search" }}
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onKeyDown={handleSearchKeyPress}
             />
           </Search>
         </Box>
@@ -326,62 +368,61 @@ function MainPage() {
           >
             <Slider {...settings}>
               {recommendBook.map((data, index) => (
-                <SwiperSlide key={index}>
-                    <Grid>
-                      <Card
-                        sx={{ maxWidth: 280, margin: 1 }}
-                        style={{ width: "220px" }}
-                      >
-                        <CardHeader
-                          title={data.title}
-                          subheader={data.author}
-                          titleTypographyProps={{ variant: "body1" }}
-                          subheaderTypographyProps={{ variant: "body2" }}
-                        />
-                        <motion.img
-                          component="img"
-                          width="220px"
-                          height="200"
-                          src={data.cover}
-                          alt="Paella dish"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 1 }}
-                        />
-                        <CardActions disableSpacing>
-                          <FavoriteIcon
-                            style={{ color: "#EF9A9A" }}
-                            // onClick={() => toggleLike(data.id)}
-                          />
-                          <IconButton aria-label="share">
-                            <ShareIcon />
-                          </IconButton>
-                          <IconButton
-                            aria-expanded={expandedId === index}
-                            aria-label="show more"
-                            onClick={() => handleExpandClick(index)}
-                          >
-                            <ExpandMoreIcon />
-                          </IconButton>
-                        </CardActions>
-                        {expandedId === index && (
-                          <>
-                            {data.description && (
-                              <>
-                                {
-                                  <Collapse in timeout="auto" unmountOnExit>
-                                    {data.description}
-                                  </Collapse>
-                                }
-                              </>
-                            )}
-                          </>
-                        )}
-                      </Card>
-                    </Grid>
-                </SwiperSlide>
+                <Grid onClick={() => handleOpen(data)}>
+                  <Card
+                    sx={{ maxWidth: 280, margin: 1 }}
+                    style={{ width: "220px" }}
+                  >
+                    <CardHeader
+                      title={truncate(data.title, 15)}
+                      subheader={truncate(data.author, 10)}
+                      titleTypographyProps={{ variant: "body1" }}
+                      subheaderTypographyProps={{ variant: "body2" }}
+                    />
+                    <motion.img
+                      component="img"
+                      width="220px"
+                      height="200"
+                      src={data.cover}
+                      alt="Paella dish"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 1 }}
+                    />
+                    <CardActions disableSpacing>
+                      <FavoriteIcon
+                        style={{
+                          color: likes[data.isbn13] ? "#EF9A9A" : "gray",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(data.isbn13);
+                          sendLikeBook(data.isbn13);
+                        }}
+                      />
+                      <IconButton aria-label="share">
+                        <ShareIcon />
+                      </IconButton>
+                    </CardActions>
+                  </Card>
+                </Grid>
               ))}
             </Slider>
           </Box>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>{"도서 정보"}</DialogTitle>
+            <DialogContent>
+              {selectedBook ? (
+                <>
+                  <div>{selectedBook.title}</div>
+                  <div>{selectedBook.author}</div>
+                  <div>{selectedBook.description}</div>
+                </>
+              ) : null}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>닫기</Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
         <Typography
           sx={{
@@ -412,8 +453,8 @@ function MainPage() {
                   style={{ width: "220px" }}
                 >
                   <CardHeader
-                    title={data.title}
-                    subheader={data.author}
+                    title={truncate(data.title, 15)}
+                    subheader={truncate(data.author, 10)}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                   />
