@@ -159,6 +159,8 @@ function BookList() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   useEffect(() => {
     axios
       .get("http://192.168.219.103:8000/book/bookListRead")
@@ -184,6 +186,20 @@ function BookList() {
       });
   }
 
+  const searchBookByAuthor = () => {
+    axios.get(`http://192.168.219.103:8000/book/searchBookByAuthor`, {
+        params: {
+            author: searchTerm
+        }
+    })
+    .then(response => {
+        console.log(response.data.author);
+        setBookList(response.data);
+    })
+    .catch(error => console.log(error));
+};
+
+  
   const toggleLike = (id) => {
     setLikes({
       ...likes,
@@ -201,6 +217,20 @@ function BookList() {
     return bookList.slice(start, end);
   };
 
+  const handleSearchKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      if (searchType === '작가명') {
+        searchBookByAuthor();
+      } else if (searchType === '도서명') {
+        // searchBookByTitle();
+      }
+    }
+  };
+  
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  
 
   return (
     <>
@@ -245,6 +275,9 @@ function BookList() {
                 style={{ fontSize: "13px" }}
                 placeholder="도서명 또는 작가명을 입력하세요."
                 inputProps={{ "aria-label": "search" }}
+                value={searchTerm}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyPress}
               />
             </Search>
           </div>
