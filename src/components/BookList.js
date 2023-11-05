@@ -161,7 +161,7 @@ function BookList() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.66.199:8000/book/bookListRead")
+      .get("http://192.168.219.103:8000/book/bookListRead")
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
@@ -170,9 +170,11 @@ function BookList() {
   }, []);
 
   const sendLikeBook = (isbn13) => {
-    axios.post("http://172.30.66.199:8000/book/bookLike", {
-      isbn13: isbn13,
-      userNum: 1
+    axios.post("http://192.168.219.103:8000/book/bookLike", {
+     
+        isbn13: isbn13,
+        userNum: 1
+   
     })
       .then((response) => {
         console.log(response);
