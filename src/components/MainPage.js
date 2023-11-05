@@ -26,8 +26,6 @@ import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { Carousel } from "react-responsive-carousel";
-// import "react-responsive-carousel/lib/styles/carousel.min.css";
 import axios from "axios";
 import Slider from "react-slick";
 import "../slick.css";
@@ -432,7 +430,7 @@ function MainPage() {
             marginTop: "10px",
           }}
         >
-          베스트셀러 Top5!
+          좋아요 많이 받은 도서 Top5!
         </Typography>
         <Grid container spacing={2} justifyContent="center">
           <Box
