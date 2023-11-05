@@ -118,7 +118,13 @@ function BookDetail() {
                                 <Button
                                     variant="contained"
                                     style={{ marginTop: '10px', marginRight: '5px', width: '120px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff' }}
-                                    onClick={() => { navigate('/BookReportRegist') }}
+                                    onClick={() => { navigate('/BookReportRegist', {
+                                        state:{
+                                            book:location.state.title,
+                                            author:location.state.author,
+                                            publisher:location.state.publisher
+                                        }
+                                    }) }}
 
                                 >독후감 작성</Button>
                             </Stack>
