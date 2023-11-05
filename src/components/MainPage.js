@@ -413,7 +413,7 @@ function MainPage() {
                 <>
                   <div>{selectedBook.title}</div>
                   <div>{selectedBook.author}</div>
-                  <div>{selectedBook.description}</div>
+                  <div>{selectedBook.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>')}</div>
                 </>
               ) : null}
             </DialogContent>
