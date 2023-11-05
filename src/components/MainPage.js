@@ -21,11 +21,23 @@ import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Slider from "react-slick";
+import { Carousel } from "react-responsive-carousel";
+// import "react-responsive-carousel/lib/styles/carousel.min.css";
 import axios from "axios";
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import Slider from "react-slick";
+import "../slick.css";
+import "../slick-theme.css";
+import { display } from "@mui/system";
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Navigation } from 'swiper';
+import "swiper/css";
+import 'swiper/css/navigation';
+import 'swiper/swiper-bundle.css';
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+
+// SwiperCore.use([Navigation]);
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -80,6 +92,12 @@ const StyledSelect = styled(Select, {
   },
 }));
 
+// const mySwiper = new Swiper('.swiper-container', {
+//   navigation: {
+//     nextEl: '.swiper-button-next',
+//     prevEl: '.swiper-button-prev',
+//   },
+// });
 const cardData = [
   {
     title: "어린왕자",
@@ -184,6 +202,7 @@ const bookReportData = [
 
 function MainPage() {
   const theme = useTheme();
+  const swiperRef = useRef(null);
   const [expandedId, setExpandedId] = useState(-1);
   const handleExpandClick = (id) => {
     setExpandedId(expandedId === id ? -1 : id);
@@ -193,25 +212,19 @@ function MainPage() {
 
   const [likes, setLikes] = useState({});
   const [searchType, setSearchType] = useState("도서명");
-
-
-
+  
   const settings = {
-    dots: false,
+
+    arrows:true,
     infinite: true,
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 5,
-  };
+    };
 
   useEffect(() => {
-    console.time();
     axios
-      .get("http://172.30.66.199:8000/book/recommendBook", {
-        params: {
-          userNum: 1,
-        },
-      })
+      .get("http://192.168.219.103:8000/book/recommendBook/1")
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -289,7 +302,6 @@ function MainPage() {
             />
           </Search>
         </Box>
-
         <Typography
           sx={{
             fontWeight: "bold",
@@ -304,108 +316,71 @@ function MainPage() {
           <Box
             sx={{
               width: "80%",
-              display: "flex",
               flexWrap: "wrap",
               justifyContent: "space-around",
               backgroundColor: "#F9F5F6",
               marginTop: "30px",
             }}
           >
+            <Slider {...settings}>
               {recommendBook.map((data, index) => (
-                <Box width={280}>
-                  <Grid>
-                    <Card
-                      sx={{ maxWidth: 280, margin: 1 }}
-                      style={{ width: "220px" }}
-                    >
-                      <CardHeader
-                        title={data.title}
-                        subheader={data.author}
-                        titleTypographyProps={{ variant: "body1" }}
-                        subheaderTypographyProps={{ variant: "body2" }}
-                      />
-                      <motion.img
-                        component="img"
-                        width="220px"
-                        height="200"
-                        src={data.cover}
-                        alt="Paella dish"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 1 }}
-                      />
-                      <CardActions disableSpacing>
-                        <FavoriteIcon
-                          style={{ color: "#EF9A9A" }}
-                          // onClick={() => toggleLike(data.id)}
+                <SwiperSlide key={index}>
+                    <Grid>
+                      <Card
+                        sx={{ maxWidth: 280, margin: 1 }}
+                        style={{ width: "220px" }}
+                      >
+                        <CardHeader
+                          title={data.title}
+                          subheader={data.author}
+                          titleTypographyProps={{ variant: "body1" }}
+                          subheaderTypographyProps={{ variant: "body2" }}
                         />
-                        <IconButton aria-label="share">
-                          <ShareIcon />
-                        </IconButton>
-                        <IconButton
-                          aria-expanded={expandedId === index}
-                          aria-label="show more"
-                          onClick={() => handleExpandClick(index)}
-                        >
-                          <ExpandMoreIcon />
-                        </IconButton>
-                      </CardActions>
-                      {expandedId === index && (
-                        <>
-                          {data.description && (
-                            <>
-                              {
-                                <Collapse in timeout="auto" unmountOnExit>
-                                  {data.description}
-                                </Collapse>
-                              }
-                            </>
-                          )}
-                        </>
-                      )}
-                    </Card>
-                  </Grid>
-                </Box>
+                        <motion.img
+                          component="img"
+                          width="220px"
+                          height="200"
+                          src={data.cover}
+                          alt="Paella dish"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 1 }}
+                        />
+                        <CardActions disableSpacing>
+                          <FavoriteIcon
+                            style={{ color: "#EF9A9A" }}
+                            // onClick={() => toggleLike(data.id)}
+                          />
+                          <IconButton aria-label="share">
+                            <ShareIcon />
+                          </IconButton>
+                          <IconButton
+                            aria-expanded={expandedId === index}
+                            aria-label="show more"
+                            onClick={() => handleExpandClick(index)}
+                          >
+                            <ExpandMoreIcon />
+                          </IconButton>
+                        </CardActions>
+                        {expandedId === index && (
+                          <>
+                            {data.description && (
+                              <>
+                                {
+                                  <Collapse in timeout="auto" unmountOnExit>
+                                    {data.description}
+                                  </Collapse>
+                                }
+                              </>
+                            )}
+                          </>
+                        )}
+                      </Card>
+                    </Grid>
+                </SwiperSlide>
               ))}
+            </Slider>
           </Box>
         </Grid>
-        {/* <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              도서명
-            </Typography>
-          </CardContent> */}
-
-        {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography paragraph>Method:</Typography>
-              <Typography paragraph>
-                Heat 1/2 cup of the broth in a pot until simmering, add saffron
-                and set aside for 10 minutes.
-              </Typography>
-              <Typography paragraph>
-                Heat oil in a (14- to 16-inch) paella pan or a large, deep
-                skillet over medium-high heat. Add chicken, shrimp and
-                chorizo, and cook, stirring occasionally until lightly browned,
-                6 to 8 minutes. Transfer shrimp to a large plate and set aside,
-                leaving chicken and chorizo in the pan. Add pimentón, bay leaves,
-                garlic, tomatoes, onion, salt and pepper, and cook, stirring often
-                until thickened and fragrant, about 10 minutes. Add saffron broth
-                and remaining 4 1/2 cups chicken broth; bring to a boil.
-              </Typography>
-              <Typography paragraph>
-                Add rice and stir very gently to distribute. Top with artichokes
-                and peppers, and cook without stirring, until most of the liquid
-                is absorbed, 15 to 18 minutes. Reduce heat to medium-low, add
-                reserved shrimp and mussels, tucking them down into the rice,
-                and cook again without stirring, until mussels have opened and
-                rice is just tender, 5 to 7 minutes more. (Discard any mussels
-                that don’t open.)
-              </Typography>
-              <Typography>
-                Set aside off of the heat to let rest for 10 minutes, and then
-                serve.
-              </Typography>
-            </CardContent>
-          </Collapse> */}
         <Typography
           sx={{
             fontWeight: "bold",
