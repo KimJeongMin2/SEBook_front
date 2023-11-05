@@ -246,6 +246,8 @@ function MainPage() {
       });
   };
 
+  
+
   const toggleLike = (id) => {
     setLikes({
       ...likes,
