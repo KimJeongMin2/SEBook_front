@@ -30,7 +30,7 @@ import axios from "axios";
 import Slider from "react-slick";
 import "../slick.css";
 import "../slick-theme.css";
-
+import { useNavigate } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 const Search = styled("div", {
@@ -199,6 +199,8 @@ const truncate = (str, n) => {
 };
 
 function MainPage() {
+  const navigate = useNavigate();
+
   const [expandedId, setExpandedId] = useState(-1);
   const handleExpandClick = (id) => {
     setExpandedId(expandedId === id ? -1 : id);
@@ -226,7 +228,7 @@ function MainPage() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.219.103:8000/book/recommendBook/1")
+      .get("http://172.30.84.171:8000/book/recommendBook/1")
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -236,13 +238,15 @@ function MainPage() {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://192.168.219.103:8000/book/searchBookByAuthor`, {
+      .get(`http://172.30.84.171:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
       })
       .then((response) => {
         setBookList(response.data);
+        console.log("나나:" + response.data);
+        navigate(`/BookDetail/${response.data.isbn13}`, { state: response.data })
       })
       .catch((error) => console.log(error));
   };
@@ -291,6 +295,7 @@ function MainPage() {
     setSelectedBook(null);
     setOpen(false);
   };
+
 
   return (
     <>

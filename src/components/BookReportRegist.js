@@ -21,12 +21,50 @@ import Button from "@mui/material/Button";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 
 import { TextField } from "@mui/material";
+import axios from "axios";
+
 
 function BookReportRegist() {
   const location = useLocation();
+  const [title, setTitle] = useState();
   const [book, setBook] = useState(location.state?.book || "");
   const [author, setAuthor] = useState(location.state?.author || "");
+  const [writer, setWriter] = useState();
   const [publisher, setPublisher] = useState(location.state?.publisher || "");
+  const [content, setContent] = useState();
+
+  const submit = async () => {
+    const bookReport = {
+      title: title,
+      book: book,
+      author: author,
+      writer: writer,
+      publisher: publisher,
+      content: content,
+    };
+
+    try {
+      const res = await axios.post(
+        "http://172.30.84.171:8000/bookReportCreate",
+        bookReport
+      );
+      console.log(res.data);
+      if (res.data === "success") {
+        alert("독후감이 성공적으로 등록 되었습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("등록에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleSubmit = () => {
+    if (title && book && author && writer && publisher && content) {
+      submit();
+    } else {
+      alert("모든 값을 입력하시고 등록 버튼을 눌러주세요.");
+    }
+  };
 
   return (
     <div>
@@ -62,6 +100,8 @@ function BookReportRegist() {
               fullWidth
               multiline
               rows={1}
+              value={title}
+              onChange={e => setTitle(e.target.value)}
               sx={{ fontSize: "10px", marginBottom: "10px" }}
               InputProps={{
                 style: {
@@ -79,6 +119,7 @@ function BookReportRegist() {
               multiline
               rows={1}
               value={book}
+              onChange={e => setBook(e.target.value)}
               disabled={!!location.state}
               sx={{ fontSize: "10px", marginBottom: "10px" }}
               InputProps={{
@@ -94,6 +135,7 @@ function BookReportRegist() {
                 multiline
                 rows={1}
                 value={author}
+                onChange={e => setAuthor(e.target.value)}
                 disabled={!!location.state}
                 sx={{
                   fontSize: "10px",
@@ -112,6 +154,7 @@ function BookReportRegist() {
                 multiline
                 rows={1}
                 value={publisher}
+                onChange={e => setPublisher(e.target.value)}
                 disabled={!!location.state}
                 sx={{
                   fontSize: "10px",
@@ -129,6 +172,8 @@ function BookReportRegist() {
               variant="outlined"
               fullWidth
               multiline
+              value={writer}
+              onChange={e => setWriter(e.target.value)}
               rows={1}
               sx={{ fontSize: "10px", marginBottom: "10px" }}
               InputProps={{
@@ -142,6 +187,8 @@ function BookReportRegist() {
               fullWidth
               multiline
               rows={6}
+              value={content}
+              onChange={e => setContent(e.target.value)}
               style={{ fontSize: "12px", marginBottom: "10px" }}
               InputProps={{
                 style: { fontSize: "14px" },
@@ -165,6 +212,7 @@ function BookReportRegist() {
               취소
             </Button>
             <Button
+              onClick={handleSubmit}
               variant="contained"
               style={{
                 marginTop: "10px",

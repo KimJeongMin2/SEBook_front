@@ -168,7 +168,7 @@ function BookList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.219.103:8000/book/bookListRead")
+      .get("http://172.30.84.171:8000/book/bookListRead")
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
@@ -177,39 +177,39 @@ function BookList() {
   }, []);
 
   const sendLikeBook = (isbn13) => {
-    axios.post("http://192.168.219.103:8000/book/bookLike", {
-        isbn13: isbn13,
-        userNum: 1
+    axios.post("http://172.30.84.171:8000/book/bookLike", {
+      isbn13: isbn13,
+      userNum: 1
     })
-    .then((response) => {
+      .then((response) => {
         console.log(response);
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         console.log(error);
-    });
-}
+      });
+  }
 
 
-const searchBookByAuthor = () => {
-  axios.get(`http://192.168.219.103:8000/book/searchBookByAuthor`, {
+  const searchBookByAuthor = () => {
+    axios.get(`http://172.30.84.171:8000/book/searchBookByAuthor`, {
       params: {
-          author: searchTerm
+        author: searchTerm
       }
-  })
-  .then(response => {
-      setBookList(response.data);
-  })
-  .catch(error => {
-      if (error.response.status === 404) {
+    })
+      .then(response => {
+        setBookList(response.data);
+      })
+      .catch(error => {
+        if (error.response.status === 404) {
           alert("해당 검색어에 맞는 결과가 없습니다.");
-      } else {
+        } else {
           console.log(error);
-      }
-  });
-};
+        }
+      });
+  };
 
 
-  
+
   const toggleLike = (id) => {
     setLikes({
       ...likes,
@@ -236,11 +236,11 @@ const searchBookByAuthor = () => {
       }
     }
   };
-  
+
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-  
+
 
   return (
     <>
@@ -362,11 +362,12 @@ const searchBookByAuthor = () => {
               count={Math.ceil(bookList.length / itemsPerPage)}
               color="primary"
               style={{
-              margin: '-7px 0', 
-              position: 'absolute',
-              bottom: 0,
-              left: '50%',
-              transform: 'translateX(-50%)' }}
+                margin: '-7px 0',
+                position: 'absolute',
+                bottom: 0,
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }}
               onChange={handleChangePage}
             />
           </Box>

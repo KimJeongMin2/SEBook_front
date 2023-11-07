@@ -132,7 +132,7 @@ function MyLikedBookList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.219.103:8000/book/likeBookListRead", {
+      .get("http://172.30.84.171:8000/book/likeBookListRead", {
         params: {
           userNum: 1
         },
@@ -151,8 +151,8 @@ function MyLikedBookList() {
   };
   const [likes, setLikes] = useState({});
 
-  const sendLikeBook = (isbn13) => {
-    axios.delete("http://192.168.219.103:8000/book/bookLike", {
+  const sendDeleteBook = (isbn13) => {
+    axios.delete("http://172.30.84.171:8000/book/bookLike", {
       params: {
         isbn13: isbn13,
         userNum: 1
@@ -210,7 +210,7 @@ function MyLikedBookList() {
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleLike(data.isbn13);
-                          sendLikeBook(data.isbn13);
+                          sendDeleteBook(data.isbn13);
                         }}
                       >
                         <FavoriteIcon style={{ color: likes[data.isbn13] ? "#EF9A9A" : "gray" }} />
