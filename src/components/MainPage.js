@@ -416,9 +416,9 @@ function MainPage() {
             <DialogContent>
               {selectedBook ? (
                 <>
-                  <div>{selectedBook.title}</div>
-                  <div>{selectedBook.author}</div>
-                  <div>{selectedBook.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>')}</div>
+                  <div style={{ fontSize: '18px', fontFamily: 'bold', marginBottom: '5px' }}>{selectedBook.title}</div>
+                  <div style={{ marginBottom: '5px' }}>{selectedBook.author}</div>
+                  <div style={{ fontSize: '15px' }}>{selectedBook.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>')}</div>
                 </>
               ) : null}
             </DialogContent>

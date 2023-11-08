@@ -136,7 +136,7 @@ function BookDetail() {
           <div style={{ margin: "0 0px 0 20px", width: "620px" }}>
             <div
               style={{
-                display: "flex",
+
                 margin: "5px",
                 justifyContent: "space-between",
               }}
