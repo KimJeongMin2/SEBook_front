@@ -213,7 +213,7 @@ function MyLikedBookList() {
                           sendDeleteBook(data.isbn13);
                         }}
                       >
-                        <FavoriteIcon style={{ color: likes[data.isbn13] ? "#EF9A9A" : "gray" }} />
+                        <FavoriteIcon style={{ color: likes[data.isbn13] ? "gray" : "#EF9A9A" }} />
                       </IconButton>
                     }
                     subheader={data.author}
@@ -240,6 +240,7 @@ function MyLikedBookList() {
                       aria-expanded={expanded}
                       aria-label="show more"
                       onClick={handleExpandClick}
+
                     >
                       <ExpandMoreIcon />
                     </IconButton>

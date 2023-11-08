@@ -377,7 +377,7 @@ function MainPage() {
                     style={{ width: "220px" }}
                   >
                     <CardHeader
-                      title={truncate(data.title, 15)}
+                      title={truncate(data.title, 12)}
                       subheader={truncate(data.author, 10)}
                       titleTypographyProps={{ variant: "body1" }}
                       subheaderTypographyProps={{ variant: "body2" }}
@@ -385,7 +385,7 @@ function MainPage() {
                     <motion.img
                       component="img"
                       width="220px"
-                      height="200"
+                      height="200px"
                       src={data.cover}
                       alt="Paella dish"
                       whileHover={{ scale: 1.1 }}

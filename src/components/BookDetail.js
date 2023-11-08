@@ -26,7 +26,7 @@ import { motion } from "framer-motion";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-
+import axios from "axios";
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -77,6 +77,19 @@ function BookDetail() {
   const selectLike = () => {
     setIsSelectedLike(!isSelectedLike);
   };
+
+  const sendLikeBook = (isbn13) => {
+    axios.post("http://172.30.84.171:8000/book/bookLike", {
+      isbn13: isbn13,
+      userNum: 1
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <>
@@ -228,6 +241,7 @@ function BookDetail() {
                     <FavoriteBorderIcon
                       style={{ fontSize: "30px", color: "#EF9A9A" }}
                       onClick={selectLike}
+
                     ></FavoriteBorderIcon>
                   )}
                   <div
