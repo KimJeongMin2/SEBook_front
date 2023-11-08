@@ -78,6 +78,8 @@ function BookDetail() {
     setIsSelectedLike(!isSelectedLike);
   };
 
+  console.log("isbn13: ", location.state.isbn13);
+
   return (
     <>
       <MainAppBar />
@@ -205,11 +207,35 @@ function BookDetail() {
                     color: "#ffffff",
                   }}
                   onClick={() => {
+                    navigate("/CommunityRegist", {
+                      state: {
+                        book: location.state.title,
+                        author: location.state.author,
+                        publisher: location.state.publisher,
+                        isbn13: location.state.isbn13,
+                      },
+                    });
+                  }}
+                >
+                  구절등록하기
+                </Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    marginTop: "10px",
+                    marginRight: "5px",
+                    width: "120px",
+                    height: "30px",
+                    backgroundColor: "#EF9A9A",
+                    color: "#ffffff",
+                  }}
+                  onClick={() => {
                     navigate("/BookReportRegist", {
                       state: {
                         book: location.state.title,
                         author: location.state.author,
                         publisher: location.state.publisher,
+                        isbn13: location.state.isbn13,
                       },
                     });
                   }}
@@ -240,7 +266,6 @@ function BookDetail() {
                     10
                   </div>
                 </div>
-                <ShareIcon style={{ fontSize: "35px" }}></ShareIcon>
               </div>
             </div>
           </div>

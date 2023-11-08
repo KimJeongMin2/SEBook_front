@@ -99,7 +99,7 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/book/likeBookListRead", {
+      .get("http://192.168.0.8:8000/book/likeBookListRead", {
         params: {
           userNum: 1,
         },

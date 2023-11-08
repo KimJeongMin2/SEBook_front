@@ -168,7 +168,7 @@ function BookList() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/book/bookListRead")
+      .get("http://192.168.0.8:8000/book/bookListRead")
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
@@ -177,7 +177,7 @@ function BookList() {
   }, []);
 
   const sendLikeBook = (isbn13) => {
-    axios.post("http://172.30.84.171:8000/book/bookLike", {
+    axios.post("http://192.168.0.8:8000/book/bookLike", {
       isbn13: isbn13,
       userNum: 1
     })
@@ -191,9 +191,27 @@ function BookList() {
 
 
   const searchBookByAuthor = () => {
-    axios.get(`http://172.30.84.171:8000/book/searchBookByAuthor`, {
+    axios.get(`http://192.168.0.8:8000/book/searchBookByAuthor`, {
       params: {
         author: searchTerm
+      }
+    })
+      .then(response => {
+        setBookList(response.data);
+      })
+      .catch(error => {
+        if (error.response.status === 404) {
+          alert("해당 검색어에 맞는 결과가 없습니다.");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+  const searchBookByTitle = () => {
+    axios.get(`http://192.168.0.8:8000/book/searchBookByTitle`, {
+      params: {
+        title: searchTerm
       }
     })
       .then(response => {
@@ -232,7 +250,7 @@ function BookList() {
       if (searchType === '작가명') {
         searchBookByAuthor();
       } else if (searchType === '도서명') {
-        // searchBookByTitle();
+        searchBookByTitle();
       }
     }
   };
