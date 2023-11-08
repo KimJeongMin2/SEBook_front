@@ -253,7 +253,7 @@ function MainPage() {
 
   const sendLikeBook = (isbn13) => {
     axios
-      .post("http://172.30.66.199.8000/book/bookLike", {
+      .post("http://172.30.84.171:8000/book/bookLike", {
         isbn13: isbn13,
         userNum: 1,
       })
