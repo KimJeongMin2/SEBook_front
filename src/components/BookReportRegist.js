@@ -93,6 +93,7 @@ function BookReportRegist() {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [isbn13, setIsbn13] = useState(location.state?.isbn13 || "");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -106,7 +107,7 @@ function BookReportRegist() {
     const bookReport = {
       userNum_report: writer,
       reportTitle: title,
-      isbn13_report: location.state.isbn13,
+      isbn13_report: isbn13,
       author: author,
       publisher: publisher,
       reportContents: content,
@@ -138,7 +139,7 @@ function BookReportRegist() {
   };
 
   const searchBookByAuthor = () => {
-    axios.get(`http://172.30.66.199:8000/book/searchBookByAuthor`, {
+    axios.get(`http://192.168.0.8:8000/book/searchBookByAuthor`, {
       params: {
         author: searchTerm
       }
@@ -157,7 +158,7 @@ function BookReportRegist() {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://172.30.66.199:8000/book/searchBookByTitle`, {
+      .get(`http://192.168.0.8:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -192,6 +193,7 @@ function BookReportRegist() {
     setBook(book.title);
     setAuthor(book.author);
     setPublisher(book.publisher);
+    setIsbn13(book.isbn13);
     handleClose();
   };
 
@@ -222,23 +224,16 @@ function BookReportRegist() {
             </div>
           </div>
           <div style={{ margin: "20px 0" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "10px",
-              }}
-            >
               <TextField
                 id="name"
                 label="제목"
                 variant="outlined"
+                fullWidth
                 multiline
                 rows={1}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 sx={{ fontSize: "10px", marginBottom: "10px" }}
-                style={{ width: "90%" }}
                 InputProps={{
                   style: {
                     height: "40px",
@@ -247,7 +242,28 @@ function BookReportRegist() {
                   },
                 }}
               />
-              <Button
+              <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+            <TextField
+              id="bookname"
+              label="도서명"
+              variant="outlined"
+              multiline
+              rows={1}
+              value={book}
+              onChange={(e) => setBook(e.target.value)}
+              disabled={!!location.state}
+              sx={{ fontSize: "10px", marginBottom: "10px" }}
+              style={{ width: "90%" }}
+              InputProps={{
+                style: { height: "40px", fontSize: "14px" },
+              }}
+            />
+             <Button
                 onClick={handleClickOpen}
                 style={{ backgroundColor: "#EF9A9A", color: "#ffffff" }}
               >
@@ -314,22 +330,7 @@ function BookReportRegist() {
                   <Button onClick={searchBookByTitle}>검색</Button>
                 </DialogActions>
               </Dialog>
-            </div>
-            <TextField
-              id="bookname"
-              label="도서명"
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={1}
-              value={book}
-              onChange={(e) => setBook(e.target.value)}
-              disabled={!!location.state}
-              sx={{ fontSize: "10px", marginBottom: "10px" }}
-              InputProps={{
-                style: { height: "40px", fontSize: "14px" },
-              }}
-            />
+              </div>
             <div style={{ display: " flex" }}>
               <TextField
                 id="author"

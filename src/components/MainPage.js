@@ -228,7 +228,7 @@ function MainPage() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.66.199:8000/book/recommendBook/1")
+      .get("http://192.168.0.8:8000/book/recommendBook/1")
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -238,7 +238,7 @@ function MainPage() {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://172.30.66.199:8000/book/searchBookByAuthor`, {
+      .get(`http://192.168.0.8:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -254,7 +254,7 @@ function MainPage() {
   
   const sendLikeBook = (isbn13) => {
     axios
-      .post("http://172.30.66.199:8000/book/bookLike", {
+      .post("http://192.168.0.8:8000/book/bookLike", {
         isbn13: isbn13,
         userNum: 1,
       })

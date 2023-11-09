@@ -114,7 +114,7 @@ function Community() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.66.199:8000/community/paragraphReadAll")
+      .get("http://192.168.0.8:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data.CommunityList);
         setCommunityList(response.data.CommunityList);
@@ -128,7 +128,7 @@ function Community() {
   );
 
   const sendLikeCommunity = (postNum) => {
-    axios.post("http://172.30.66.199:8000/community/paragraphLike", {
+    axios.post("http://192.168.0.8:8000/community/paragraphLike", {
       postNum: postNum,
       userNum: 1
     })
