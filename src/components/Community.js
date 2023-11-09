@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
-
+import axios from "axios";
 import { Box, InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -101,6 +101,7 @@ function Community() {
   const [rows, setRows] = useState(initialRows);
   const [page, setPage] = useState(0); // Current page
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [communityList, setCommunityList] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -110,6 +111,16 @@ function Community() {
     setPage(0); // Reset to the first page when changing rows per page
     setRowsPerPage(parseInt(event.target.value, 10));
   };
+
+  useEffect(() => {
+    axios
+      .get("http://172.30.66.199:8000/community/paragraphReadAll")
+      .then((response) => {
+        console.log(response.data.CommunityList);
+        setCommunityList(response.data.CommunityList);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const displayRows = initialRows.slice(
     page * rowsPerPage,
@@ -195,70 +206,76 @@ function Community() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {displayRows.map((row) => (
-                <TableRow
-                  key={row.title}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
-                >
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    style={{
-                      width: "10px",
-                      borderRight: "1px solid #F8E8EE",
-                      textAlign: "center",
-                    }}
+            {communityList.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) => (
+                  <TableRow
+                    key={row.title}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                   >
-                    {row.id}
-                  </TableCell>
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    style={{ width: "180px", borderRight: "1px solid #F8E8EE" }}
-                  >
-                    {row.title}
-                  </TableCell>
-                  <TableCell
-                    style={{ width: "600px", borderRight: "1px solid #F8E8EE" }}
-                  >
-                    {row.paragraph}
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      width: "50px",
-                      borderRight: "1px solid #F8E8EE",
-                      textAlign: "center",
-                    }}
-                  >
-                    {row.writer}
-                  </TableCell>
-                  <TableCell style={{ width: "80px", textAlign: "center" }}>
-                    {row.date}
-                  </TableCell>
-                  <TableCell style={{ width: "45px", textAlign: "center" }}>
-                    {likeStatus[row.id] ? (
-                      <FavoriteIcon
-                        style={{ color: "#EF9A9A" }}
-                        onClick={() => toggleLike(row.id)}
-                      />
-                    ) : (
-                      <FavoriteBorderIcon
-                        style={{ color: "#EF9A9A" }}
-                        onClick={() => toggleLike(row.id)}
-                      />
-                    )}
-                    <div style={{ marginTop: "-5px" }}>{row.like}</div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{
+                        width: "10px",
+                        borderRight: "1px solid #F8E8EE",
+                        textAlign: "center",
+                      }}
+                    >
+                      {index + 1}
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{
+                        width: "250px",
+                        borderRight: "1px solid #F8E8EE",
+                      }}
+                    >
+                      {row.title}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        width: "600px",
+                        borderRight: "1px solid #F8E8EE",
+                      }}
+                    >
+                      {row.contents}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        width: "150px",
+                        borderRight: "1px solid #F8E8EE",
+                        textAlign: "center",
+                      }}
+                    >
+                      {row.author}
+                    </TableCell>
+                    <TableCell style={{ width: "80px", textAlign: "center" }}>
+                      {row.date}
+                    </TableCell>
+                    <TableCell style={{ width: "50px", textAlign: "center" }}>
+                      {likeStatus[row.postNum] ? (
+                        <FavoriteIcon
+                          style={{ color: "#EF9A9A" }}
+                          onClick={() => toggleLike(row.postNum)}
+                        />
+                      ) : (
+                        <FavoriteBorderIcon
+                          style={{ color: "#EF9A9A" }}
+                          onClick={() => toggleLike(row.postNum)}
+                        />
+                      )}
+                      <div style={{ marginTop: "-5px" }}>{row.like}</div>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
         <div style={{ display: "flex", maxWidth: "70%", margin: "0 auto" }}>
           <Pagination
             component="div"
-            count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
+            count={Math.ceil(communityList.length / rowsPerPage)} // Calculate the number of pages based on rows
             page={page}
             onChange={handleChangePage}
             rowsPerPage={rowsPerPage}
@@ -266,6 +283,7 @@ function Community() {
             style={{ margin: "0 auto" }}
             color="primary"
           />
+
           <Stack spacing={2} direction="row">
             <Button
               variant="contained"
