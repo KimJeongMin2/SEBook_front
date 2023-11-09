@@ -35,17 +35,19 @@ function BookReportRegist() {
 
   const submit = async () => {
     const bookReport = {
-      title: title,
-      book: book,
+      userNum_report:writer,
+      reportTitle: title,
+      isbn13_report: location.state.isbn13,
       author: author,
-      writer: writer,
       publisher: publisher,
-      content: content,
+      reportContents: content,
     };
+
+    console.log("isbn13: ", location.state.isbn13);
 
     try {
       const res = await axios.post(
-        "http://172.30.84.171:8000/bookReportCreate",
+        "http://192.168.0.8:8000/bookReport/bookReportCreate",
         bookReport
       );
       console.log(res.data);

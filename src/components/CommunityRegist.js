@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
-
+import { useLocation } from "react-router-dom";
 import { Box, InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -24,22 +24,27 @@ import { TextField } from "@mui/material";
 import axios from "axios";
 
 function CommunityRegist() {
-  const [book, setBook] = useState("");
-  const [author, setAuthor] = useState("");
-  const [writer, setWriter] = useState("");
-  const [content, setContent] = useState("");
+  const location = useLocation();
+
+  const [title, setTitle] = useState();
+  const [book, setBook] = useState(location.state?.book || "");
+  const [author, setAuthor] = useState(location.state?.author || "");
+  const [writer, setWriter] = useState();
+  const [publisher, setPublisher] = useState(location.state?.publisher || "");
+  const [content, setContent] = useState();
 
   const submit = async () => {
     const paragraph = {
       book: book,
       author: author,
-      writer: writer,
-      content: content,
+      contents: content,
+      userNum_community:writer,
+      isbn13_community: location.state.isbn13,
     };
 
-    try {
+    try {                                                
       const res = await axios.post(
-        "http://192.168.219.103:8000/community/paragraphCreate",
+        "http://192.168.0.8:8000/community/paragraphCreate",
         paragraph
       );
       console.log(res.data);
@@ -98,6 +103,7 @@ function CommunityRegist() {
                 rows={1}
                 value={book}
                 onChange={e => setBook(e.target.value)}
+                disabled={!!location.state}
                 sx={{
                   fontSize: "10px",
                   marginBottom: "10px",
@@ -116,6 +122,7 @@ function CommunityRegist() {
                 rows={1}
                 value={author}
                 onChange={e => setAuthor(e.target.value)}
+                disabled={!!location.state}
                 sx={{
                   fontSize: "10px",
                   marginBottom: "10px",
