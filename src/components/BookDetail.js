@@ -148,7 +148,7 @@ function BookDetail() {
               }}
             >
               <div>
-                {location.state.author} | 출판사 | {location.state.pubDate}
+                {location.state.author} | {location.state.publisher} | {location.state.pubDate}
               </div>
               <div>{location.state.priceStandard} 원</div>
             </div>

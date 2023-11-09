@@ -127,6 +127,19 @@ function Community() {
     (page + 1) * rowsPerPage
   );
 
+  const sendLikeCommunity = (postNum) => {
+    axios.post("http://172.30.66.199:8000/community/paragraphLike", {
+      postNum: postNum,
+      userNum: 1
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
 
   // Function to toggle the like status for a specific row
@@ -135,6 +148,9 @@ function Community() {
       ...prevStatus,
       [id]: !prevStatus[id],
     }));
+    if (!likeStatus[id]) {
+      sendLikeCommunity(id);
+    }
   };
   const [searchType, setSearchType] = useState("도서명");
   return (
@@ -257,7 +273,9 @@ function Community() {
                       {likeStatus[row.postNum] ? (
                         <FavoriteIcon
                           style={{ color: "#EF9A9A" }}
-                          onClick={() => toggleLike(row.postNum)}
+                          onClick={() => {
+                            toggleLike(row.postNum);
+                          }}
                         />
                       ) : (
                         <FavoriteBorderIcon
