@@ -44,7 +44,7 @@ function CommunityRegist() {
 
     try {                                                
       const res = await axios.post(
-        "http://192.168.0.8:8000/community/paragraphCreate",
+        "http://172.30.127.93:8000/community/paragraphCreate",
         paragraph
       );
       console.log(res.data);
