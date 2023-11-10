@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
+import axios from "axios";
 
 import { Box, InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -18,7 +19,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function createData(id, title, bookName, author, publisher, writer, date, like) {
     return { id, title, bookName, author, publisher, writer, date, like };
@@ -75,24 +76,36 @@ const StyledInputBase = styled(InputBase, {
 }));
 
 function MyLikedBookReport() {
-
+    const location = useLocation();
     const navigate = new useNavigate();
 
-    const [rows, setRows] = useState(initialRows);
-    const [page, setPage] = useState(0); // Current page
-    const [rowsPerPage, setRowsPerPage] = useState(6);
+    const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
+    const getPageData = () => {
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        return bookReportList.slice(start, end);
     };
 
-    const handleChangeRowsPerPage = (event) => {
-        setPage(0); // Reset to the first page when changing rows per page
-        setRowsPerPage(parseInt(event.target.value, 10));
+    const handleChangePage = (event, value) => {
+        setCurrentPage(value);
     };
 
-    const displayRows = initialRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
-
+    useEffect(() => {
+        axios.get("http://192.168.0.7:8000/bookReportReadLike", {
+            params: {
+                userNum: 1
+            }
+        })
+            .then((response) => {
+                // console.log(response.data.bookList);
+                setBookReportList(response.data.bookList);
+            })
+            .catch((error) => console.error(error));
+    }, []);
 
     return (
         <>
@@ -122,23 +135,23 @@ function MyLikedBookReport() {
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                            {displayRows.map((row) => (
+                            {getPageData()?.map((data) => (
                                 <TableRow
-                                    key={row.title}
+                                    key={data.book}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    onClick={() => navigate(`/BookReportDetail/${row.id}`, { state: row })}
+                                    onClick={() => navigate(`/BookReportDetail/${data.id}`, { state: data })}
                                 >
                                     <TableCell component="th" scope="row">
-                                        {row.id}
+                                        {data.id}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {row.title}
+                                        {data.title}
                                     </TableCell>
-                                    <TableCell>{row.bookName}</TableCell>
-                                    <TableCell>{row.author}</TableCell>
-                                    <TableCell>{row.publisher}</TableCell>
-                                    <TableCell>{row.date}</TableCell>
-                                    <TableCell style={{ textAlign: 'center' }}>{row.like}</TableCell>
+                                    <TableCell>{data.book}</TableCell>
+                                    <TableCell>{data.author}</TableCell>
+                                    <TableCell>{data.publisher}</TableCell>
+                                    <TableCell>{data.date}</TableCell>
+                                    <TableCell style={{ textAlign: 'center' }}>{data.like}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -146,14 +159,16 @@ function MyLikedBookReport() {
                 </TableContainer>
                 <div style={{ display: 'flex' }}>
                     <Pagination
-                        component="div"
-                        count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
-                        page={page}
-                        onChange={handleChangePage}
-                        rowsPerPage={rowsPerPage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "20px auto 20px" }}
+                        count={Math.ceil(bookReportList.length / itemsPerPage)}
                         color="primary"
+                        style={{
+                            margin: '-7px 0',
+                            position: 'absolute',
+                            bottom: 0,
+                            left: '50%',
+                            transform: 'translateX(-50%)'
+                        }}
+                        onChange={handleChangePage}
                     />
                 </div>
             </Box>

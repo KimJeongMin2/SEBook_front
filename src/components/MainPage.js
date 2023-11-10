@@ -32,7 +32,9 @@ import "../slick.css";
 import "../slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-
+import ConfettiExplosion from 'react-confetti-explosion';
+import useWindowSize from 'react-use/lib/useWindowSize'
+import Confetti from 'react-confetti'
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -198,8 +200,13 @@ const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
 
+
+
 function MainPage() {
   const navigate = useNavigate();
+
+  const [isExploding, setIsExploding] = useState(false);
+  const { width, height } = useWindowSize()
 
   const [expandedId, setExpandedId] = useState(-1);
   const handleExpandClick = (id) => {
@@ -228,7 +235,7 @@ function MainPage() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.127.93:8000/book/recommendBook/1")
+      .get("http://192.168.0.7:8000/book/recommendBook/1")
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -238,23 +245,58 @@ function MainPage() {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://172.30.127.93:8000/book/searchBookByAuthor`, {
+      .get(`http://192.168.0.7:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
       })
       .then((response) => {
         setBookList(response.data);
-        console.log("나나:" + response.data);
-        navigate(`/BookDetail/${response.data.isbn13}`, { state: response.data })
+        console.log("book list : " + response.data.title);
+        // navigate(`/BookList`, { state: bookList })
       })
-      .catch((error) => console.log(error));
+      .catch(error => {
+        if (error.response.status === 404) {
+          alert("해당 검색어에 맞는 결과가 없습니다.");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+  const searchBookByTitle = () => {
+    axios.get(`http://192.168.0.7:8000/book/searchBookByTitle`, {
+      params: {
+        title: searchTerm
+      }
+    })
+      .then(response => {
+
+        response.data.forEach(book => {
+          setBookList(prevBookList => [...prevBookList, book]);
+          console.log("bookList:", bookList);
+        });
+
+
+        navigate(`/BookList`, {
+          state: {
+            bookList: bookList
+          },
+        });
+      })
+      .catch(error => {
+        if (error.response.status === 404) {
+          alert("해당 검색어에 맞는 결과가 없습니다.");
+        } else {
+          console.log(error);
+        }
+      });
   };
 
   
   const sendLikeBook = (isbn13) => {
     axios
-      .post("http://172.30.127.93:8000/book/bookLike", {
+      .post("http://192.168.0.7:8000/book/bookLike", {
         isbn13: isbn13,
         userNum: 1,
       })
@@ -271,7 +313,7 @@ function MainPage() {
       if (searchType === "작가명") {
         searchBookByAuthor();
       } else if (searchType === "도서명") {
-        // searchBookByTitle();
+        searchBookByTitle();
       }
     }
   };
@@ -360,6 +402,12 @@ function MainPage() {
         >
           홍길동님, 맞춤 도서 추천
         </Typography>
+        {/* <>{isExploding && <ConfettiExplosion />} </>
+        <Confetti
+          width={width}
+          height={height}
+        /> */}
+        {/* 빵빠레.. 구리긴한데 일단은 냅둠 */}
         <Grid container spacing={2} justifyContent="center">
           <Box
             sx={{

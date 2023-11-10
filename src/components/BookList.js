@@ -24,7 +24,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import axios from "axios";
-
+import { useLocation } from "react-router-dom"
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -149,10 +149,11 @@ const truncate = (str, n) => {
 
 
 function BookList() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
 
-  const [bookList, setBookList] = useState([]);
+  const [bookList, setBookList] = useState(location.state?.bookList || []);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -172,6 +173,10 @@ function BookList() {
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
+
+        if (location.state.bookList) {
+          console.log("look ..: " + location.state.bookList);
+        }
       })
       .catch((error) => console.error(error));
   }, []);

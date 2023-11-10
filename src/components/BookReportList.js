@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
-
+import axios from "axios";
 import { Box, InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -18,7 +18,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -144,27 +144,25 @@ const StyledSelect = styled(Select, {
 
 function BookReportList() {
   const navigate = new useNavigate();
+  const location = useLocation();
+  const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
 
-  const [rows, setRows] = useState(initialRows);
-  const [page, setPage] = useState(0); // Current page
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const getPageData = () => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return bookReportList.slice(start, end);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setPage(0); // Reset to the first page when changing rows per page
-    setRowsPerPage(parseInt(event.target.value, 10));
-  };
-
-  const displayRows = initialRows.slice(
-    page * rowsPerPage,
-    (page + 1) * rowsPerPage
-  );
   const [searchType, setSearchType] = useState("도서명");
 
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
+
+  const handleChangePage = (event, value) => {
+    setCurrentPage(value);
+  };
 
   // Function to toggle the like status for a specific row
   const toggleLike = (id) => {
@@ -173,6 +171,33 @@ function BookReportList() {
       [id]: !prevStatus[id],
     }));
   };
+
+  useEffect(() => {
+    axios
+      .get("http://172.30.66.199:8000/bookReportReadAll")
+      .then((response) => {
+        // console.log(response.data.bookList);
+        setBookReportList(response.data.bookList);
+
+        if (location.state.bookReportList) {
+          // console.log("look ..: " + location.state.bookList[0]);
+        }
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const sendLikeBookReport = (bookReportNum) => {
+    axios.post("http://192.168.0.7:8000/bookReportLike", {
+      bookReportNum: bookReportNum,
+      userNum: 1
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <>
@@ -244,39 +269,41 @@ function BookReportList() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {displayRows.map((row) => (
+              {getPageData()?.map((data) => (
                 <TableRow
                   className="bookReportTable"
-                  key={row.title}
+                  key={data.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  onClick={() =>
-                    navigate(`/BookReportDetail/${row.id}`, { state: row })
-                  }
+                  onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}
                 >
                   <TableCell component="th" scope="row">
-                    {row.id}
+                    {data.id}
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    {row.title}
+                    {data.title}
                   </TableCell>
-                  <TableCell>{row.bookName}</TableCell>
-                  <TableCell>{row.author}</TableCell>
-                  <TableCell>{row.publisher}</TableCell>
-                  <TableCell>{row.writer}</TableCell>
-                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{data.title}</TableCell>
+                  <TableCell>{data.author}</TableCell>
+                  <TableCell>{data.publisher}</TableCell>
+                  <TableCell>{data.writer}</TableCell>
+                  <TableCell>{data.date}</TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    {likeStatus[row.id] ? (
+                    {likeStatus[data.bookReportNum] ? (
                       <FavoriteIcon
                         style={{ color: "#EF9A9A" }}
-                        onClick={() => toggleLike(row.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(data.bookReportNum);
+                          sendLikeBookReport(data.bookReportNum);
+                        }}
                       />
                     ) : (
                       <FavoriteBorderIcon
                         style={{ color: "#EF9A9A" }}
-                        onClick={() => toggleLike(row.id)}
+                        onClick={() => toggleLike(data.isbn13)}
                       />
                     )}
-                    <div style={{ marginTop: "-5px" }}>{row.like}</div>
+                    <div style={{ marginTop: "-5px" }}>{data.like}</div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -292,14 +319,16 @@ function BookReportList() {
           }}
         >
           <Pagination
-            component="div"
-            count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
-            page={page}
-            onChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            style={{ margin: "-10px auto" }}
+            count={Math.ceil(bookReportList.length / itemsPerPage)}
             color="primary"
+            style={{
+              margin: '-7px 0',
+              position: 'absolute',
+              bottom: 0,
+              left: '50%',
+              transform: 'translateX(-50%)'
+            }}
+            onChange={handleChangePage}
           />
           <Stack spacing={2} direction="row">
             <Button
