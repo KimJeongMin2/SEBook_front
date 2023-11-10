@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 
@@ -18,7 +18,8 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 
 function createData(id, title, bookName, author, publisher, writer, date) {
     return { id, title, bookName, author, publisher, writer, date };
@@ -76,23 +77,56 @@ const StyledInputBase = styled(InputBase, {
 
 function MyBookReport() {
 
-    const navigate = useNavigate();
+    const location = useLocation();
+    const navigate = new useNavigate();
 
-    const [rows, setRows] = useState(initialRows);
-    const [page, setPage] = useState(0); // Current page
-    const [rowsPerPage, setRowsPerPage] = useState(6);
+    const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
+    const getPageData = () => {
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        return bookReportList.slice(start, end);
     };
 
-    const handleChangeRowsPerPage = (event) => {
-        setPage(0); // Reset to the first page when changing rows per page
-        setRowsPerPage(parseInt(event.target.value, 10));
+    const handleChangePage = (event, value) => {
+        setCurrentPage(value);
     };
 
-    const displayRows = initialRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+    useEffect(() => {
+        axios.get("http://192.168.0.7:8000/bookReportReadMy", {
+            params: {
+                userNum: 1
+            }
+        })
+            .then((response) => {
+                console.log(response.data.bookList);
+                setBookReportList(response.data.bookList);
+            })
+            .catch((error) => console.error(error));
+    }, []);
 
+    const sendDeleteBook = (isbn13) => {
+        if (window.confirm("삭제하시겠습니까?")) {
+            axios.delete("http://192.168.0.7:8000/bookReportDelete", {
+                params: {
+                    bookReportNum: isbn13
+                }
+            })
+                .then((response) => {
+                    console.log(response);
+                    alert("삭제되었습니다.");
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else {
+            alert("취소합니다.");
+        }
+    }
 
     return (
         <>
@@ -122,23 +156,27 @@ function MyBookReport() {
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                            {displayRows.map((row) => (
+                            {getPageData()?.map((data) => (
                                 <TableRow
-                                    key={row.title}
+                                    key={data.title}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    onClick={() => navigate(`/BookReportDetail/${row.id}`, { state: row })}
                                 >
-                                    <TableCell component="th" scope="row">
-                                        {row.id}
+                                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
+                                        {data.id}
                                     </TableCell>
-                                    <TableCell component="th" scope="row">
-                                        {row.title}
+                                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
+                                        {data.title}
                                     </TableCell>
-                                    <TableCell>{row.bookName}</TableCell>
-                                    <TableCell>{row.author}</TableCell>
-                                    <TableCell>{row.publisher}</TableCell>
-                                    <TableCell>{row.date}</TableCell>
-                                    <TableCell><DeleteIcon style={{ color: "#FF9999" }} /></TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.book}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.author}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.publisher}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.date}</TableCell>
+                                    <TableCell>
+                                        <DeleteIcon
+                                            style={{ color: "#FF9999" }}
+                                            onClick={() => sendDeleteBook(data.isbn13)}
+                                        />
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -146,14 +184,16 @@ function MyBookReport() {
                 </TableContainer>
                 <div style={{ display: "flex" }}>
                     <Pagination
-                        component="div"
-                        count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
-                        page={page}
-                        onChange={handleChangePage}
-                        rowsPerPage={rowsPerPage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        style={{ margin: "0px auto 20px" }}
+                        count={Math.ceil(bookReportList.length / itemsPerPage)}
                         color="primary"
+                        style={{
+                            margin: '-7px 0',
+                            position: 'absolute',
+                            bottom: 0,
+                            left: '50%',
+                            transform: 'translateX(-50%)'
+                        }}
+                        onChange={handleChangePage}
                     />
                 </div>
             </Box>

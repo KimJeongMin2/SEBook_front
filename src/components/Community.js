@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 
@@ -126,6 +127,17 @@ function Community() {
     }));
   };
   const [searchType, setSearchType] = useState("도서명");
+
+  useEffect(() => {
+    axios
+      .get("http://172.30.66.199:8000/community/paragraphReadAll")
+      .then((response) => {
+        console.log("data : " + response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+
   return (
     <>
       <MainAppBar />

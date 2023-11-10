@@ -22,9 +22,10 @@ import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 
 import { TextField } from "@mui/material";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 
 function BookReportRegist() {
+  const navigate = useNavigate();
   const location = useLocation();
   const [title, setTitle] = useState();
   const [book, setBook] = useState(location.state?.book || "");
@@ -35,7 +36,7 @@ function BookReportRegist() {
 
   const submit = async () => {
     const bookReport = {
-      userNum_report:writer,
+      userNum_report: writer,
       reportTitle: title,
       isbn13_report: location.state.isbn13,
       author: author,
@@ -47,12 +48,13 @@ function BookReportRegist() {
 
     try {
       const res = await axios.post(
-        "http://192.168.0.8:8000/bookReport/bookReportCreate",
+        "http://192.168.0.7:8000/bookReport/bookReportCreate",
         bookReport
       );
       console.log(res.data);
       if (res.data === "success") {
         alert("독후감이 성공적으로 등록 되었습니다.");
+        navigate("/BookReport");
       }
     } catch (error) {
       console.error(error);

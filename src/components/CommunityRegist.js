@@ -38,13 +38,13 @@ function CommunityRegist() {
       book: book,
       author: author,
       contents: content,
-      userNum_community:writer,
+      userNum_community: writer,
       isbn13_community: location.state.isbn13,
     };
 
-    try {                                                
+    try {
       const res = await axios.post(
-        "http://192.168.0.8:8000/community/paragraphCreate",
+        "http://172.30.66.199:8000/community/paragraphCreate",
         paragraph
       );
       console.log(res.data);

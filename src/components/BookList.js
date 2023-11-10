@@ -24,7 +24,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import axios from "axios";
-
+import { useLocation } from "react-router-dom"
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -149,10 +149,11 @@ const truncate = (str, n) => {
 
 
 function BookList() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
 
-  const [bookList, setBookList] = useState([]);
+  const [bookList, setBookList] = useState(location.state?.bookList || []);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -168,16 +169,20 @@ function BookList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/book/bookListRead")
+      .get("http://192.168.0.7:8000/book/bookListRead")
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
+
+        if (location.state.bookList) {
+          console.log("look ..: " + location.state.bookList);
+        }
       })
       .catch((error) => console.error(error));
   }, []);
 
   const sendLikeBook = (isbn13) => {
-    axios.post("http://192.168.0.8:8000/book/bookLike", {
+    axios.post("http://192.168.0.7:8000/book/bookLike", {
       isbn13: isbn13,
       userNum: 1
     })
@@ -191,7 +196,7 @@ function BookList() {
 
 
   const searchBookByAuthor = () => {
-    axios.get(`http://192.168.0.8:8000/book/searchBookByAuthor`, {
+    axios.get(`http://192.168.0.7:8000/book/searchBookByAuthor`, {
       params: {
         author: searchTerm
       }
@@ -209,7 +214,7 @@ function BookList() {
   };
 
   const searchBookByTitle = () => {
-    axios.get(`http://192.168.0.8:8000/book/searchBookByTitle`, {
+    axios.get(`http://192.168.0.7:8000/book/searchBookByTitle`, {
       params: {
         title: searchTerm
       }
