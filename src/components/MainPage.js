@@ -293,6 +293,7 @@ function MainPage() {
       });
   };
 
+  
   const sendLikeBook = (isbn13) => {
     axios
       .post("http://192.168.0.7:8000/book/bookLike", {

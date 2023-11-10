@@ -82,6 +82,7 @@ function MyBookReport() {
 
     const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
 
+
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
 

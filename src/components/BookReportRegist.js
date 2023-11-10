@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box, InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -17,13 +17,69 @@ import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-
+import MenuItem from "@mui/material/MenuItem";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
-
+import Select from "@mui/material/Select";
 import { TextField } from "@mui/material";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
+const Search = styled("div", {
+  shouldForwardProp: (prop) => prop !== "theme",
+})(({ theme }) => ({
+  position: "relative",
+  borderRadius: "50px 50px 50px 50px", // 둥글게 만들기 위한 변경
+  backgroundColor: "rgba(255, 182, 193, 0.4)", // 연핑크 배경색 적용
+  marginLeft: "auto", // 오른쪽 정렬 적용
+  marginTop: "1ch",
+  marginRight: "27ch",
+  width: "35ch",
+  minWidth: "45ch", // 최소 가로 길이 조절
+  height: "35px",
+}));
+
+const SearchIconWrapper = styled("div", {
+  shouldForwardProp: (prop) => prop !== "theme",
+})(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase, {
+  shouldForwardProp: (prop) => prop !== "theme",
+})(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "50ch", // 기본 가로 길이 조절
+    [theme.breakpoints.up("md")]: {
+      width: "50ch",
+    },
+  },
+}));
+const StyledSelect = styled(Select, {
+  shouldForwardProp: (prop) => prop !== "theme",
+})(({ theme }) => ({
+  width: "5ch",
+  color: "inherit",
+  backgroundColor: "rgba(255, 182, 193, 0.4)",
+  borderRadius: "50px 50px 50px 50px",
+  border: "none",
+  [theme.breakpoints.up("md")]: {
+    width: "20ch",
+  },
+}));
 function BookReportRegist() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,12 +89,26 @@ function BookReportRegist() {
   const [writer, setWriter] = useState();
   const [publisher, setPublisher] = useState(location.state?.publisher || "");
   const [content, setContent] = useState();
+  const [searchType, setSearchType] = useState("도서명");
+  const [open, setOpen] = useState(false);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+  const [isbn13, setIsbn13] = useState(location.state?.isbn13 || "");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const submit = async () => {
     const bookReport = {
       userNum_report: writer,
       reportTitle: title,
-      isbn13_report: location.state.isbn13,
+      isbn13_report: isbn13,
       author: author,
       publisher: publisher,
       reportContents: content,
@@ -68,6 +138,65 @@ function BookReportRegist() {
     } else {
       alert("모든 값을 입력하시고 등록 버튼을 눌러주세요.");
     }
+  };
+
+  const searchBookByAuthor = () => {
+    axios.get(`http://192.168.0.8:8000/book/searchBookByAuthor`, {
+      params: {
+        author: searchTerm
+      }
+    })
+      .then(response => {
+        setSearchResult(response.data);
+      })
+      .catch(error => {
+        if (error.response.status === 404) {
+          alert("해당 검색어에 맞는 결과가 없습니다.");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+  const searchBookByTitle = () => {
+    axios
+      .get(`http://192.168.0.8:8000/book/searchBookByTitle`, {
+        params: {
+          title: searchTerm,
+        },
+      })
+      .then((response) => {
+        setSearchResult(response.data);
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          alert("해당 검색어에 맞는 결과가 없습니다.");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearchKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      if (searchType === '작가명') {
+        searchBookByAuthor();
+      } else if (searchType === '도서명') {
+        searchBookByTitle();
+      }
+    }
+  };
+
+  const handleBookClick = (book) => {
+    setBook(book.title);
+    setAuthor(book.author);
+    setPublisher(book.publisher);
+    setIsbn13(book.isbn13);
+    handleClose();
   };
 
   return (
@@ -105,7 +234,7 @@ function BookReportRegist() {
               multiline
               rows={1}
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               sx={{ fontSize: "10px", marginBottom: "10px" }}
               InputProps={{
                 style: {
@@ -115,21 +244,95 @@ function BookReportRegist() {
                 },
               }}
             />
-            <TextField
-              id="bookname"
-              label="도서명"
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={1}
-              value={book}
-              onChange={e => setBook(e.target.value)}
-              disabled={!!location.state}
-              sx={{ fontSize: "10px", marginBottom: "10px" }}
-              InputProps={{
-                style: { height: "40px", fontSize: "14px" },
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
               }}
-            />
+            >
+              <TextField
+                id="bookname"
+                label="도서명"
+                variant="outlined"
+                multiline
+                rows={1}
+                value={book}
+                onChange={(e) => setBook(e.target.value)}
+                disabled={!!location.state}
+                sx={{ fontSize: "10px", marginBottom: "10px" }}
+                style={{ width: "90%" }}
+                InputProps={{
+                  style: { height: "40px", fontSize: "14px" },
+                }}
+              />
+              <Button
+                onClick={handleClickOpen}
+                style={{ backgroundColor: "#EF9A9A", color: "#ffffff" }}
+              >
+                도서 검색
+              </Button>
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle
+                  style={{ backgroundColor: "#EF9A9A", color: "#ffffff" }}
+                >
+                  도서 검색
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    원하는 도서를 입력하고 검색 버튼 또는 Enter 키를 눌러주세요.
+                  </DialogContentText>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <StyledSelect
+                      sx={{
+                        marginTop: "30px",
+                        marginRight: "10px",
+                        height: "35px",
+                        fontSize: "13px",
+                      }}
+                      value={searchType}
+                      onChange={(e) => setSearchType(e.target.value)}
+                      defaultValue={"도서명"}
+                    >
+                      <MenuItem value={"도서명"} style={{ fontSize: "13px" }}>
+                        도서명
+                      </MenuItem>
+                      <MenuItem value={"작가명"} style={{ fontSize: "13px" }}>
+                        작가명
+                      </MenuItem>
+                    </StyledSelect>
+                    <Search
+                      style={{
+                        marginTop: "30px",
+                        height: "35px",
+                        marginLeft: "auto",
+                      }}
+                    >
+                      <SearchIconWrapper>
+                        <SearchIcon />
+                      </SearchIconWrapper>
+                      <StyledInputBase
+                        style={{ fontSize: "13px" }}
+                        placeholder="도서명 또는 작가명을 입력하세요."
+                        inputProps={{ "aria-label": "search" }}
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleSearchKeyPress}
+                      />
+                    </Search>
+                  </div>
+                  {searchResult.map((book, index) => (
+                    <div key={index} style={{ borderBottom: "0.1px solid #EF9A9A", cursor: "pointer" }}
+                      onClick={() => handleBookClick(book)}>
+                      <p>{book.title} | {book.author}</p>
+                    </div>
+                  ))}
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>취소</Button>
+                  <Button onClick={searchBookByTitle}>검색</Button>
+                </DialogActions>
+              </Dialog>
+            </div>
             <div style={{ display: " flex" }}>
               <TextField
                 id="author"
@@ -139,7 +342,7 @@ function BookReportRegist() {
                 multiline
                 rows={1}
                 value={author}
-                onChange={e => setAuthor(e.target.value)}
+                onChange={(e) => setAuthor(e.target.value)}
                 disabled={!!location.state}
                 sx={{
                   fontSize: "10px",
@@ -158,7 +361,7 @@ function BookReportRegist() {
                 multiline
                 rows={1}
                 value={publisher}
-                onChange={e => setPublisher(e.target.value)}
+                onChange={(e) => setPublisher(e.target.value)}
                 disabled={!!location.state}
                 sx={{
                   fontSize: "10px",
@@ -177,7 +380,7 @@ function BookReportRegist() {
               fullWidth
               multiline
               value={writer}
-              onChange={e => setWriter(e.target.value)}
+              onChange={(e) => setWriter(e.target.value)}
               rows={1}
               sx={{ fontSize: "10px", marginBottom: "10px" }}
               InputProps={{
@@ -192,7 +395,7 @@ function BookReportRegist() {
               multiline
               rows={6}
               value={content}
-              onChange={e => setContent(e.target.value)}
+              onChange={(e) => setContent(e.target.value)}
               style={{ fontSize: "12px", marginBottom: "10px" }}
               InputProps={{
                 style: { fontSize: "14px" },

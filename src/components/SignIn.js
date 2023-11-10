@@ -112,9 +112,9 @@ export default function SignIn() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  {/* <Link href="#" variant="body2">
                     비밀번호를 잊어 버렸나요?
-                  </Link>
+                  </Link> */}
                 </Grid>
                 <Grid item>
                   <Link href="/SignUp" variant="body2">

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
-
+import axios from "axios";
 import { Box, InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -99,23 +98,43 @@ const StyledSelect = styled(Select, {
 function Community() {
   const navigate = new useNavigate();
 
-  const [rows, setRows] = useState(initialRows);
-  const [page, setPage] = useState(0); // Current page
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [communityList, setCommunityList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangePage = (event, value) => {
+    setCurrentPage(value);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setPage(0); // Reset to the first page when changing rows per page
-    setRowsPerPage(parseInt(event.target.value, 10));
+  const getPageData = () => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return communityList.slice(start, end);
   };
 
-  const displayRows = initialRows.slice(
-    page * rowsPerPage,
-    (page + 1) * rowsPerPage
-  );
+
+  useEffect(() => {
+    axios
+      .get("http://192.168.0.8:8000/community/paragraphReadAll")
+      .then((response) => {
+        console.log(response.data.CommunityList);
+        setCommunityList(response.data.CommunityList);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const sendLikeCommunity = (postNum) => {
+    axios.post("http://192.168.0.8:8000/community/paragraphLike", {
+      postNum: postNum,
+      userNum: 1
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
 
@@ -125,6 +144,9 @@ function Community() {
       ...prevStatus,
       [id]: !prevStatus[id],
     }));
+    if (!likeStatus[id]) {
+      sendLikeCommunity(id);
+    }
   };
   const [searchType, setSearchType] = useState("도서명");
 
@@ -207,7 +229,7 @@ function Community() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {displayRows.map((row) => (
+              {getPageData().map((row, index) => (
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -222,42 +244,50 @@ function Community() {
                       textAlign: "center",
                     }}
                   >
-                    {row.id}
+                    {index + 1}
                   </TableCell>
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ width: "180px", borderRight: "1px solid #F8E8EE" }}
+                    style={{
+                      width: "250px",
+                      borderRight: "1px solid #F8E8EE",
+                    }}
                   >
                     {row.title}
                   </TableCell>
                   <TableCell
-                    style={{ width: "600px", borderRight: "1px solid #F8E8EE" }}
+                    style={{
+                      width: "600px",
+                      borderRight: "1px solid #F8E8EE",
+                    }}
                   >
-                    {row.paragraph}
+                    {row.contents}
                   </TableCell>
                   <TableCell
                     style={{
-                      width: "50px",
+                      width: "150px",
                       borderRight: "1px solid #F8E8EE",
                       textAlign: "center",
                     }}
                   >
-                    {row.writer}
+                    {row.author}
                   </TableCell>
                   <TableCell style={{ width: "80px", textAlign: "center" }}>
                     {row.date}
                   </TableCell>
-                  <TableCell style={{ width: "45px", textAlign: "center" }}>
-                    {likeStatus[row.id] ? (
+                  <TableCell style={{ width: "50px", textAlign: "center" }}>
+                    {likeStatus[row.postNum] ? (
                       <FavoriteIcon
                         style={{ color: "#EF9A9A" }}
-                        onClick={() => toggleLike(row.id)}
+                        onClick={() => {
+                          toggleLike(row.postNum);
+                        }}
                       />
                     ) : (
                       <FavoriteBorderIcon
                         style={{ color: "#EF9A9A" }}
-                        onClick={() => toggleLike(row.id)}
+                        onClick={() => toggleLike(row.postNum)}
                       />
                     )}
                     <div style={{ marginTop: "-5px" }}>{row.like}</div>
@@ -269,14 +299,16 @@ function Community() {
         </TableContainer>
         <div style={{ display: "flex", maxWidth: "70%", margin: "0 auto" }}>
           <Pagination
-            component="div"
-            count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
-            page={page}
-            onChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            style={{ margin: "0 auto" }}
+            count={Math.ceil(communityList.length / itemsPerPage)}
             color="primary"
+            style={{
+              margin: '-7px 0',
+              position: 'absolute',
+              bottom: 0,
+              left: '50%',
+              transform: 'translateX(-50%)'
+            }}
+            onChange={handleChangePage}
           />
           <Stack spacing={2} direction="row">
             <Button
