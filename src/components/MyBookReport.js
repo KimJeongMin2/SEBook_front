@@ -87,33 +87,38 @@ function MyBookReport() {
     const itemsPerPage = 5;
 
     const getPageData = () => {
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        return bookReportList.slice(start, end);
+        if (bookReportList) {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            return bookReportList.slice(start, end);
+        } else {
+            return [];
+        }
     };
-
     const handleChangePage = (event, value) => {
         setCurrentPage(value);
     };
 
     useEffect(() => {
-        axios.get("http://192.168.0.7:8000/bookReportReadMy", {
+        axios.get("http://192.168.123.158:8000/bookReport/bookReportReadMy", {
             params: {
                 userNum: 1
             }
         })
             .then((response) => {
-                console.log(response.data.bookList);
-                setBookReportList(response.data.bookList);
+                console.log(response.data.userBookReportList);
+                const data = response.data.userBookReportList;
+                const reversedData = data.reverse();
+                setBookReportList(reversedData);
             })
             .catch((error) => console.error(error));
     }, []);
 
     const sendDeleteBook = (isbn13) => {
         if (window.confirm("삭제하시겠습니까?")) {
-            axios.delete("http://192.168.0.7:8000/bookReportDelete", {
+            axios.delete("http://192.168.123.158:8000/bookReport/DeleteBookReport", {
                 params: {
-                    bookReportNum: isbn13
+                    reportNum: isbn13,
                 }
             })
                 .then((response) => {
@@ -128,6 +133,11 @@ function MyBookReport() {
             alert("취소합니다.");
         }
     }
+
+    const truncate = (str, n) => {
+        return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+    };
+
 
     return (
         <>
@@ -148,30 +158,30 @@ function MyBookReport() {
                         <TableHead style={{ backgroundColor: "#F8E8EE" }}>
                             <TableRow>
                                 <TableCell style={{ width: '10px' }}>No</TableCell>
-                                <TableCell>제목</TableCell>
-                                <TableCell>도서명</TableCell>
-                                <TableCell style={{ width: '50px' }}>직기</TableCell>
+                                <TableCell style={{ width: '300px' }}>제목</TableCell>
+                                <TableCell style={{ width: '200px' }}>도서명</TableCell>
+                                <TableCell style={{ width: '50px' }}>작가</TableCell>
                                 <TableCell style={{ width: '100px' }}>출판사</TableCell>
                                 <TableCell style={{ width: '75px' }}>등록일</TableCell>
                                 <TableCell style={{ width: '10px' }}></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                            {getPageData()?.map((data) => (
+                            {getPageData()?.map((data, index) => (
                                 <TableRow
                                     key={data.title}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
-                                        {data.id}
+                                        {data.reportNum}
                                     </TableCell>
                                     <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
-                                        {data.title}
+                                        {truncate(data.reportTitle, 20)}
                                     </TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.book}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{truncate(data.title, 12)}</TableCell>
                                     <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.author}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.publisher}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.date}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{truncate(data.publisher, 5)}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.registDate_report.split('T')[0]}</TableCell>
                                     <TableCell>
                                         <DeleteIcon
                                             style={{ color: "#FF9999" }}
@@ -184,18 +194,20 @@ function MyBookReport() {
                     </Table>
                 </TableContainer>
                 <div style={{ display: "flex" }}>
-                    <Pagination
-                        count={Math.ceil(bookReportList.length / itemsPerPage)}
-                        color="primary"
-                        style={{
-                            margin: '-7px 0',
-                            position: 'absolute',
-                            bottom: 0,
-                            left: '50%',
-                            transform: 'translateX(-50%)'
-                        }}
-                        onChange={handleChangePage}
-                    />
+                    {bookReportList && (
+                        <Pagination
+                            count={Math.ceil(bookReportList.length / itemsPerPage)}
+                            color="primary"
+                            style={{
+                                margin: '40px 0',
+                                position: 'absolute',
+                                bottom: 0,
+                                left: '50%',
+                                transform: 'translateX(-50%)'
+                            }}
+                            onChange={handleChangePage}
+                        />
+                    )}
                 </div>
             </Box>
         </>

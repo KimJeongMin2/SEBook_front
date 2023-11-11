@@ -114,17 +114,17 @@ function BookReportRegist() {
       reportContents: content,
     };
 
-    console.log("isbn13: ", location.state.isbn13);
+    console.log("isbn13 여기여기: ", isbn13);
 
     try {
       const res = await axios.post(
-        "http://192.168.0.7:8000/bookReport/bookReportCreate",
+        "http://192.168.123.158:8000/bookReport/bookReportCreate",
         bookReport
       );
       console.log(res.data);
-      if (res.data === "success") {
+      if (res.status === 200) {
         alert("독후감이 성공적으로 등록 되었습니다.");
-        navigate("/BookReport");
+        navigate("/BookReportList");
       }
     } catch (error) {
       console.error(error);
@@ -141,7 +141,7 @@ function BookReportRegist() {
   };
 
   const searchBookByAuthor = () => {
-    axios.get(`http://192.168.0.8:8000/book/searchBookByAuthor`, {
+    axios.get(`http://192.168.123.158:8000/book/searchBookByAuthor`, {
       params: {
         author: searchTerm
       }
@@ -160,7 +160,7 @@ function BookReportRegist() {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.0.8:8000/book/searchBookByTitle`, {
+      .get(`http://192.168.123.158:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -197,6 +197,7 @@ function BookReportRegist() {
     setPublisher(book.publisher);
     setIsbn13(book.isbn13);
     handleClose();
+    console.log("isbn13 : " + book.isbn13)
   };
 
   return (
@@ -267,7 +268,7 @@ function BookReportRegist() {
               />
               <Button
                 onClick={handleClickOpen}
-                style={{ backgroundColor: "#EF9A9A", color: "#ffffff" }}
+                style={{ backgroundColor: "#EF9A9A", color: "#ffffff", marginTop: '-10px', marginLeft: '2px' }}
               >
                 도서 검색
               </Button>

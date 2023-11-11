@@ -115,7 +115,7 @@ function Community() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/community/paragraphReadAll")
+      .get("http://192.168.123.158:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data.CommunityList);
         setCommunityList(response.data.CommunityList);
@@ -124,7 +124,7 @@ function Community() {
   }, []);
 
   const sendLikeCommunity = (postNum) => {
-    axios.post("http://192.168.0.8:8000/community/paragraphLike", {
+    axios.post("http://192.168.123.158:8000/community/paragraphLike", {
       postNum: postNum,
       userNum: 1
     })
@@ -229,10 +229,11 @@ function Community() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {getPageData().map((row, index) => (
+              {getPageData().map((data, index) => (
                 <TableRow
-                  key={row.title}
+                  key={data.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  onClick={() => navigate(`/CommunityDetail/${index + 1}`, { state: data })}
                 // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                 >
                   <TableCell
@@ -254,7 +255,7 @@ function Community() {
                       borderRight: "1px solid #F8E8EE",
                     }}
                   >
-                    {row.title}
+                    {data.title}
                   </TableCell>
                   <TableCell
                     style={{
@@ -262,7 +263,7 @@ function Community() {
                       borderRight: "1px solid #F8E8EE",
                     }}
                   >
-                    {row.contents}
+                    {data.contents}
                   </TableCell>
                   <TableCell
                     style={{
@@ -271,26 +272,26 @@ function Community() {
                       textAlign: "center",
                     }}
                   >
-                    {row.author}
+                    {data.author}
                   </TableCell>
                   <TableCell style={{ width: "80px", textAlign: "center" }}>
-                    {row.date}
+                    {data.date}
                   </TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    {likeStatus[row.postNum] ? (
+                    {likeStatus[data.postNum] ? (
                       <FavoriteIcon
                         style={{ color: "#EF9A9A" }}
                         onClick={() => {
-                          toggleLike(row.postNum);
+                          toggleLike(data.postNum);
                         }}
                       />
                     ) : (
                       <FavoriteBorderIcon
                         style={{ color: "#EF9A9A" }}
-                        onClick={() => toggleLike(row.postNum)}
+                        onClick={() => toggleLike(data.postNum)}
                       />
                     )}
-                    <div style={{ marginTop: "-5px" }}>{row.like}</div>
+                    <div style={{ marginTop: "-5px" }}>{data.like}</div>
                   </TableCell>
                 </TableRow>
               ))}

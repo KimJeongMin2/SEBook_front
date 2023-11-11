@@ -32,7 +32,7 @@ function App() {
         <Route path="/BookReportDetail/:id" element={<BookReportDetail />} />
         <Route path="/BookReportRegist" element={<BookReportRegist />} />
         <Route path="/Community" element={<Community />} />
-        {/* <Route path="/CommunityDetail/:id" element={<CommunityDetail />} /> */}
+        <Route path="/CommunityDetail/:id" element={<CommunityDetail />} />
         <Route path="/CommunityRegist" element={<CommunityRegist />} />
         <Route path="/MyPage" element={<MyPage />} />
         <Route path="/MyLikedBookList" element={<MyLikedBookList />} />
