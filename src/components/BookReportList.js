@@ -151,9 +151,13 @@ function BookReportList() {
   const itemsPerPage = 5;
 
   const getPageData = () => {
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    return bookReportList.slice(start, end);
+    if (bookReportList) {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return bookReportList.slice(start, end);
+    } else {
+      return [];
+    }
   };
 
   const [searchType, setSearchType] = useState("도서명");
@@ -174,10 +178,10 @@ function BookReportList() {
 
   useEffect(() => {
     axios
-      .get("http://172.29.114.163:8000/bookReport/bookReportReadAll")
+      .get("http://192.168.123.158:8000/bookReport/bookReportReadAll")
       .then((response) => {
-        // console.log(response.data.bookList);
-        setBookReportList(response.data.bookreports);
+        console.log("bookReportList: " + response.data.bookReportList);
+        setBookReportList(response.data.bookReportList);
 
         if (location.state.bookReportList) {
           // console.log("look ..: " + location.state.bookList[0]); 
@@ -187,7 +191,7 @@ function BookReportList() {
   }, []);
 
   const sendLikeBookReport = (bookReportNum) => {
-    axios.post("http://172.29.114.163:8000/bookReport/bookReportLike", {
+    axios.post("http://192.168.123.158:8000/bookReport/bookReportLike", {
       bookReportNum: bookReportNum,
       userNum: 1
     })
@@ -198,6 +202,10 @@ function BookReportList() {
         console.log(error);
       });
   }
+
+  const truncate = (str, n) => {
+    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+  };
 
   return (
     <>
@@ -263,7 +271,7 @@ function BookReportList() {
                 <TableCell>도서명</TableCell>
                 <TableCell style={{ width: "50px" }}>작가</TableCell>
                 <TableCell style={{ width: "100px" }}>출판사</TableCell>
-                <TableCell style={{ width: "50px" }}>작가</TableCell>
+                <TableCell style={{ width: "50px" }}>글쓴이</TableCell>
                 <TableCell style={{ width: "90px" }}>등록일</TableCell>
                 <TableCell style={{ width: "50px" }}>좋아요</TableCell>
               </TableRow>
@@ -277,12 +285,12 @@ function BookReportList() {
                   onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}
                 >
                   <TableCell component="th" scope="row">
-                    {data.id}
+                    {data.reportNum}
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    {data.title}
+                    {data.reportTitle}
                   </TableCell>
-                  <TableCell>{data.title}</TableCell>
+                  <TableCell>{data.book}</TableCell>
                   <TableCell>{data.author}</TableCell>
                   <TableCell>{data.publisher}</TableCell>
                   <TableCell>{data.writer}</TableCell>
@@ -318,18 +326,20 @@ function BookReportList() {
             justifyContent: "space-between",
           }}
         >
-          <Pagination
-            count={Math.ceil(bookReportList.length / itemsPerPage)}
-            color="primary"
-            style={{
-              margin: '-7px 0',
-              position: 'absolute',
-              bottom: 0,
-              left: '50%',
-              transform: 'translateX(-50%)'
-            }}
-            onChange={handleChangePage}
-          />
+          {bookReportList && (
+            <Pagination
+              count={Math.ceil(bookReportList.length / itemsPerPage)}
+              color="primary"
+              style={{
+                margin: '-7px 0',
+                position: 'absolute',
+                bottom: 0,
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }}
+              onChange={handleChangePage}
+            />
+          )}
           <Stack spacing={2} direction="row">
             <Button
               variant="contained"
@@ -338,7 +348,8 @@ function BookReportList() {
                 height: "30px",
                 backgroundColor: "#EF9A9A",
                 color: "#ffffff",
-                marginTop: '-10px'
+                marginTop: '-10px',
+
               }}
               onClick={() => {
                 navigate("/BookReportRegist");
@@ -348,7 +359,7 @@ function BookReportList() {
             </Button>
           </Stack>
         </div>
-      </Box>
+      </Box >
     </>
   );
 }

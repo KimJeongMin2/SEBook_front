@@ -87,7 +87,7 @@ function MyLikedBookReport() {
     const getPageData = () => {
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        return bookReportList.slice(start, end);
+        return Array.isArray(bookReportList) ? bookReportList.slice(start, end) : [];
     };
 
     const handleChangePage = (event, value) => {
@@ -95,17 +95,21 @@ function MyLikedBookReport() {
     };
 
     useEffect(() => {
-        axios.get("http://172.29.114.163:8000/bookReportReadLike", {
+        axios.get("http://192.168.123.158:8000/bookReport/bookReportReadLike", {
             params: {
                 userNum: 1
             }
         })
             .then((response) => {
                 // console.log(response.data.bookList);
-                setBookReportList(response.data.bookList);
+                setBookReportList(response.data.bookReportList);
             })
             .catch((error) => console.error(error));
     }, []);
+
+    const truncate = (str, n) => {
+        return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+    };
 
     return (
         <>
@@ -158,7 +162,7 @@ function MyLikedBookReport() {
                     </Table>
                 </TableContainer>
                 <div style={{ display: 'flex' }}>
-                    <Pagination
+                    {bookReportList && <Pagination
                         count={Math.ceil(bookReportList.length / itemsPerPage)}
                         color="primary"
                         style={{
@@ -169,7 +173,7 @@ function MyLikedBookReport() {
                             transform: 'translateX(-50%)'
                         }}
                         onChange={handleChangePage}
-                    />
+                    />}
                 </div>
             </Box>
         </>

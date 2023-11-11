@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box, InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -25,7 +25,7 @@ import axios from "axios";
 
 function CommunityRegist() {
   const location = useLocation();
-
+  const navigate = useNavigate();
   const [title, setTitle] = useState();
   const [book, setBook] = useState(location.state?.book || "");
   const [author, setAuthor] = useState(location.state?.author || "");
@@ -44,12 +44,13 @@ function CommunityRegist() {
 
     try {
       const res = await axios.post(
-        "http://172.29.114.163:8000/community/paragraphCreate",
+        "http://192.168.123.158:8000/community/paragraphCreate",
         paragraph
       );
-      console.log(res.data);
+
       if (res.status === 200) {
         alert("인상 깊은 구절이 성공적으로 등록 되었습니다.");
+        navigate("/Community  ");
       }
     } catch (error) {
       console.error(error);

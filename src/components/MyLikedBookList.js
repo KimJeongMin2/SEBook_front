@@ -145,9 +145,13 @@ function MyLikedBookList() {
   }, []);
 
   const getPageData = () => {
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    return readLikeBook.slice(start, end);
+    if (readLikeBook) {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return readLikeBook.slice(start, end);
+    } else {
+      return [];
+    }
   };
   const [likes, setLikes] = useState({});
 
@@ -248,16 +252,20 @@ function MyLikedBookList() {
                 </Card>
               </Grid>
             ))}
-            <Pagination count={totalPages} color="primary"
-              style={{
-                margin: '3px 0',
-                position: 'absolute',
-                bottom: 0,
-                left: '50%',
-                transform: 'translateX(-50%)'
-              }}
-              onChange={handleChangePage}
-            />
+            {readLikeBook && (
+              <Pagination
+                count={Math.ceil(readLikeBook.length / itemsPerPage)}
+                color="primary"
+                style={{
+                  margin: '-7px 0',
+                  position: 'absolute',
+                  bottom: 0,
+                  left: '50%',
+                  transform: 'translateX(-50%)'
+                }}
+                onChange={handleChangePage}
+              />
+            )}
           </Box>
         </Grid>
 

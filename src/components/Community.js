@@ -106,7 +106,7 @@ function Community() {
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [paragraphList, setParagraphList] = useState([]);
 
   const handleOpen = (content) => {
@@ -130,7 +130,7 @@ function Community() {
 
   useEffect(() => {
     axios
-      .get("http://172.29.114.163:8000/community/paragraphReadAll")
+      .get("http://192.168.123.158:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data.CommunityList);
         setCommunityList(response.data.CommunityList);
@@ -140,7 +140,7 @@ function Community() {
 
   const sendLikeCommunity = (postNum) => {
     axios
-      .post("http://172.29.114.163:8000/community/paragraphLike", {
+      .post("http://192.168.123.158:8000/community/paragraphLike", {
         postNum: postNum,
         userNum: 1,
       })
@@ -176,15 +176,16 @@ function Community() {
   }, []);
 
   const searchBookByAuthor = () => {
-    axios.get(`http://172.29.114.163:8000/community/searchCommunityByAuthor`, {
-      params: {
-        author: searchTerm
-      }
-    })
-      .then(response => {
+    axios
+      .get(`http://172.29.114.163:8000/community/searchCommunityByAuthor`, {
+        params: {
+          author: searchTerm,
+        },
+      })
+      .then((response) => {
         setParagraphList(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 404) {
           alert("해당 검색어에 맞는 결과가 없습니다.");
         } else {
@@ -194,15 +195,16 @@ function Community() {
   };
 
   const searchBookByTitle = () => {
-    axios.get(`http://172.29.114.163:8000/community/searchParagraphByTitle`, {
-      params: {
-        title: searchTerm
-      }
-    })
-      .then(response => {
+    axios
+      .get(`http://172.29.114.163:8000/community/searchParagraphByTitle`, {
+        params: {
+          title: searchTerm,
+        },
+      })
+      .then((response) => {
         setParagraphList(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 404) {
           alert("해당 검색어에 맞는 결과가 없습니다.");
         } else {
@@ -211,10 +213,10 @@ function Community() {
       });
   };
   const handleSearchKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      if (searchType === '작가명') {
+    if (event.key === "Enter") {
+      if (searchType === "작가명") {
         searchBookByAuthor();
-      } else if (searchType === '도서명') {
+      } else if (searchType === "도서명") {
         searchBookByTitle();
       }
     }
@@ -223,7 +225,6 @@ function Community() {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
 
   return (
     <>
@@ -297,11 +298,14 @@ function Community() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {getPageData().map((row, index) => (
+              {getPageData().map((data, index) => (
                 <TableRow
-                  key={row.title}
+                  key={data.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  onClick={() => handleOpen(row)}
+                  onClick={() =>
+                    navigate(`/CommunityDetail/${index + 1}`, { state: data })
+                  }
+                  // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                 >
                   <TableCell
                     component="th"
@@ -322,7 +326,7 @@ function Community() {
                       borderRight: "1px solid #F8E8EE",
                     }}
                   >
-                    {row.title}
+                    {data.title}
                   </TableCell>
                   <TableCell
                     style={{
@@ -330,7 +334,7 @@ function Community() {
                       borderRight: "1px solid #F8E8EE",
                     }}
                   >
-                    {row.contents}
+                    {data.contents}
                   </TableCell>
                   <TableCell
                     style={{
@@ -339,18 +343,18 @@ function Community() {
                       textAlign: "center",
                     }}
                   >
-                    {row.author}
+                    {data.author}
                   </TableCell>
                   <TableCell style={{ width: "80px", textAlign: "center" }}>
-                    {row.date}
+                    {data.date}
                   </TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    {likeStatus[row.postNum] ? (
+                    {likeStatus[data.postNum] ? (
                       <FavoriteIcon
                         style={{ color: "#EF9A9A" }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleLike(row.postNum);
+                          toggleLike(data.postNum);
                         }}
                       />
                     ) : (
@@ -358,11 +362,11 @@ function Community() {
                         style={{ color: "#EF9A9A" }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleLike(row.postNum);
+                          toggleLike(data.postNum);
                         }}
                       />
                     )}
-                    <div style={{ marginTop: "-5px" }}>{row.like}</div>
+                    <div style={{ marginTop: "-5px" }}>{data.like}</div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -423,28 +427,33 @@ function Community() {
             id="modal-modal-title"
             variant="h6"
             component="div"
-            sx={{ display: "flex", justifyContent: "space-between", fontSize:"22px", fontWeight:"bold" }}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "22px",
+              fontWeight: "bold",
+            }}
           >
             <div>구절 정보</div>
             {likeStatus[modalContent.postNum] ? (
-            <FavoriteIcon
-              style={{ color: "#EF9A9A" }}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleLike(modalContent.postNum);
-              }}
-            />
-          ) : (
-            <FavoriteBorderIcon
-              style={{ color: "#EF9A9A" }}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleLike(modalContent.postNum);
-              }}
-            />
-          )}
+              <FavoriteIcon
+                style={{ color: "#EF9A9A" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleLike(modalContent.postNum);
+                }}
+              />
+            ) : (
+              <FavoriteBorderIcon
+                style={{ color: "#EF9A9A" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleLike(modalContent.postNum);
+                }}
+              />
+            )}
           </Typography>
-          
+
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <span style={{ fontWeight: "bold" }}>도서명 | </span>
             {modalContent.title}
@@ -458,7 +467,7 @@ function Community() {
             <span style={{ fontWeight: "bold" }}>내용 | </span>
             {modalContent.contents}
           </Typography>
-          
+
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button onClick={handleClose}>닫기</Button>
           </Box>
