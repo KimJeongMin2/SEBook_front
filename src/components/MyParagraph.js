@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 
@@ -20,6 +20,7 @@ import Button from "@mui/material/Button";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
 function createData(id, title, paragraph, writer, date, like) {
@@ -83,10 +84,12 @@ const StyledInputBase = styled(InputBase, {
     },
   },
 }));
+
 function MyParagraph() {
   const navigate = new useNavigate();
 
-  const [rows, setRows] = useState(initialRows);
+  const [paragraphReadMy, setParagraphReadMy] = useState([]);
+  // const [rows, setRows] = useState(paragraphReadMy);
   const [page, setPage] = useState(0); // Current page
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -112,6 +115,37 @@ function MyParagraph() {
       ...prevStatus,
       [id]: !prevStatus[id],
     }));
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://172.29.114.163:8000/community/paragraphReadMy", {
+        params: {
+          userNum: 1,
+        },
+      })
+      .then((response) => {
+        console.log(response.data.CommunityList);
+        setParagraphReadMy(response.data.CommunityListMy);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const sendDeleteParagraphMy = (postNum) => {
+    axios
+      .delete("http://172.29.114.163:8000/community/paragraphDelete", {
+        params: {
+          postNum: postNum,
+          userNum: 1,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -148,11 +182,11 @@ function MyParagraph() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {displayRows.map((row) => (
+              {displayRows.map((row, index) => (
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                  // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                 >
                   <TableCell
                     component="th"
@@ -163,7 +197,7 @@ function MyParagraph() {
                       textAlign: "center",
                     }}
                   >
-                    {row.id}
+                    {index + 1}
                   </TableCell>
                   <TableCell
                     component="th"
@@ -193,7 +227,13 @@ function MyParagraph() {
                       fontSize: "10px",
                     }}
                   >
-                    <DeleteIcon style={{ color: "#FF9999" }} />
+                    <DeleteIcon
+                      style={{ color: "#FF9999" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        sendDeleteParagraphMy(row.postNum);
+                      }}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

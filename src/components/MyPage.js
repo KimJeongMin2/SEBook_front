@@ -96,10 +96,11 @@ export default function MyPage() {
   const navigate = useNavigate();
 
   const [readLikeBook, setReadLikeBook] = useState([]);
+  const [readMyParagraph, setReadMyParagraph] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://172.30.127.93:8000/book/likeBookListRead", {
+      .get("http://172.29.114.163:8000/book/likeBookListRead", {
         params: {
           userNum: 1,
         },
@@ -110,6 +111,23 @@ export default function MyPage() {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  const paragraphReadMy = (userNum) => {
+    axios
+      .post("http://172.29.114.163:8000/community/paragraphReadMy", {
+        params: {
+          userNum: 1,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setReadMyParagraph(response.data.a);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <React.Fragment>
       <MainAppBar />
@@ -227,6 +245,7 @@ export default function MyPage() {
                 <Link color="primary" href="#" onClick={preventDefault}></Link>
                 <Table
                   size="small"
+                  style={{ width: '360px', height: '200px' }}
                   sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
                 >
                   <TableHead>
@@ -235,16 +254,22 @@ export default function MyPage() {
                       <TableCell style={{ fontSize: "13px" }}>
                         Paragraph
                       </TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>
+                        author
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data.map((row) => (
-                      <TableRow key={row.id}>
+                  {readMyParagraph.slice(-5).reverse().map((row, index) => (
+                      <TableRow key={row.isbn13}>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.id}
+                          {index + 1}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.title, 15)}
+                          {truncate(row.title, 10)}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {truncate(row.author, 10)}
                         </TableCell>
                       </TableRow>
                     ))}

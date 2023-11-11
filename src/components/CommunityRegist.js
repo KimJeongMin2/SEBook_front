@@ -48,7 +48,7 @@ function CommunityRegist() {
         paragraph
       );
 
-      if (res.data === 200) {
+      if (res.status === 200) {
         alert("인상 깊은 구절이 성공적으로 등록 되었습니다.");
         navigate("/Community  ");
       }
