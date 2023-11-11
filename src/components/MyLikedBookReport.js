@@ -96,7 +96,7 @@ function MyLikedBookReport() {
     };
 
     useEffect(() => {
-        axios.get("http://121.183.121.119:8000/bookReport/bookReportReadLike", {
+        axios.get("http://192.168.123.158:8000/bookReport/bookReportReadLike", {
             params: {
                 userNum: 1
             }
@@ -160,6 +160,7 @@ function MyLikedBookReport() {
                                 <TableCell style={{ width: '200px' }}>도서명</TableCell>
                                 <TableCell style={{ width: '95px' }}>작가</TableCell>
                                 <TableCell style={{ width: '100px' }}>출판사</TableCell>
+                                <TableCell style={{ width: '100px' }}>글쓴이</TableCell>
                                 <TableCell style={{ width: '90px' }}>등록일</TableCell>
                                 <TableCell style={{ width: '45px' }}>좋아요</TableCell>
                             </TableRow>
@@ -180,6 +181,7 @@ function MyLikedBookReport() {
                                     <TableCell>{truncate(data.title, 20)}</TableCell>
                                     <TableCell>{truncate(data.author, 6)}</TableCell>
                                     <TableCell>{truncate(data.publisher, 6)}</TableCell>
+                                    <TableCell>{truncate(data.writer, 6)}</TableCell>
                                     <TableCell>{data.registDate_report.split('T')[0]}</TableCell>
                                     <TableCell style={{ width: "50px", textAlign: "center" }}>
                                         <IconButton

@@ -377,14 +377,10 @@ export default function MyPage() {
                   <AssignmentIndIcon
                     style={{ margin: "auto 10px", fontSize: "150px" }}
                   ></AssignmentIndIcon>
-                  {myInfo && (
-                    <div style={{ margin: "50px 0" }}>
-                      <div style={{ margin: "10px" }}>이름 : {myInfo.name}</div>
-                      <div style={{ margin: "10px" }}>
-                        아이디 : {myInfo.userId}
-                      </div>
-                    </div>
-                  )}
+                  <div style={{ margin: "50px 0" }}>
+                    <div style={{ margin: "10px" }}>이름 : {myInfo?.name}</div>
+                    <div style={{ margin: "10px" }}>아이디 : {myInfo?.userId}</div>
+                  </div>
                 </div>
               </Box>
             </Box>

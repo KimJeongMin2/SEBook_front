@@ -219,6 +219,8 @@ function MainPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [bookList, setBookList] = useState([]);
+  const [bookTop5List, setBookTop5List] = useState([]);
+  const [bestsellerList, setBestsellerList] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
@@ -237,6 +239,26 @@ function MainPage() {
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://192.168.123.158:8000/book/BestsellerListRead")
+      .then((response) => {
+        console.log(response.data);
+        setBestsellerList(response.data.recommendations);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://192.168.123.158:8000/bookReport/bookReportReadTop5")
+      .then((response) => {
+        console.log(response.data);
+        setBookTop5List(response.data);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -523,7 +545,7 @@ function MainPage() {
               marginTop: "30px",
             }}
           >
-            {bestCardData.map((data, index) => (
+            {bestsellerList.map((data, index) => (
               <Grid>
                 <Card
                   sx={{ maxWidth: 280, margin: "10px" }}
@@ -592,7 +614,7 @@ function MainPage() {
               margin: "30px 0 100px",
             }}
           >
-            {bookReportData.map((data) => (
+            {bookTop5List.map((data) => (
               <Grid>
                 <Card
                   sx={{ maxWidth: 280, margin: 1 }}
@@ -609,7 +631,7 @@ function MainPage() {
                     component="img"
                     width="220px"
                     height="200"
-                    src={data.image}
+                    src={data.cover}
                     alt="Paella dish"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
