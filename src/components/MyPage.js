@@ -99,16 +99,17 @@ export default function MyPage() {
   const [readLikeBook, setReadLikeBook] = useState([]);
   const [myBookReport, setMyBookReport] = useState([]);
   const [myLikedBookReport, setMyLikedBookReport] = useState([]);
+  const [readMyParagraph, setReadMyParagraph] = useState([]);
 
   useEffect(() => {
     axios.get("http://192.168.123.158:8000/user/memberSearch", {
       params: {
-        id: 1
+        userNum: 1
       }
     })
       .then((response) => {
-        console.log("myInfo : " + response.data.user);
-        setMyInfo(response.data.user);
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -154,6 +155,23 @@ export default function MyPage() {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  const paragraphReadMy = (userNum) => {
+    axios
+      .post("http://121.183.121.119:8000/community/paragraphReadMy", {
+        params: {
+          userNum: 1,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setReadMyParagraph(response.data.a);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
 
   return (
 
@@ -274,6 +292,7 @@ export default function MyPage() {
                 <Link color="primary" href="#" onClick={preventDefault}></Link>
                 <Table
                   size="small"
+                  style={{ width: '360px', height: '200px' }}
                   sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
                 >
                   <TableHead>
@@ -282,16 +301,22 @@ export default function MyPage() {
                       <TableCell style={{ fontSize: "13px" }}>
                         Title
                       </TableCell>
+                      <TableCell style={{ fontSize: "13px" }}>
+                        author
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data.map((row) => (
-                      <TableRow key={row.id}>
+                    {readMyParagraph.slice(-5).reverse().map((row, index) => (
+                      <TableRow key={row.isbn13}>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.id}
+                          {index + 1}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.title, 15)}
+                          {truncate(row.title, 10)}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {truncate(row.author, 10)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -320,12 +345,11 @@ export default function MyPage() {
                   }}
                 >
                   <AssignmentIndIcon
-                    style={{ margin: "auto 0", fontSize: "150px" }}
+                    style={{ margin: "auto 10px", fontSize: "150px" }}
                   ></AssignmentIndIcon>
-                  <div style={{ margin: "30px 0" }}>
-                    <div style={{ margin: "10px" }}>이름 : 홍길동</div>
-                    <div style={{ margin: "10px" }}>닉네임 : 동길홍</div>
-                    <div style={{ margin: "10px" }}>아이디 : abc1234</div>
+                  <div style={{ margin: "50px 0" }}>
+                    <div style={{ margin: "10px" }}>이름 : {myInfo.name}</div>
+                    <div style={{ margin: "10px" }}>아이디 : {myInfo.userId}</div>
                   </div>
                 </div>
               </Box>

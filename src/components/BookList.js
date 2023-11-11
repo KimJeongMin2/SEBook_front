@@ -174,7 +174,7 @@ function BookList() {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
 
-        if (location.state.bookList) {
+        if (location.state && location.state.bookList) {
           console.log("look ..: " + location.state.bookList);
         }
       })

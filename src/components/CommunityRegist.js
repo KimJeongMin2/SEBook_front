@@ -44,11 +44,11 @@ function CommunityRegist() {
 
     try {
       const res = await axios.post(
-        "http://192.168.123.158:8000/community/paragraphCreate",
+        "http://121.183.121.119:8000/community/paragraphCreate",
         paragraph
       );
 
-      if (res.data === 200) {
+      if (res.status === 200) {
         alert("인상 깊은 구절이 성공적으로 등록 되었습니다.");
         navigate("/Community  ");
       }

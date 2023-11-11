@@ -80,7 +80,7 @@ const StyledSelect = styled(Select, {
     width: "20ch",
   },
 }));
-function BookReportRegist() {
+function BookReportUpdate() {
   const navigate = useNavigate();
   const location = useLocation();
   const [title, setTitle] = useState(location.state?.reportTitle || "");
@@ -108,7 +108,7 @@ function BookReportRegist() {
     setOpen(false);
   };
 
-  const submit = async () => {
+  const update = async () => {
     const bookReport = {
       userNum_report: writer,
       reportTitle: title,
@@ -119,24 +119,26 @@ function BookReportRegist() {
     };
 
     try {
-      const res = await axios.post(
-        "http://121.183.121.119:8000/bookReport/bookReportCreate",
-        bookReport
-      );
+      const res = await axios.put(
+        "http://192.168.123.158:8000/bookReport/bookReportUpdate", {
+        reportNum: location.state.reportNum,
+        reportContents: content,
+        reportTitle: title
+      })
       console.log(res.data);
       if (res.status === 200) {
-        alert("독후감이 성공적으로 등록 되었습니다.");
+        alert("독후감이 성공적으로 수정 되었습니다.");
         navigate("/BookReportList");
       }
     } catch (error) {
       console.error(error);
-      alert("등록에 실패했습니다. 다시 시도해주세요.");
+      alert("수정에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
-  const handleSubmit = () => {
+  const handleUpdate = () => {
     if (title && book && author && writer && publisher && content) {
-      submit();
+      update();
     } else {
       alert("모든 값을 입력하시고 등록 버튼을 눌러주세요.");
     }
@@ -225,7 +227,7 @@ function BookReportRegist() {
               }}
             ></ImportContactsIcon>
             <div style={{ fontSize: "20px", fontWeight: "bold" }}>
-              독후감 작성
+              독후감 수정
             </div>
           </div>
           <div style={{ margin: "20px 0" }}>
@@ -418,7 +420,7 @@ function BookReportRegist() {
               취소
             </Button>
             <Button
-              onClick={handleSubmit}
+              onClick={handleUpdate}
               variant="contained"
               style={{
                 marginTop: "10px",
@@ -428,7 +430,7 @@ function BookReportRegist() {
                 color: "#ffffff",
               }}
             >
-              등록
+              수정
             </Button>
           </Stack>
         </div>
@@ -437,4 +439,4 @@ function BookReportRegist() {
   );
 }
 
-export default BookReportRegist;
+export default BookReportUpdate;

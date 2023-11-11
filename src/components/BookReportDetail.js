@@ -97,7 +97,7 @@ function BookReportDetail() {
                             <Button
                                 variant="contained"
                                 style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
-                                onClick={() => { navigate('/') }}
+                                onClick={() => navigate(`/BookReportUpdate`, { state: location.state })}
 
                             >수정하기</Button>
                             <div >

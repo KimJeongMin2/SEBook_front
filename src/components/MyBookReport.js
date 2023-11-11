@@ -116,7 +116,9 @@ function MyBookReport() {
 
     const sendDeleteBook = (reportNum) => {
         if (window.confirm("삭제하시겠습니까?")) {
+
             axios.delete("http://192.168.123.158:8000/bookReport/bookReportDelete", {
+
                 params: {
                     reportNum: reportNum,
                 }

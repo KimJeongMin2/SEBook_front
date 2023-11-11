@@ -17,6 +17,7 @@ import MyBookReport from "./components/MyBookReport";
 import MyLikedBookReport from "./components/MyLikedBookReport.js";
 import MyParagraph from "./components/MyParagraph";
 import MyLikedParagraph from "./components/MyLikedParagraph";
+import BookReportUpdate from "./components/BookReportUpdate.js";
 
 function App() {
   <link href="https://font.elice.io/css?family=Elice+DX+Neolli" rel="stylesheet"></link>
@@ -31,6 +32,7 @@ function App() {
         <Route path="/BookReportList" element={<BookReportList />} />
         <Route path="/BookReportDetail/:id" element={<BookReportDetail />} />
         <Route path="/BookReportRegist" element={<BookReportRegist />} />
+        <Route path="/BookReportUpdate" element={<BookReportUpdate />} />
         <Route path="/Community" element={<Community />} />
         <Route path="/CommunityDetail/:id" element={<CommunityDetail />} />
         <Route path="/CommunityRegist" element={<CommunityRegist />} />

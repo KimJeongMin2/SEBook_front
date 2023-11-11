@@ -32,9 +32,9 @@ import "../slick.css";
 import "../slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import ConfettiExplosion from 'react-confetti-explosion';
-import useWindowSize from 'react-use/lib/useWindowSize'
-import Confetti from 'react-confetti'
+import ConfettiExplosion from "react-confetti-explosion";
+import useWindowSize from "react-use/lib/useWindowSize";
+import Confetti from "react-confetti";
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -200,13 +200,11 @@ const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
 
-
-
 function MainPage() {
   const navigate = useNavigate();
 
   const [isExploding, setIsExploding] = useState(false);
-  const { width, height } = useWindowSize()
+  const { width, height } = useWindowSize();
 
   const [expandedId, setExpandedId] = useState(-1);
   const handleExpandClick = (id) => {
@@ -255,7 +253,7 @@ function MainPage() {
         console.log("book list : " + response.data.title);
         // navigate(`/BookList`, { state: bookList })
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 404) {
           alert("해당 검색어에 맞는 결과가 없습니다.");
         } else {
@@ -265,20 +263,21 @@ function MainPage() {
   };
 
   const searchBookByTitle = () => {
-    axios.get(`http://192.168.123.158:8000/book/searchBookByTitle`, {
-      params: {
-        title: searchTerm
-      }
-    })
-      .then(response => {
+    axios
+      .get(`http://192.168.123.158:8000/book/searchBookByTitle`, {
+        params: {
+          title: searchTerm,
+        },
+      })
+      .then((response) => {
         setBookList(response.data);
         navigate(`/BookList`, {
           state: {
-            bookList: bookList
+            bookList: bookList,
           },
         });
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 404) {
           alert("해당 검색어에 맞는 결과가 없습니다.");
         } else {
@@ -331,7 +330,6 @@ function MainPage() {
     setSelectedBook(null);
     setOpen(false);
   };
-
 
   return (
     <>
@@ -454,13 +452,47 @@ function MainPage() {
             </Slider>
           </Box>
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{"도서 정보"}</DialogTitle>
+            <DialogTitle
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              {"도서 정보"}
+              {selectedBook ? (
+                <FavoriteIcon
+                  style={{
+                    color: likes[selectedBook.isbn13] ? "#EF9A9A" : "gray",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleLike(selectedBook.isbn13);
+                    sendLikeBook(selectedBook.isbn13);
+                  }}
+                />
+              ) : null}
+            </DialogTitle>
             <DialogContent>
               {selectedBook ? (
                 <>
-                  <div style={{ fontSize: '18px', fontFamily: 'bold', marginBottom: '5px' }}>{selectedBook.title}</div>
-                  <div style={{ marginBottom: '5px' }}>{selectedBook.author}</div>
-                  <div style={{ fontSize: '15px' }}>{selectedBook.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>')}</div>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontFamily: "bold",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    {selectedBook.title}
+                  </div>
+                  <div style={{ marginBottom: "5px" }}>
+                    {selectedBook.author}
+                  </div>
+                  <div style={{ fontSize: "15px" }}>
+                    {selectedBook.description
+                      .replace(/&lt;/g, "<")
+                      .replace(/&gt;/g, ">")}
+                  </div>
                 </>
               ) : null}
             </DialogContent>
