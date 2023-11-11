@@ -108,6 +108,7 @@ function Community() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [paragraphList, setParagraphList] = useState([]);
+  const [searchType, setSearchType] = useState("도서명");
 
   const handleOpen = (content) => {
     setOpen(true);
@@ -130,7 +131,7 @@ function Community() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/community/paragraphReadAll")
+      .get("http://121.183.121.119:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data.CommunityList);
         setCommunityList(response.data.CommunityList);
@@ -140,7 +141,7 @@ function Community() {
 
   const sendLikeCommunity = (postNum) => {
     axios
-      .post("http://192.168.123.158:8000/community/paragraphLike", {
+      .post("http://121.183.121.119:8000/community/paragraphLike", {
         postNum: postNum,
         userNum: 1,
       })
@@ -164,20 +165,11 @@ function Community() {
       sendLikeCommunity(id);
     }
   };
-  const [searchType, setSearchType] = useState("도서명");
-
-  useEffect(() => {
-    axios
-      .get("http://172.30.66.199:8000/community/paragraphReadAll")
-      .then((response) => {
-        console.log("data : " + response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+  
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://172.29.114.163:8000/community/searchCommunityByAuthor`, {
+      .get(`http://121.183.121.119:8000/community/searchCommunityByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -196,7 +188,7 @@ function Community() {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://172.29.114.163:8000/community/searchParagraphByTitle`, {
+      .get(`http://121.183.121.119:8000/community/searchParagraphByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -303,7 +295,7 @@ function Community() {
                   key={data.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   onClick={() =>
-                    navigate(`/CommunityDetail/${index + 1}`, { state: data })
+                    handleOpen(data)
                   }
                   // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                 >

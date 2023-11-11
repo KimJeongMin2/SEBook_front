@@ -97,7 +97,7 @@ function MyLikedParagraph() {
 
   useEffect(() => {
     axios
-      .get("http://172.29.114.163:8000/community/paragraphReadLike", {
+      .get("http://121.183.121.119:8000/community/paragraphReadLike", {
         params: {
           userNum: 1
         },
@@ -134,7 +134,7 @@ function MyLikedParagraph() {
   };
 
   const sendDeleteParagraph = (postNum) => {
-    axios.delete("http://172.29.114.163:8000/community/likeparagraphDelete", {
+    axios.delete("http://121.183.121.119:8000/community/likeparagraphDelete", {
       params: {
         postNum:postNum,
         userNum: 1

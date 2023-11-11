@@ -119,7 +119,7 @@ function MyParagraph() {
 
   useEffect(() => {
     axios
-      .get("http://172.29.114.163:8000/community/paragraphReadMy", {
+      .get("http://121.183.121.119:8000/community/paragraphReadMy", {
         params: {
           userNum: 1,
         },
@@ -133,7 +133,7 @@ function MyParagraph() {
 
   const sendDeleteParagraphMy = (postNum) => {
     axios
-      .delete("http://172.29.114.163:8000/community/paragraphDelete", {
+      .delete("http://121.183.121.119:8000/community/paragraphDelete", {
         params: {
           postNum: postNum,
           userNum: 1,
