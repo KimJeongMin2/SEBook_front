@@ -134,17 +134,17 @@ function Community() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/community/paragraphReadAll")
+      .get("http://121.183.121.119:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data); // Log the entire response
-        setCommunityList(response.data.CommunityList || []);
+        setCommunityList(response.data.allPosts || []);
       })
       .catch((error) => console.error(error));
   }, []);
 
   const sendLikeCommunity = (postNum) => {
     axios
-      .post("http://192.168.123.158:8000/community/paragraphLike", {
+      .post("http://121.183.121.119:8000/community/paragraphLike", {
         postNum: postNum,
         userNum: 1,
       })
@@ -170,9 +170,9 @@ function Community() {
   };
 
 
-  const searchBookByAuthor = () => {
+  const searchParagraphByAuthor = () => {
     axios
-      .get(`http://192.168.123.158:8000/community/searchCommunityByAuthor`, {
+      .get(`http://121.183.121.119:8000/community/searchParagraphByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -192,9 +192,10 @@ function Community() {
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   }
-  const searchBookByTitle = () => {
+
+  const searchParagraphByTitle = () => {
     axios
-      .get(`http://192.168.123.158:8000/community/searchParagraphByTitle`, {
+      .get(`http://121.183.121.119:8000/community/searchParagraphByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -213,9 +214,9 @@ function Community() {
   const handleSearchKeyPress = (event) => {
     if (event.key === "Enter") {
       if (searchType === "작가명") {
-        searchBookByAuthor();
+        searchParagraphByAuthor();
       } else if (searchType === "도서명") {
-        searchBookByTitle();
+        searchParagraphByTitle();
       }
     }
   };
@@ -279,7 +280,6 @@ function Community() {
             </Search>
           </div>
         </div>
-
         <TableContainer
           component={Paper}
           style={{ display: "flex", maxWidth: "70%", margin: "10px auto" }}
@@ -362,7 +362,7 @@ function Community() {
                           }}
                         />
                       )}
-                      <div style={{ marginTop: "-5px" }}>{data.like}</div>
+                      <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
                     </TableCell>
                   </TableRow>
                 ))

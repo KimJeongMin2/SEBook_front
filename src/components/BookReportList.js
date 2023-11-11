@@ -180,7 +180,7 @@ function BookReportList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/bookReport/bookReportReadAll")
+      .get("http://121.183.121.119:8000/bookReport/bookReportReadAll")
       .then((response) => {
         console.log("bookReportList: " + response.data.allReports);
         setBookReportList(response.data.allReports);
@@ -194,7 +194,7 @@ function BookReportList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/bookReport/bookReportReadLike", {
+      .get("http://121.183.121.119:8000/bookReport/bookReportReadLike", {
         params: {
           userNum: 1
         }
@@ -207,7 +207,7 @@ function BookReportList() {
   }, []);
 
   const sendLikeBookReport = (bookReportNum) => {
-    axios.post("http://192.168.123.158:8000/bookReport/bookReportLike", {
+    axios.post("http://121.183.121.119:8000/bookReport/bookReportLike", {
       reportNum: bookReportNum,
       userNum: 1
     })
