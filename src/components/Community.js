@@ -159,6 +159,9 @@ function Community() {
       .catch((error) => console.error(error));
   }, []);
 
+  const truncate = (str, n) => {
+    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+  };
 
   return (
     <>
@@ -255,27 +258,27 @@ function Community() {
                       borderRight: "1px solid #F8E8EE",
                     }}
                   >
-                    {data.title}
+                    {truncate(data.title, 18)}
                   </TableCell>
                   <TableCell
                     style={{
-                      width: "600px",
+                      width: "500px",
                       borderRight: "1px solid #F8E8EE",
                     }}
                   >
-                    {data.contents}
+                    {truncate(data.contents, 30)}
                   </TableCell>
                   <TableCell
                     style={{
-                      width: "150px",
+                      width: "180px",
                       borderRight: "1px solid #F8E8EE",
                       textAlign: "center",
                     }}
                   >
-                    {data.author}
+                    {truncate(data.author, 9)}
                   </TableCell>
-                  <TableCell style={{ width: "80px", textAlign: "center" }}>
-                    {data.date}
+                  <TableCell style={{ width: "90px", textAlign: "center" }}>
+                    {data.registDate_community.split('T')[0]}
                   </TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
                     {likeStatus[data.postNum] ? (
@@ -303,7 +306,7 @@ function Community() {
             count={Math.ceil(communityList.length / itemsPerPage)}
             color="primary"
             style={{
-              margin: '-7px 0',
+              margin: '20px 0',
               position: 'absolute',
               bottom: 0,
               left: '50%',

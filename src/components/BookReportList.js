@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import axios from "axios";
-import { Box, InputBase } from "@mui/material";
+import { Box, InputBase, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -163,25 +163,25 @@ function BookReportList() {
   const [searchType, setSearchType] = useState("도서명");
 
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
-
+  const [likedBookReportList, setLikedBookReportList] = useState([]);
+  const [likes, setLikes] = useState({});
   const handleChangePage = (event, value) => {
     setCurrentPage(value);
   };
 
-  // Function to toggle the like status for a specific row
   const toggleLike = (id) => {
-    setLikeStatus((prevStatus) => ({
-      ...prevStatus,
-      [id]: !prevStatus[id],
-    }));
+    setLikes({
+      ...likes,
+      [id]: !likes[id],
+    });
   };
 
   useEffect(() => {
     axios
       .get("http://192.168.123.158:8000/bookReport/bookReportReadAll")
       .then((response) => {
-        console.log("bookReportList: " + response.data.bookReportList);
-        setBookReportList(response.data.bookReportList);
+        console.log("bookReportList: " + response.data.allReports);
+        setBookReportList(response.data.allReports);
 
         if (location.state.bookReportList) {
           // console.log("look ..: " + location.state.bookList[0]);
@@ -190,13 +190,28 @@ function BookReportList() {
       .catch((error) => console.error(error));
   }, []);
 
+  useEffect(() => {
+    axios
+      .get("http://192.168.123.158:8000/bookReport/bookReportReadLike", {
+        params: {
+          userNum: 1
+        }
+      })
+      .then((response) => {
+
+        setLikedBookReportList(response.data.likeBookReportList);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
   const sendLikeBookReport = (bookReportNum) => {
     axios.post("http://192.168.123.158:8000/bookReport/bookReportLike", {
-      bookReportNum: bookReportNum,
+      reportNum: bookReportNum,
       userNum: 1
     })
       .then((response) => {
         console.log(response);
+        window.location.reload();
       })
       .catch((error) => {
         console.log(error);
@@ -267,13 +282,13 @@ function BookReportList() {
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
               <TableRow>
                 <TableCell style={{ width: "10px" }}>No</TableCell>
-                <TableCell>제목</TableCell>
-                <TableCell>도서명</TableCell>
+                <TableCell style={{ width: "200px" }}>제목</TableCell>
+                <TableCell style={{ width: "100px" }}>도서명</TableCell>
                 <TableCell style={{ width: "50px" }}>작가</TableCell>
-                <TableCell style={{ width: "100px" }}>출판사</TableCell>
+                <TableCell style={{ width: "50px" }}>출판사</TableCell>
                 <TableCell style={{ width: "50px" }}>글쓴이</TableCell>
-                <TableCell style={{ width: "90px" }}>등록일</TableCell>
-                <TableCell style={{ width: "50px" }}>좋아요</TableCell>
+                <TableCell style={{ width: "50px" }}>등록일</TableCell>
+                <TableCell style={{ width: "20px", textAlign: 'center' }}>좋아요</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -282,36 +297,29 @@ function BookReportList() {
                   className="bookReportTable"
                   key={data.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
                     {data.reportNum}
                   </TableCell>
-                  <TableCell component="th" scope="row">
-                    {data.reportTitle}
+                  <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
+                    {truncate(data.reportTitle, 18)}
                   </TableCell>
-                  <TableCell>{data.book}</TableCell>
-                  <TableCell>{data.author}</TableCell>
-                  <TableCell>{data.publisher}</TableCell>
-                  <TableCell>{data.writer}</TableCell>
-                  <TableCell>{data.date}</TableCell>
+                  <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{truncate(data.title, 13)} </TableCell>
+                  <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{truncate(data.author, 5)}</TableCell>
+                  <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{truncate(data.publisher, 5)}</TableCell>
+                  <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.username}</TableCell>
+                  <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.registDate_report.split('T')[0]}</TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    {likeStatus[data.bookReportNum] ? (
-                      <FavoriteIcon
-                        style={{ color: "#EF9A9A" }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleLike(data.bookReportNum);
-                          sendLikeBookReport(data.bookReportNum);
-                        }}
-                      />
-                    ) : (
-                      <FavoriteBorderIcon
-                        style={{ color: "#EF9A9A" }}
-                        onClick={() => toggleLike(data.isbn13)}
-                      />
-                    )}
-                    <div style={{ marginTop: "-5px" }}>{data.like}</div>
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleLike(data.reportNum);
+                        sendLikeBookReport(data.reportNum);
+                      }}
+                    >
+                      <FavoriteIcon style={{ color: likes[data.reportNum] ? "#EF9A9A" : "gray" }} />
+                    </IconButton>
+                    <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
                   </TableCell>
                 </TableRow>
               ))}

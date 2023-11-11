@@ -84,16 +84,16 @@ function BookReportDetail() {
                         />
                     </Search>
                 </div>
-                <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '55%', height: '400px', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '55%', height: '380px', borderRadius: '20px' }}>
                     <div style={{ marginLeft: '10px', width: '98%' }}>
                         <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between', borderBottom: '1px solid #FDCEDF' }}>
                             <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{location.state.reportTitle}</div>
-                            <div>{location.state.writer} | {location.state.date}</div>
+                            <div>{location.state.username} | {`${location.state.registDate_report.split('T')[0]} ${location.state.registDate_report.split('T')[1]}`}</div>
                         </div>
-                        <div style={{ height: '350px', padding: '10px', fontSize: '15px' }}>
+                        <div style={{ height: '340px', padding: '10px', fontSize: '15px' }}>
                             {location.state.reportContents}
                         </div>
-                        <div style={{ display: 'flex', margin: '5px 5px 0 640px' }}>
+                        <div style={{ display: 'flex', margin: '10px 5px 0 640px' }}>
                             <Button
                                 variant="contained"
                                 style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
@@ -104,7 +104,7 @@ function BookReportDetail() {
                                 {isSelectedLike ?
                                     <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteIcon>
                                     : <FavoriteBorderIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteBorderIcon>}
-                                <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>10</div>
+                                <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>{location.state.like_count}</div>
                             </div>
                             <ShareIcon style={{ fontSize: '35px' }}></ShareIcon>
                         </div>

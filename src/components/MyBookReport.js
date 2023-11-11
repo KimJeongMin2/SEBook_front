@@ -106,7 +106,7 @@ function MyBookReport() {
             }
         })
             .then((response) => {
-                console.log(response.data.userBookReportList);
+                console.log("data : " + response.data.userBookReportList);
                 const data = response.data.userBookReportList;
                 const reversedData = data.reverse();
                 setBookReportList(reversedData);
@@ -114,11 +114,11 @@ function MyBookReport() {
             .catch((error) => console.error(error));
     }, []);
 
-    const sendDeleteBook = (isbn13) => {
+    const sendDeleteBook = (reportNum) => {
         if (window.confirm("삭제하시겠습니까?")) {
-            axios.delete("http://192.168.123.158:8000/bookReport/DeleteBookReport", {
+            axios.delete("http://192.168.123.158:8000/bookReport/bookReportDelete", {
                 params: {
-                    reportNum: isbn13,
+                    reportNum: reportNum,
                 }
             })
                 .then((response) => {
@@ -160,7 +160,7 @@ function MyBookReport() {
                                 <TableCell style={{ width: '10px' }}>No</TableCell>
                                 <TableCell style={{ width: '300px' }}>제목</TableCell>
                                 <TableCell style={{ width: '200px' }}>도서명</TableCell>
-                                <TableCell style={{ width: '50px' }}>작가</TableCell>
+                                <TableCell style={{ width: '95px' }}>작가</TableCell>
                                 <TableCell style={{ width: '100px' }}>출판사</TableCell>
                                 <TableCell style={{ width: '75px' }}>등록일</TableCell>
                                 <TableCell style={{ width: '10px' }}></TableCell>
@@ -178,14 +178,14 @@ function MyBookReport() {
                                     <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
                                         {truncate(data.reportTitle, 20)}
                                     </TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{truncate(data.title, 12)}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.author}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{truncate(data.publisher, 5)}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>{data.registDate_report.split('T')[0]}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{truncate(data.title, 18)}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{truncate(data.author, 6)}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{truncate(data.publisher, 6)}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{data.registDate_report.split('T')[0]}</TableCell>
                                     <TableCell>
                                         <DeleteIcon
                                             style={{ color: "#FF9999" }}
-                                            onClick={() => sendDeleteBook(data.isbn13)}
+                                            onClick={() => sendDeleteBook(data.reportNum)}
                                         />
                                     </TableCell>
                                 </TableRow>

@@ -95,11 +95,27 @@ const truncate = (str, n) => {
 export default function MyPage() {
   const navigate = useNavigate();
 
+  const [myInfo, setMyInfo] = useState();
   const [readLikeBook, setReadLikeBook] = useState([]);
+  const [myBookReport, setMyBookReport] = useState([]);
+  const [myLikedBookReport, setMyLikedBookReport] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://192.168.123.158:8000/user/memberSearch", {
+      params: {
+        id: 1
+      }
+    })
+      .then((response) => {
+        console.log("myInfo : " + response.data.user);
+        setMyInfo(response.data.user);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   useEffect(() => {
     axios
-      .get("http://172.30.127.93:8000/book/likeBookListRead", {
+      .get("http://192.168.123.158:8000/book/likeBookListRead", {
         params: {
           userNum: 1,
         },
@@ -110,7 +126,37 @@ export default function MyPage() {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  useEffect(() => {
+    axios.get("http://192.168.123.158:8000/bookReport/bookReportReadMy", {
+      params: {
+        userNum: 1
+      }
+    })
+      .then((response) => {
+        console.log(response.data.userBookReportList);
+        const data = response.data.userBookReportList;
+        const reversedData = data.reverse();
+        setMyBookReport(reversedData);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios.get("http://192.168.123.158:8000/bookReport/bookReportReadLike", {
+      params: {
+        userNum: 1
+      }
+    })
+      .then((response) => {
+        console.log("공감한 도서 : " + response.data.likeBookReportList[0]);
+        setMyLikedBookReport(response.data.likeBookReportList);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
   return (
+
     <React.Fragment>
       <MainAppBar />
       <div>
@@ -175,24 +221,25 @@ export default function MyPage() {
                   <TableHead>
                     <TableRow>
                       <TableCell>No.</TableCell>
-                      <TableCell>BookReport Title</TableCell>
+                      <TableCell style={{ width: '110px' }}>BookReport Title</TableCell>
                       <TableCell>author</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {bookLikeList.slice(0, 5).map((row) => (
+                    {myBookReport.slice(-5).map((row, index) => (
                       <TableRow key={row.id}>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.id}
+                          {index + 1}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.title, 10)}
+                          {truncate(row.reportTitle, 10)}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.author, 10)}
+                          {truncate(row.author, 9)}
                         </TableCell>
                       </TableRow>
                     ))}
+
                   </TableBody>
                 </Table>
               </Box>
@@ -233,7 +280,7 @@ export default function MyPage() {
                     <TableRow>
                       <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
                       <TableCell style={{ fontSize: "13px" }}>
-                        Paragraph
+                        Title
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -303,7 +350,7 @@ export default function MyPage() {
                     style={{
                       color: "#F2BED1",
                       marginBottom: "-6px",
-                      marginRight: "2px",
+                      marginLeft: "3px",
                     }}
                   ></ThumbUpAltIcon>
                   좋아요 누른 독후감
@@ -322,28 +369,28 @@ export default function MyPage() {
                 <Table
                   size="small"
                   style={{ width: '350px', height: '200px' }}
-                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6", marginLeft: '8px' }}
+                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6", marginLeft: '3px' }}
                 >
                   <TableHead>
                     <TableRow>
                       <TableCell style={{ fontSize: "13px" }}>No.</TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
+                      <TableCell style={{ fontSize: "13px", width: '110px' }}>
                         BookReport Title
                       </TableCell>
                       <TableCell style={{ fontSize: "13px" }}>author</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {bookLikeList.map((row) => (
+                    {myLikedBookReport.slice(-5).map((row, index) => (
                       <TableRow key={row.id}>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {row.id}
+                          {index + 1}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.title, 10)}
+                          {truncate(row.reportTitle, 10)}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.author, 10)}
+                          {truncate(row.author, 9)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -411,6 +458,7 @@ export default function MyPage() {
                         </TableCell>
                       </TableRow>
                     ))}
+
                   </TableBody>
                 </Table>
               </Box>
