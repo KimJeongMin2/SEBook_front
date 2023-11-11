@@ -169,12 +169,12 @@ function BookList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/book/bookListRead")
+      .get("http://121.183.121.119:8000/book/bookListRead")
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
 
-        if (location.state.bookList) {
+        if (location.state && location.state.bookList) {
           console.log("look ..: " + location.state.bookList);
         }
       })
@@ -182,7 +182,7 @@ function BookList() {
   }, []);
 
   const sendLikeBook = (isbn13) => {
-    axios.post("http://192.168.123.158:8000/book/bookLike", {
+    axios.post("http://121.183.121.119:8000/book/bookLike", {
       isbn13: isbn13,
       userNum: 1
     })
@@ -196,7 +196,7 @@ function BookList() {
 
 
   const searchBookByAuthor = () => {
-    axios.get(`http://192.168.123.158:8000/book/searchBookByAuthor`, {
+    axios.get(`http://121.183.121.119:8000/book/searchBookByAuthor`, {
       params: {
         author: searchTerm
       }
@@ -214,7 +214,7 @@ function BookList() {
   };
 
   const searchBookByTitle = () => {
-    axios.get(`http://192.168.123.158:8000/book/searchBookByTitle`, {
+    axios.get(`http://121.183.121.119:8000/book/searchBookByTitle`, {
       params: {
         title: searchTerm
       }

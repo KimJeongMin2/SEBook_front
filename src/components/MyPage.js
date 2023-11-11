@@ -100,7 +100,7 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://172.29.114.163:8000/book/likeBookListRead", {
+      .get("http://121.183.121.119:8000/book/likeBookListRead", {
         params: {
           userNum: 1,
         },
@@ -114,7 +114,7 @@ export default function MyPage() {
 
   const paragraphReadMy = (userNum) => {
     axios
-      .post("http://172.29.114.163:8000/community/paragraphReadMy", {
+      .post("http://121.183.121.119:8000/community/paragraphReadMy", {
         params: {
           userNum: 1,
         },
