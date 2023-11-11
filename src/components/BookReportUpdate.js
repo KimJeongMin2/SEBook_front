@@ -120,7 +120,7 @@ function BookReportUpdate() {
 
     try {
       const res = await axios.put(
-        "http://192.168.123.158:8000/bookReport/bookReportUpdate", {
+        "http://121.183.121.119:8000/bookReport/bookReportUpdate", {
         reportNum: location.state.reportNum,
         reportContents: content,
         reportTitle: title
