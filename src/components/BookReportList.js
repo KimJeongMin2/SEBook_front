@@ -165,6 +165,8 @@ function BookReportList() {
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
   const [likedBookReportList, setLikedBookReportList] = useState([]);
   const [likes, setLikes] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+
   const handleChangePage = (event, value) => {
     setCurrentPage(value);
   };
@@ -218,6 +220,38 @@ function BookReportList() {
       });
   }
 
+  const searchBookByTitle = () => {
+    axios.get(`http://192.168.123.158:8000/bookReport/bookReportSearch`, {
+      params: {
+        title: searchTerm
+      }
+    })
+      .then(response => {
+        setBookReportList(response.data);
+      })
+      .catch(error => {
+        if (error.response.status === 404) {
+          alert("해당 검색어에 맞는 결과가 없습니다.");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+  const handleSearchKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      if (searchType === '작가명') {
+        // searchBookByAuthor();
+      } else if (searchType === '도서명') {
+        searchBookByTitle();
+      }
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };
@@ -270,6 +304,9 @@ function BookReportList() {
                 style={{ fontSize: "13px" }}
                 placeholder="도서명 또는 작가명을 입력하세요."
                 inputProps={{ "aria-label": "search" }}
+                value={searchTerm}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyPress}
               />
             </Search>
           </div>
