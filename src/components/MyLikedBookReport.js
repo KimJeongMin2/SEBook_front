@@ -95,7 +95,7 @@ function MyLikedBookReport() {
     };
 
     useEffect(() => {
-        axios.get("http://192.168.0.7:8000/bookReportReadLike", {
+        axios.get("http://172.29.114.163:8000/bookReportReadLike", {
             params: {
                 userNum: 1
             }

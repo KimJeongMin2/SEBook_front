@@ -174,20 +174,20 @@ function BookReportList() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.66.199:8000/bookReportReadAll")
+      .get("http://172.29.114.163:8000/bookReport/bookReportReadAll")
       .then((response) => {
         // console.log(response.data.bookList);
-        setBookReportList(response.data.bookList);
+        setBookReportList(response.data.bookreports);
 
         if (location.state.bookReportList) {
-          // console.log("look ..: " + location.state.bookList[0]);
+          // console.log("look ..: " + location.state.bookList[0]); 
         }
       })
       .catch((error) => console.error(error));
   }, []);
 
   const sendLikeBookReport = (bookReportNum) => {
-    axios.post("http://192.168.0.7:8000/bookReportLike", {
+    axios.post("http://172.29.114.163:8000/bookReport/bookReportLike", {
       bookReportNum: bookReportNum,
       userNum: 1
     })

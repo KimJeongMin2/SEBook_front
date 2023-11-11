@@ -118,7 +118,7 @@ function BookReportRegist() {
 
     try {
       const res = await axios.post(
-        "http://192.168.0.7:8000/bookReport/bookReportCreate",
+        "http://172.29.114.163:8000/bookReport/bookReportCreate",
         bookReport
       );
       console.log(res.data);
@@ -141,7 +141,7 @@ function BookReportRegist() {
   };
 
   const searchBookByAuthor = () => {
-    axios.get(`http://172.30.127.93:8000/book/searchBookByAuthor`, {
+    axios.get(`http://172.29.114.163:8000/book/searchBookByAuthor`, {
       params: {
         author: searchTerm
       }
@@ -160,7 +160,7 @@ function BookReportRegist() {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://172.30.127.93:8000/book/searchBookByTitle`, {
+      .get(`http://172.29.114.163:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },

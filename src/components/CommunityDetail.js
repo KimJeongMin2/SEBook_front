@@ -88,10 +88,10 @@ function CommunityDetail() {
                     <div style={{ marginLeft: '10px', width: '98%' }}>
                         <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between', borderBottom: '1px solid #FDCEDF' }}>
                             <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{location.state.title}</div>
-                            <div>{location.state.writer} | {location.state.date}</div>
+                            <div>{location.state.author} | {location.state.date}</div>
                         </div>
                         <div style={{ display: 'flex', margin: '2px', padding: '10px', fontSize: '20px' }}>
-                            {location.state.paragraph}
+                            {location.state.contents}
                         </div>
                     </div>
                 </div>

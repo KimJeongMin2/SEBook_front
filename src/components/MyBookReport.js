@@ -97,7 +97,7 @@ function MyBookReport() {
     };
 
     useEffect(() => {
-        axios.get("http://192.168.0.7:8000/bookReportReadMy", {
+        axios.get("http://172.29.114.163:8000/bookReport/bookReportReadMy", {
             params: {
                 userNum: 1
             }
@@ -111,7 +111,7 @@ function MyBookReport() {
 
     const sendDeleteBook = (isbn13) => {
         if (window.confirm("삭제하시겠습니까?")) {
-            axios.delete("http://192.168.0.7:8000/bookReportDelete", {
+            axios.delete("http://172.29.114.163:8000/bookReport/bookReportDelete", {
                 params: {
                     bookReportNum: isbn13
                 }

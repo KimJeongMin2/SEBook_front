@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 
-import { Box, InputBase } from "@mui/material";
+import { Box, InputBase, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -20,6 +20,7 @@ import Button from "@mui/material/Button";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
 function createData(id, title, paragraph, writer, date, like) {
@@ -86,9 +87,27 @@ const StyledInputBase = styled(InputBase, {
 function MyLikedParagraph() {
   const navigate = new useNavigate();
 
-  const [rows, setRows] = useState(initialRows);
+  // const [rows, setRows] = useState(initialRows);
   const [page, setPage] = useState(0); // Current page
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [likeParagraph, setLikeParagraph] = useState([]);
+
+  const [likes, setLikes] = useState({});
+
+  useEffect(() => {
+    axios
+      .get("http://172.29.114.163:8000/community/paragraphReadLike", {
+        params: {
+          userNum: 1
+        },
+      })
+      .then((response) => {
+        console.log(response.data.likeBookList);
+        setLikeParagraph(response.data.likeParagraphList);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -113,6 +132,22 @@ function MyLikedParagraph() {
       [id]: !prevStatus[id],
     }));
   };
+
+  const sendDeleteParagraph = (postNum) => {
+    axios.delete("http://172.29.114.163:8000/community/likeparagraphDelete", {
+      params: {
+        postNum:postNum,
+        userNum: 1
+      }
+    })
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <>
@@ -144,6 +179,7 @@ function MyLikedParagraph() {
                 <TableCell>작가</TableCell>
                 <TableCell>등록일</TableCell>
                 <TableCell>좋아요</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -190,6 +226,19 @@ function MyLikedParagraph() {
                     style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
                   >
                     {row.like}
+                  </TableCell>
+                  <TableCell
+                    style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
+                  >
+                    <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(row.isbn13);
+                          sendDeleteParagraph(row.isbn13);
+                        }}
+                      >
+                        <FavoriteIcon style={{ color: likes[row.isbn13] ? "gray" : "#EF9A9A" }} />
+                      </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

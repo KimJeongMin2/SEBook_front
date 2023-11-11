@@ -5,7 +5,8 @@ import axios from "axios";
 import { Box, InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -100,7 +101,22 @@ function Community() {
 
   const [communityList, setCommunityList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const itemsPerPage = 5;
+
+  const [open, setOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({});
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [paragraphList, setParagraphList] = useState([]);
+
+  const handleOpen = (content) => {
+    setOpen(true);
+    setModalContent(content);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleChangePage = (event, value) => {
     setCurrentPage(value);
@@ -112,10 +128,9 @@ function Community() {
     return communityList.slice(start, end);
   };
 
-
   useEffect(() => {
     axios
-      .get("http://172.30.127.93:8000/community/paragraphReadAll")
+      .get("http://172.29.114.163:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data.CommunityList);
         setCommunityList(response.data.CommunityList);
@@ -124,17 +139,18 @@ function Community() {
   }, []);
 
   const sendLikeCommunity = (postNum) => {
-    axios.post("http://172.30.127.93:8000/community/paragraphLike", {
-      postNum: postNum,
-      userNum: 1
-    })
+    axios
+      .post("http://172.29.114.163:8000/community/paragraphLike", {
+        postNum: postNum,
+        userNum: 1,
+      })
       .then((response) => {
         console.log(response);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
 
@@ -158,6 +174,55 @@ function Community() {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  const searchBookByAuthor = () => {
+    axios.get(`http://172.29.114.163:8000/community/searchCommunityByAuthor`, {
+      params: {
+        author: searchTerm
+      }
+    })
+      .then(response => {
+        setParagraphList(response.data);
+      })
+      .catch(error => {
+        if (error.response.status === 404) {
+          alert("해당 검색어에 맞는 결과가 없습니다.");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+  const searchBookByTitle = () => {
+    axios.get(`http://172.29.114.163:8000/community/searchParagraphByTitle`, {
+      params: {
+        title: searchTerm
+      }
+    })
+      .then(response => {
+        setParagraphList(response.data);
+      })
+      .catch(error => {
+        if (error.response.status === 404) {
+          alert("해당 검색어에 맞는 결과가 없습니다.");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+  const handleSearchKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      if (searchType === '작가명') {
+        searchBookByAuthor();
+      } else if (searchType === '도서명') {
+        searchBookByTitle();
+      }
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
 
   return (
@@ -208,6 +273,9 @@ function Community() {
                 style={{ fontSize: "13px" }}
                 placeholder="도서명 또는 작가명을 입력하세요."
                 inputProps={{ "aria-label": "search" }}
+                value={searchTerm}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyPress}
               />
             </Search>
           </div>
@@ -233,7 +301,7 @@ function Community() {
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                  onClick={() => handleOpen(row)}
                 >
                   <TableCell
                     component="th"
@@ -280,14 +348,18 @@ function Community() {
                     {likeStatus[row.postNum] ? (
                       <FavoriteIcon
                         style={{ color: "#EF9A9A" }}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           toggleLike(row.postNum);
                         }}
                       />
                     ) : (
                       <FavoriteBorderIcon
                         style={{ color: "#EF9A9A" }}
-                        onClick={() => toggleLike(row.postNum)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(row.postNum);
+                        }}
                       />
                     )}
                     <div style={{ marginTop: "-5px" }}>{row.like}</div>
@@ -302,11 +374,11 @@ function Community() {
             count={Math.ceil(communityList.length / itemsPerPage)}
             color="primary"
             style={{
-              margin: '-7px 0',
-              position: 'absolute',
+              margin: "-7px 0",
+              position: "absolute",
               bottom: 0,
-              left: '50%',
-              transform: 'translateX(-50%)'
+              left: "50%",
+              transform: "translateX(-50%)",
             }}
             onChange={handleChangePage}
           />
@@ -328,6 +400,70 @@ function Community() {
           </Stack>
         </div>
       </Box>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            // border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="div"
+            sx={{ display: "flex", justifyContent: "space-between", fontSize:"22px", fontWeight:"bold" }}
+          >
+            <div>구절 정보</div>
+            {likeStatus[modalContent.postNum] ? (
+            <FavoriteIcon
+              style={{ color: "#EF9A9A" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleLike(modalContent.postNum);
+              }}
+            />
+          ) : (
+            <FavoriteBorderIcon
+              style={{ color: "#EF9A9A" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleLike(modalContent.postNum);
+              }}
+            />
+          )}
+          </Typography>
+          
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <span style={{ fontWeight: "bold" }}>도서명 | </span>
+            {modalContent.title}
+            <div>{modalContent.date}</div>
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <span style={{ fontWeight: "bold" }}>작가 | </span>
+            {modalContent.author}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <span style={{ fontWeight: "bold" }}>내용 | </span>
+            {modalContent.contents}
+          </Typography>
+          
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+            <Button onClick={handleClose}>닫기</Button>
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 }
