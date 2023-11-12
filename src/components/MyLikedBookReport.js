@@ -181,7 +181,7 @@ function MyLikedBookReport() {
                                     <TableCell>{truncate(data.title, 20)}</TableCell>
                                     <TableCell>{truncate(data.author, 6)}</TableCell>
                                     <TableCell>{truncate(data.publisher, 6)}</TableCell>
-                                    <TableCell>{truncate(data.writer, 6)}</TableCell>
+                                    <TableCell>{truncate(data.username, 6)}</TableCell>
                                     <TableCell>{data.registDate_report.split('T')[0]}</TableCell>
                                     <TableCell style={{ width: "50px", textAlign: "center" }}>
                                         <IconButton
