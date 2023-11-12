@@ -96,7 +96,7 @@ function MyLikedBookReport() {
     };
 
     useEffect(() => {
-        axios.get("http://192.168.123.158:8000/bookReport/bookReportReadLike", {
+        axios.get("http://192.168.0.8:8000/bookReport/bookReportReadLike", {
             params: {
                 userNum: 1
             }
@@ -118,7 +118,7 @@ function MyLikedBookReport() {
     };
 
     const sendDeleteBook = (bookReportNum) => {
-        axios.delete("http://192.168.123.158:8000/bookReport/bookReportLike", {
+        axios.delete("http://192.168.0.8:8000/bookReport/bookReportLike", {
             params: {
                 reportNum: bookReportNum,
                 userNum: 1

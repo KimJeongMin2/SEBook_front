@@ -221,7 +221,7 @@ function BookReportList() {
   }
 
   const searchBookByTitle = () => {
-    axios.get(`http://192.168.123.158:8000/bookReport/bookReportSearch`, {
+    axios.get(`http://192.168.0.8:8000/bookReport/bookReportSearch`, {
       params: {
         title: searchTerm
       }
