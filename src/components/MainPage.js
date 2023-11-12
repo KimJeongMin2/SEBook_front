@@ -247,8 +247,8 @@ function MainPage() {
     axios
       .get("http://192.168.123.158:8000/book/BestsellerListRead")
       .then((response) => {
-        console.log(response.data);
-        setBestsellerList(response.data.recommendations);
+        console.log(response.data.bestsellerList);
+        setBestsellerList(response.data.bestsellerList);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -315,7 +315,12 @@ function MainPage() {
         userNum: 1,
       })
       .then((response) => {
-        console.log(response);
+        const updatedBookList = bookList.map((book) =>
+          book.isbn13 === isbn13
+            ? { ...book, num_likes: response.data.num_likes }
+            : book
+        );
+        setBookList(updatedBookList);
       })
       .catch((error) => {
         console.log(error);
