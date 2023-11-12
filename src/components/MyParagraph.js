@@ -88,6 +88,9 @@ const StyledInputBase = styled(InputBase, {
 function MyParagraph() {
   const navigate = new useNavigate();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   const [paragraphReadMy, setParagraphReadMy] = useState([]);
   // const [rows, setRows] = useState(paragraphReadMy);
   const [page, setPage] = useState(0); // Current page
@@ -117,23 +120,33 @@ function MyParagraph() {
     }));
   };
 
+  const getPageData = () => {
+    if (paragraphReadMy) {
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        return paragraphReadMy.slice(start, end);
+    } else {
+        return [];
+    }
+};
+
   useEffect(() => {
     axios
-      .get("http://121.183.121.119:8000/community/paragraphReadMy", {
+      .get("http://192.168.0.8:8000/community/paragraphReadMy", {
         params: {
           userNum: 1,
         },
       })
       .then((response) => {
-        console.log(response.data.CommunityList);
-        setParagraphReadMy(response.data.CommunityListMy);
+        console.log(response.data.userCommunityList);
+        setParagraphReadMy(response.data.userCommunityList);
       })
       .catch((error) => console.error(error));
   }, []);
 
   const sendDeleteParagraphMy = (postNum) => {
     axios
-      .delete("http://121.183.121.119:8000/community/paragraphDelete", {
+      .delete("http://192.168.0.8:8000/community/paragraphDelete", {
         params: {
           postNum: postNum,
           userNum: 1,
@@ -182,7 +195,7 @@ function MyParagraph() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {displayRows.map((row, index) => (
+              {getPageData()?.map((row, index) => (
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -209,16 +222,16 @@ function MyParagraph() {
                   <TableCell
                     style={{ width: "500px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.paragraph}
+                    {row.contents}
                   </TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    {row.writer}
+                    {row.author}
                   </TableCell>
                   <TableCell style={{ width: "80px", textAlign: "center" }}>
-                    {row.date}
+                    {row.registDate_community}
                   </TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    {row.like}
+                    {row.like_count}
                   </TableCell>
                   <TableCell
                     style={{

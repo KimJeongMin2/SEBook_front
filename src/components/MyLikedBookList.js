@@ -132,7 +132,7 @@ function MyLikedBookList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/book/likeBookListRead", {
+      .get("http://192.168.0.8:8000/book/likeBookListRead", {
         params: {
           userNum: 1
         },
@@ -156,7 +156,7 @@ function MyLikedBookList() {
   const [likes, setLikes] = useState({});
 
   const sendDeleteBook = (isbn13) => {
-    axios.delete("http://192.168.123.158:8000/book/bookLike", {
+    axios.delete("http://192.168.0.8:8000/book/bookLike", {
       params: {
         isbn13: isbn13,
         userNum: 1

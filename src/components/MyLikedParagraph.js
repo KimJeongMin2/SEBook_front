@@ -95,16 +95,19 @@ function MyLikedParagraph() {
 
   const [likes, setLikes] = useState({});
 
+  const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
   useEffect(() => {
     axios
-      .get("http://121.183.121.119:8000/community/paragraphReadLike", {
+      .get("http://192.168.0.8:8000/community/paragraphReadLike", {
         params: {
           userNum: 1
         },
       })
       .then((response) => {
-        console.log(response.data.likeBookList);
-        setLikeParagraph(response.data.likeParagraphList);
+        console.log(response.data.savedCommunityList);
+        setLikeParagraph(response.data.savedCommunityList);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -118,10 +121,15 @@ function MyLikedParagraph() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const displayRows = initialRows.slice(
-    page * rowsPerPage,
-    (page + 1) * rowsPerPage
-  );
+  const getPageData = () => {
+    if (likeParagraph) {
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        return likeParagraph.slice(start, end);
+    } else {
+        return [];
+    }
+};
 
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
 
@@ -134,10 +142,10 @@ function MyLikedParagraph() {
   };
 
   const sendDeleteParagraph = (postNum) => {
-    axios.delete("http://121.183.121.119:8000/community/likeparagraphDelete", {
+    axios.delete("http://192.168.0.8:8000/community/paragraphLike", {
       params: {
         postNum:postNum,
-        userNum: 1
+        userNum: 1,
       }
     })
       .then((response) => {
@@ -183,7 +191,7 @@ function MyLikedParagraph() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {displayRows.map((row) => (
+              {getPageData()?.map((row, index) => (
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -198,7 +206,7 @@ function MyLikedParagraph() {
                       textAlign: "center",
                     }}
                   >
-                    {row.id}
+                    {index+1}
                   </TableCell>
                   <TableCell
                     component="th"
@@ -210,22 +218,22 @@ function MyLikedParagraph() {
                   <TableCell
                     style={{ width: "600px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.paragraph}
+                    {row.contents}
                   </TableCell>
                   <TableCell
                     style={{ width: "60px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.writer}
+                    {row.author}
                   </TableCell>
                   <TableCell
                     style={{ width: "100px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.date}
+                    {row.registDate_community}
                   </TableCell>
                   <TableCell
                     style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.like}
+                    {row.like_count}
                   </TableCell>
                   <TableCell
                     style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
@@ -234,7 +242,7 @@ function MyLikedParagraph() {
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleLike(row.isbn13);
-                          sendDeleteParagraph(row.isbn13);
+                          sendDeleteParagraph(row.postNum);
                         }}
                       >
                         <FavoriteIcon style={{ color: likes[row.isbn13] ? "gray" : "#EF9A9A" }} />
