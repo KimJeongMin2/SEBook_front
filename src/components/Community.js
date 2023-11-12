@@ -134,7 +134,7 @@ function Community() {
 
   useEffect(() => {
     axios
-      .get("http://121.183.121.119:8000/community/paragraphReadAll")
+      .get("http://192.168.0.8:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data); // Log the entire response
         setCommunityList(response.data.allPosts || []);
@@ -144,7 +144,7 @@ function Community() {
 
   const sendLikeCommunity = (postNum) => {
     axios
-      .post("http://121.183.121.119:8000/community/paragraphLike", {
+      .post("http://192.168.0.8:8000/community/paragraphLike", {
         postNum: postNum,
         userNum: 1,
       })
@@ -172,13 +172,13 @@ function Community() {
 
   const searchParagraphByAuthor = () => {
     axios
-      .get(`http://121.183.121.119:8000/community/searchParagraphByAuthor`, {
+      .get(`http://192.168.0.8:8000/community/searchParagraphByAuthor`, {
         params: {
           author: searchTerm,
         },
       })
       .then((response) => {
-        setParagraphList(response.data);
+        setCommunityList(response.data);
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -195,13 +195,14 @@ function Community() {
 
   const searchParagraphByTitle = () => {
     axios
-      .get(`http://121.183.121.119:8000/community/searchParagraphByTitle`, {
+      .get(`http://192.168.0.8:8000/community/searchParagraphByTitle`, {
         params: {
           title: searchTerm,
         },
       })
       .then((response) => {
-        setParagraphList(response.data);
+        console.log(response.data);
+        setCommunityList(response.data);
       })
       .catch((error) => {
         if (error.response.status === 404) {
