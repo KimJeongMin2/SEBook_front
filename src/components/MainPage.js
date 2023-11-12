@@ -247,7 +247,7 @@ function MainPage() {
     axios
       .get("http://192.168.123.158:8000/book/BestsellerListRead")
       .then((response) => {
-        console.log(response.data.bestsellerList);
+        console.log("bestSeller: " + response.data.bestsellerList);
         setBestsellerList(response.data.bestsellerList);
       })
       .catch((error) => console.error(error));
@@ -566,7 +566,7 @@ function MainPage() {
                     component="img"
                     width="220px"
                     height="200"
-                    src={data.image}
+                    src={data.cover}
                     alt="Paella dish"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 1 }}
