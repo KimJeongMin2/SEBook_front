@@ -60,9 +60,8 @@ export default function SignUp() {
   const submit = async () => {
     const userInfo = {
       name: name,
-      id: id,
-      pw: pw,
-      pw_check: pwCheck
+      userId: id,
+      password: pw,
     };
 
     if (pw === pwCheck) {
@@ -72,10 +71,8 @@ export default function SignUp() {
           userInfo
         );
         console.log(res.data);
-        if (res.status === 200) {
-          alert("회원가입이 성공적으로 되었습니다. 환영합니다.");
-          navigate("/");
-        }
+        alert("회원가입이 성공적으로 되었습니다. 환영합니다.");
+        navigate("/");
       } catch (error) {
         console.error(error);
         alert("등록에 실패했습니다. 다시 시도해주세요.");

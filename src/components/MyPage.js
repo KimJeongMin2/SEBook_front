@@ -103,7 +103,7 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/user/memberSearch", {
+      .get("http://192.168.123.158:8000/user/memberSearch", {
         params: {
           userNum: 1,
         },
@@ -117,7 +117,7 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/book/likeBookListRead", {
+      .get("http://192.168.123.158:8000/book/likeBookListRead", {
         params: {
           userNum: 1,
         },
@@ -131,23 +131,21 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/bookReport/bookReportReadMy", {
+      .get("http://192.168.123.158:8000/bookReport/bookReportReadMy", {
         params: {
           userNum: 1,
         },
       })
       .then((response) => {
         console.log(response.data.userBookReportList);
-        const data = response.data.userBookReportList;
-        const reversedData = data.reverse();
-        setMyBookReport(reversedData);
+        setMyBookReport(response.data.userBookReportList);
       })
       .catch((error) => console.error(error));
   }, []);
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/bookReport/bookReportReadLike", {
+      .get("http://192.168.123.158:8000/bookReport/bookReportReadLike", {
         params: {
           userNum: 1,
         },
@@ -161,13 +159,13 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/community/paragraphReadMy", {
+      .get("http://192.168.123.158:8000/community/paragraphReadMy", {
         params: {
           userNum: 1,
         },
       })
       .then((response) => {
-      
+
         setReadMyParagraph(response.data.userCommunityList);
       })
       .catch((error) => console.error(error));
@@ -175,7 +173,7 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/community/paragraphReadLike", {
+      .get("http://192.168.123.158:8000/community/paragraphReadLike", {
         params: {
           userNum: 1
         },
@@ -203,6 +201,10 @@ export default function MyPage() {
   //       console.log(error);
   //     });
   // };
+
+  const truncate = (str, n) => {
+    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+  };
 
   return (
     <React.Fragment>
@@ -282,7 +284,7 @@ export default function MyPage() {
                           {index + 1}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.reportTitle, 10)}
+                          {truncate(row.reportTitle, 8)}
                         </TableCell>
                         <TableCell style={{ fontSize: "13px" }}>
                           {truncate(row.author, 9)}
@@ -343,7 +345,7 @@ export default function MyPage() {
                             {index + 1}
                           </TableCell>
                           <TableCell style={{ fontSize: "13px" }}>
-                            {truncate(row.title, 10)}
+                            {truncate(row.title, 8)}
                           </TableCell>
                           <TableCell style={{ fontSize: "13px" }}>
                             {truncate(row.author, 10)}
@@ -441,18 +443,18 @@ export default function MyPage() {
                   <TableBody>
                     {myLikedBookReport.slice(-5)
                       .reverse().map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell style={{ fontSize: "13px" }}>
-                          {index + 1}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.reportTitle, 10)}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.author, 9)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                        <TableRow key={row.id}>
+                          <TableCell style={{ fontSize: "13px" }}>
+                            {index + 1}
+                          </TableCell>
+                          <TableCell style={{ fontSize: "13px" }}>
+                            {truncate(row.reportTitle, 8)}
+                          </TableCell>
+                          <TableCell style={{ fontSize: "13px" }}>
+                            {truncate(row.author, 9)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </Box>
@@ -512,7 +514,7 @@ export default function MyPage() {
                             {index + 1}
                           </TableCell>
                           <TableCell style={{ fontSize: "13px" }}>
-                            {truncate(row.title, 10)}
+                            {truncate(row.title, 8)}
                           </TableCell>
                           <TableCell style={{ fontSize: "13px" }}>
                             {truncate(row.author, 10)}
@@ -570,18 +572,18 @@ export default function MyPage() {
                   <TableBody>
                     {likeParagraph.slice(-5)
                       .reverse().map((row, index) => (
-                      <TableRow key={row.isbn13}>
-                        <TableCell style={{ fontSize: "13px" }}>
-                          {index+1}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.title, 10)}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
-                          {truncate(row.author, 10)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                        <TableRow key={row.isbn13}>
+                          <TableCell style={{ fontSize: "13px" }}>
+                            {index + 1}
+                          </TableCell>
+                          <TableCell style={{ fontSize: "13px" }}>
+                            {truncate(row.title, 8)}
+                          </TableCell>
+                          <TableCell style={{ fontSize: "13px" }}>
+                            {truncate(row.author, 10)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </Box>

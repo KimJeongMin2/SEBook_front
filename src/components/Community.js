@@ -134,7 +134,7 @@ function Community() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/community/paragraphReadAll")
+      .get("http://192.168.123.158:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data); // Log the entire response
         setCommunityList(response.data.allPosts || []);
@@ -144,7 +144,7 @@ function Community() {
 
   const sendLikeCommunity = (postNum) => {
     axios
-      .post("http://192.168.0.8:8000/community/paragraphLike", {
+      .post("http://192.168.123.158:8000/community/paragraphLike", {
         postNum: postNum,
         userNum: 1,
       })
@@ -172,7 +172,7 @@ function Community() {
 
   const searchParagraphByAuthor = () => {
     axios
-      .get(`http://192.168.0.8:8000/community/searchParagraphByAuthor`, {
+      .get(`http://192.168.123.158:8000/community/searchParagraphByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -195,7 +195,7 @@ function Community() {
 
   const searchParagraphByTitle = () => {
     axios
-      .get(`http://192.168.0.8:8000/community/searchParagraphByTitle`, {
+      .get(`http://192.168.123.158:8000/community/searchParagraphByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -291,9 +291,9 @@ function Community() {
                 <TableCell>No</TableCell>
                 <TableCell>도서명</TableCell>
                 <TableCell>인상깊은 구절</TableCell>
-                <TableCell>작가</TableCell>
-                <TableCell>등록일</TableCell>
-                <TableCell>좋아요</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>글쓴이</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>등록일</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>좋아요</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -329,18 +329,19 @@ function Community() {
                       style={{
                         width: "500px",
                         borderRight: "1px solid #F8E8EE",
+
                       }}
                     >
-                      {truncate(data.contents, 30)}
+                      {truncate(data.contents, 28)}
                     </TableCell>
                     <TableCell
                       style={{
-                        width: "180px",
+                        width: "50px",
                         borderRight: "1px solid #F8E8EE",
                         textAlign: "center",
                       }}
                     >
-                      {truncate(data.author, 9)}
+                      {truncate(data.username, 9)}
                     </TableCell>
                     <TableCell style={{ width: "90px", textAlign: "center" }}>
                       {data.registDate_community.split('T')[0]}
