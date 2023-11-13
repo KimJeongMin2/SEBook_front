@@ -84,7 +84,7 @@ function BookReportRegist() {
   const navigate = useNavigate();
   const location = useLocation();
   const [title, setTitle] = useState(location.state?.reportTitle || "");
-  const [book, setBook] = useState(location.state?.title || "");
+  const [book, setBook] = useState(location.state?.book || "");
   const [author, setAuthor] = useState(location.state?.author || "");
   const [writer, setWriter] = useState(location.state?.username || "");
   const [publisher, setPublisher] = useState(location.state?.publisher || "");
@@ -97,7 +97,8 @@ function BookReportRegist() {
   const [isbn13, setIsbn13] = useState(location.state?.isbn13 || "");
 
   useEffect(() => {
-    console.log(location);
+    console.log("도서명"+location.state.book);
+    console.log("도서명"+location.state.author);
   }, []);
 
   const handleClickOpen = () => {
@@ -117,7 +118,7 @@ function BookReportRegist() {
       publisher: publisher,
       reportContents: content,
     };
-
+    
     try {
       const res = await axios.post(
         "http://192.168.0.8:8000/bookReport/bookReportCreate",
@@ -381,6 +382,7 @@ function BookReportRegist() {
               multiline
               value={writer}
               rows={1}
+              onChange={(e) => setWriter(e.target.value)}
               sx={{ fontSize: "10px", marginBottom: "10px" }}
               InputProps={{
                 style: { height: "40px", fontSize: "14px" },

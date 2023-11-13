@@ -315,7 +315,12 @@ function MainPage() {
         userNum: 1,
       })
       .then((response) => {
-        console.log(response);
+        const updatedBookList = bookList.map((book) =>
+          book.isbn13 === isbn13
+            ? { ...book, num_likes: response.data.num_likes }
+            : book
+        );
+        setBookList(updatedBookList);
       })
       .catch((error) => {
         console.log(error);

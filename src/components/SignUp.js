@@ -70,6 +70,7 @@ export default function SignUp() {
           "http://192.168.123.158:8000/user/memberReg",
           userInfo
         );
+
         console.log(res.data);
         alert("회원가입이 성공적으로 되었습니다. 환영합니다.");
         navigate("/");
