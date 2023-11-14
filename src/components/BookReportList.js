@@ -142,7 +142,7 @@ const StyledSelect = styled(Select, {
   },
 }));
 
-function BookReportList() {
+function BookReportList({ PROXY }) {
   const navigate = new useNavigate();
   const location = useLocation();
   const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
@@ -182,28 +182,39 @@ function BookReportList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/bookReport/bookReportReadAll")
+      .get("http://192.168.0.7:8000/bookReport/bookReportReadAll")
       .then((response) => {
         console.log("bookReportList: " + response.data.allReports);
-        setBookReportList(response.data.allReports);
-        setUserLikeReports(response.data.userLikeReports);
-        setUserWriteReports(response.data.userWriteReports);
-        if (location.state.bookReportList) {
-          // console.log("look ..: " + location.state.bookList[0]); 
-        }
+        const bookReportData = response.data.allReports.reverse();
+        setBookReportList(bookReportData);
       })
       .catch((error) => console.error(error));
   }, []);
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/bookReport/bookReportReadLike", {
+      .get("http://192.168.0.7:8000/bookReport/bookReportReadAll", {
         params: {
           userNum: 1
         }
       })
       .then((response) => {
+        console.log("userLikeReports: " + response.data.userLikeReports);
+        setUserLikeReports(response.data.userLikeReports);
+        setUserWriteReports(response.data.userWriteReports);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
+
+  useEffect(() => {
+    axios
+      .get("http://192.168.0.7:8000/bookReport/bookReportReadLike", {
+        params: {
+          userNum: 1
+        }
+      })
+      .then((response) => {
         setLikedBookReportList(response.data.likeBookReportList);
       })
       .catch((error) => console.error(error));
@@ -211,7 +222,7 @@ function BookReportList() {
 
 
   const sendLikeBookReport = (bookReportNum) => {
-    axios.post("http://192.168.123.158:8000/bookReport/bookReportLike", {
+    axios.post("http://192.168.0.7:8000/bookReport/bookReportLike", {
       reportNum: bookReportNum,
       userNum: 1
     })
@@ -225,7 +236,7 @@ function BookReportList() {
   }
 
   const searchBookByTitle = () => {
-    axios.get(`http://192.168.123.158:8000/bookReport/bookReportSearch`, {
+    axios.get(`http://192.168.0.7:8000/bookReport/bookReportSearch`, {
       params: {
         title: searchTerm
       }
@@ -334,30 +345,35 @@ function BookReportList() {
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
               {getPageData()?.map((data) => {
-                const isUserLikeReportsLiked = userLikeReports.some((report) => console.log("report : " + report));
+                const isUserLikeReportsLiked = Array.isArray(userLikeReports) && userLikeReports.some((report) => data.reportNum === report);
+                const isUserWriteReportsLiked = Array.isArray(userWriteReports) && userWriteReports.some((report) => data.reportNum === report);
 
-                const isUserWriteReportsLiked = userWriteReports.some((report) => data.reportNum === report);
-                console.log(data.reportNum + " : " + isUserWriteReportsLiked);
+                const rowData = {
+                  ...data,
+                  isUserLikeReportsLiked,
+                  isUserWriteReportsLiked,
+                };
+
                 return (
                   <TableRow
                     className="bookReportTable"
                     key={data.title}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>
+                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>
                       {data.reportNum}
                     </TableCell>
-                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>
+                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>
                       {truncate(data.reportTitle, 25)}
                     </TableCell>
-                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{truncate(data.title, 20)} </TableCell>
+                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>{truncate(data.title, 20)} </TableCell>
                     <TableCell
-                      onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })} >{truncate(data.author, 5)}</TableCell>
-                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{truncate(data.publisher, 5)}</TableCell>
-                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}
+                      onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })} >{truncate(data.author, 5)}</TableCell>
+                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>{truncate(data.publisher, 5)}</TableCell>
+                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}
                       style={{ textAlign: 'center' }}
                     >{data.username}</TableCell>
-                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}
+                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}
                       style={{ textAlign: 'center' }}
                     >{data.registDate_report.split('T')[0]}</TableCell>
                     <TableCell style={{ width: "50px", textAlign: "center" }}>
@@ -368,7 +384,7 @@ function BookReportList() {
                           sendLikeBookReport(data.reportNum);
                         }}
                       >
-                        <FavoriteIcon style={{ color: isUserWriteReportsLiked || likes[data.reportNum] ? "#EF9A9A" : "gray" }} />
+                        <FavoriteIcon style={{ color: isUserLikeReportsLiked || likes[data.reportNum] ? "#EF9A9A" : "gray" }} />
                       </IconButton>
                       <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
                     </TableCell>

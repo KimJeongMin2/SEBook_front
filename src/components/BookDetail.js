@@ -68,7 +68,7 @@ const StyledInputBase = styled(InputBase, {
   },
 }));
 
-function BookDetail() {
+function BookDetail({ PROXY }) {
   const location = useLocation();
   const navigate = useNavigate();
 

@@ -96,7 +96,7 @@ const StyledSelect = styled(Select, {
   },
 }));
 
-function Community() {
+function Community({ PROXY }) {
   const navigate = new useNavigate();
 
   const [communityList, setCommunityList] = useState([]);

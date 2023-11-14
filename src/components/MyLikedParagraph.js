@@ -84,7 +84,7 @@ const StyledInputBase = styled(InputBase, {
     },
   },
 }));
-function MyLikedParagraph() {
+function MyLikedParagraph({ PROXY }) {
   const navigate = new useNavigate();
 
   // const [rows, setRows] = useState(initialRows);

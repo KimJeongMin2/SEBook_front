@@ -23,7 +23,7 @@ import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import { TextField } from "@mui/material";
 import axios from "axios";
 
-function CommunityRegist() {
+function CommunityRegist({ PROXY }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [title, setTitle] = useState();

@@ -37,7 +37,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function SignIn({ PROXY }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -52,7 +52,7 @@ export default function SignIn() {
       <MainAppBar />
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
-      </Box>  
+      </Box>
       <ThemeProvider theme={defaultTheme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -104,10 +104,10 @@ export default function SignIn() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, backgroundColor: "#F8E8EE"}}
+                sx={{ mt: 3, mb: 2, backgroundColor: "#F8E8EE" }}
               >
-                <Typography sx={{color:"black"}}>
-                로그인
+                <Typography sx={{ color: "black" }}>
+                  로그인
                 </Typography>
               </Button>
               <Grid container>

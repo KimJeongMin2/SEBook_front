@@ -17,7 +17,7 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 const settings = ['Profile', 'Logout'];
 
-function MainAppBar() {
+function MainAppBar({ PROXY }) {
 
   const navigate = useNavigate();
 

@@ -7,7 +7,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import { useLocation } from "react-router";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
-
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -56,7 +56,7 @@ const StyledInputBase = styled(InputBase, {
 }));
 
 
-function BookReportDetail() {
+function BookReportDetail({ PROXY }) {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -64,6 +64,27 @@ function BookReportDetail() {
 
     const selectLike = () => {
         setIsSelectedLike(!isSelectedLike)
+    }
+
+    const sendDeleteBook = (reportNum) => {
+        if (window.confirm("삭제하시겠습니까?")) {
+
+            axios.delete("http://192.168.0.7:8000/bookReport/bookReportDelete", {
+                params: {
+                    reportNum: reportNum,
+                }
+            })
+                .then((response) => {
+                    console.log(response);
+                    alert("삭제되었습니다.");
+                    navigate(`/BookReportList`);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else {
+            alert("취소합니다.");
+        }
     }
 
     return (
@@ -94,14 +115,27 @@ function BookReportDetail() {
                             {location.state.reportContents}
                         </div>
                         <div style={{ display: 'flex', margin: '10px 5px 0 640px' }}>
-                            <Button
-                                variant="contained"
-                                style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
-                                onClick={() => navigate(`/BookReportUpdate`, { state: location.state })}
+                            {location.state && location.state.isUserWriteReportsLiked &&
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
+                                        onClick={() => navigate(`/BookReportUpdate`, { state: location.state })}
+                                    >
+                                        수정
+                                    </Button>
 
-                            >수정하기</Button>
-                            <div >
-                                {isSelectedLike ?
+                                    <Button
+                                        variant="contained"
+                                        style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
+                                        onClick={() => sendDeleteBook(location.state.reportNum)}
+                                    >
+                                        삭제
+                                    </Button>
+                                </>
+                            }
+                            <div>
+                                {isSelectedLike || location.state.isUserLikeReportsLiked ?
                                     <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteIcon>
                                     : <FavoriteBorderIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteBorderIcon>}
                                 <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>{location.state.like_count}</div>

@@ -80,7 +80,7 @@ const StyledSelect = styled(Select, {
     width: "20ch",
   },
 }));
-function BookReportUpdate() {
+function BookReportUpdate({ PROXY }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [title, setTitle] = useState(location.state?.reportTitle || "");

@@ -109,7 +109,7 @@ const StyledInputBase = styled(InputBase, {
 //   },
 // ];
 
-function MyLikedBookList() {
+function MyLikedBookList({ PROXY }) {
 
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);

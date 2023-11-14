@@ -75,7 +75,7 @@ const StyledInputBase = styled(InputBase, {
     },
 }));
 
-function MyBookReport() {
+function MyBookReport({ PROXY }) {
 
     const location = useLocation();
     const navigate = new useNavigate();

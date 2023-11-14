@@ -147,7 +147,8 @@ const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
 
-function BookList() {
+
+function BookList({ PROXY }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
@@ -168,7 +169,7 @@ function BookList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/book/bookListRead")
+      .get(`http://192.168.0.7:8000/book/bookListRead`)
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
@@ -182,7 +183,7 @@ function BookList() {
 
   const sendLikeBook = (isbn13) => {
     axios
-      .post("http://192.168.123.158:8000/book/bookLike", {
+      .post(`http://192.168.0.7:8000/book/bookLike`, {
         isbn13: isbn13,
         userNum: 1,
       })
@@ -201,7 +202,7 @@ function BookList() {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://192.168.123.158:8000/book/searchBookByAuthor`, {
+      .get(`http://192.168.0.7:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -220,7 +221,7 @@ function BookList() {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.123.158:8000/book/searchBookByTitle`, {
+      .get(`http://192.168.0.7:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },

@@ -56,7 +56,7 @@ const StyledInputBase = styled(InputBase, {
 }));
 
 
-function CommunityDetail() {
+function CommunityDetail({ PROXY }) {
     const location = useLocation();
     const navigate = useNavigate();
 

@@ -85,7 +85,7 @@ const StyledInputBase = styled(InputBase, {
   },
 }));
 
-function MyParagraph() {
+function MyParagraph({ PROXY }) {
   const navigate = new useNavigate();
 
   const [currentPage, setCurrentPage] = useState(1);
