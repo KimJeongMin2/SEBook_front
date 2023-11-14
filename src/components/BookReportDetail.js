@@ -107,9 +107,13 @@ function BookReportDetail({ PROXY }) {
                 </div>
                 <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '55%', height: '380px', borderRadius: '20px' }}>
                     <div style={{ marginLeft: '10px', width: '98%' }}>
-                        <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between', borderBottom: '1px solid #FDCEDF' }}>
+                        <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between' }}>
                             <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{location.state.reportTitle}</div>
                             <div>{location.state.username} | {`${location.state.registDate_report.split('T')[0]} ${location.state.registDate_report.split('T')[1]}`}</div>
+                        </div>
+                        <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between', borderBottom: '1px solid #FDCEDF' }}>
+                            <div style={{ fontSize: '14px' }}>{location.state.title}</div>
+                            <div style={{ fontSize: '14px' }}>{location.state.author} | {location.state.publisher}</div>
                         </div>
                         <div style={{ height: '340px', padding: '10px', fontSize: '15px' }}>
                             {location.state.reportContents}
