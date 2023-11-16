@@ -169,7 +169,7 @@ function BookList({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.0.7:8000/book/bookListRead`)
+      .get(`http://172.30.84.171:8000/book/bookListRead`)
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
@@ -183,7 +183,7 @@ function BookList({ PROXY }) {
 
   const sendLikeBook = (isbn13) => {
     axios
-      .post(`http://192.168.0.7:8000/book/bookLike`, {
+      .post(`http://172.30.84.171:8000/book/bookLike`, {
         isbn13: isbn13,
         userNum: 1,
       })
@@ -202,7 +202,7 @@ function BookList({ PROXY }) {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://192.168.0.7:8000/book/searchBookByAuthor`, {
+      .get(`http://172.30.84.171:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -221,7 +221,7 @@ function BookList({ PROXY }) {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.0.7:8000/book/searchBookByTitle`, {
+      .get(`http://172.30.84.171:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },

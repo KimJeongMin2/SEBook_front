@@ -96,7 +96,7 @@ function MyLikedBookReport({ PROXY }) {
     };
 
     useEffect(() => {
-        axios.get("http://192.168.0.7:8000/bookReport/bookReportReadLike", {
+        axios.get("http://172.30.84.171:8000/bookReport/bookReportReadLike", {
             params: {
                 userNum: 1
             }
@@ -118,7 +118,7 @@ function MyLikedBookReport({ PROXY }) {
     };
 
     const sendDeleteBook = (bookReportNum) => {
-        axios.delete("http://192.168.0.7:8000/bookReport/bookReportLike", {
+        axios.delete("http://172.30.84.171:8000/bookReport/bookReportLike", {
             params: {
                 reportNum: bookReportNum,
                 userNum: 1

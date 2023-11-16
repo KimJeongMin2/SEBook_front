@@ -55,7 +55,6 @@ const StyledInputBase = styled(InputBase, {
     },
 }));
 
-
 function BookReportDetail({ PROXY }) {
     const location = useLocation();
     const navigate = useNavigate();
@@ -77,7 +76,6 @@ function BookReportDetail({ PROXY }) {
                 .then((response) => {
                     console.log(response);
                     alert("삭제되었습니다.");
-                    navigate(`/BookReportList`);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -85,6 +83,37 @@ function BookReportDetail({ PROXY }) {
         } else {
             alert("취소합니다.");
         }
+    }
+
+    const sendDeleteLikeBookReport = (reportNum) => {
+        axios.delete("http://172.30.84.171:8000/bookReport/bookReportLike", {
+            params: {
+                reportNum: reportNum,
+                userNum: 1
+            }
+        })
+            .then((response) => {
+                console.log(response);
+                window.location.reload();
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const sendLikeBookReport = (reportNum) => {
+        axios.post("http://172.30.84.171:8000/bookReport/bookReportLike", {
+            reportNum: reportNum,
+            userNum: 1
+        })
+            .then((response) => {
+                console.log(response);
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     return (
@@ -140,8 +169,21 @@ function BookReportDetail({ PROXY }) {
                             }
                             <div>
                                 {isSelectedLike || location.state.isUserLikeReportsLiked ?
-                                    <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteIcon>
-                                    : <FavoriteBorderIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteBorderIcon>}
+                                    <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            selectLike();
+                                            sendDeleteLikeBookReport(location.state.reportNum);
+                                        }}
+                                    ></FavoriteIcon>
+                                    : <FavoriteBorderIcon
+                                        style={{ fontSize: '30px', color: '#EF9A9A' }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            selectLike();
+                                            sendLikeBookReport(location.state.reportNum);
+                                        }}>
+                                    </FavoriteBorderIcon>}
                                 <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>{location.state.like_count}</div>
                             </div>
                             <ShareIcon style={{ fontSize: '35px' }}></ShareIcon>

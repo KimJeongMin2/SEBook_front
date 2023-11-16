@@ -103,7 +103,7 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.7:8000/user/memberSearch", {
+      .get("http://172.30.84.171:8000/user/memberSearch", {
         params: {
           userNum: 1,
         },
@@ -117,7 +117,7 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.7:8000/book/likeBookListRead", {
+      .get("http://172.30.84.171:8000/book/likeBookListRead", {
         params: {
           userNum: 1,
         },
@@ -131,7 +131,7 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.7:8000/bookReport/bookReportReadMy", {
+      .get("http://172.30.84.171:8000/bookReport/bookReportReadMy", {
         params: {
           userNum: 1,
         },
@@ -145,7 +145,7 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.7:8000/bookReport/bookReportReadLike", {
+      .get("http://172.30.84.171:8000/bookReport/bookReportReadLike", {
         params: {
           userNum: 1,
         },
@@ -159,7 +159,7 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.7:8000/community/paragraphReadMy", {
+      .get("http://172.30.84.171:8000/community/paragraphReadMy", {
         params: {
           userNum: 1,
         },
@@ -173,7 +173,7 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.7:8000/community/paragraphReadLike", {
+      .get("http://172.30.84.171:8000/community/paragraphReadLike", {
         params: {
           userNum: 1
         },

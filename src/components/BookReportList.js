@@ -182,7 +182,7 @@ function BookReportList({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.7:8000/bookReport/bookReportReadAll")
+      .get("http://172.30.84.171:8000/bookReport/bookReportReadAll")
       .then((response) => {
         console.log("bookReportList: " + response.data.allReports);
         const bookReportData = response.data.allReports.reverse();
@@ -193,7 +193,7 @@ function BookReportList({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.7:8000/bookReport/bookReportReadAll", {
+      .get("http://172.30.84.171:8000/bookReport/bookReportReadAll", {
         params: {
           userNum: 1
         }
@@ -209,7 +209,7 @@ function BookReportList({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.7:8000/bookReport/bookReportReadLike", {
+      .get("http://172.30.84.171:8000/bookReport/bookReportReadLike", {
         params: {
           userNum: 1
         }
@@ -222,7 +222,7 @@ function BookReportList({ PROXY }) {
 
 
   const sendLikeBookReport = (bookReportNum) => {
-    axios.post("http://192.168.0.7:8000/bookReport/bookReportLike", {
+    axios.post("http://172.30.84.171:8000/bookReport/bookReportLike", {
       reportNum: bookReportNum,
       userNum: 1
     })
@@ -235,8 +235,25 @@ function BookReportList({ PROXY }) {
       });
   }
 
+  const sendDeleteLikeBookReport = (bookReportNum) => {
+    axios.delete("http://172.30.84.171:8000/bookReport/bookReportLike", {
+      params: {
+        reportNum: bookReportNum,
+        userNum: 1
+      }
+    })
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+
   const searchBookByTitle = () => {
-    axios.get(`http://192.168.0.7:8000/bookReport/bookReportSearch`, {
+    axios.get(`http://172.30.84.171:8000/bookReport/bookReportSearch`, {
       params: {
         title: searchTerm
       }
@@ -382,9 +399,13 @@ function BookReportList({ PROXY }) {
                           e.stopPropagation();
                           toggleLike(data.reportNum);
                           sendLikeBookReport(data.reportNum);
+                          if (likes[data.reportNum]) {
+                            sendDeleteLikeBookReport(data.reportNum);
+                          }
                         }}
                       >
-                        <FavoriteIcon style={{ color: isUserLikeReportsLiked || likes[data.reportNum] ? "#EF9A9A" : "gray" }} />
+                        <FavoriteIcon
+                          style={{ color: isUserLikeReportsLiked || likes[data.reportNum] ? "#EF9A9A" : "gray" }} />
                       </IconButton>
                       <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
                     </TableCell>
