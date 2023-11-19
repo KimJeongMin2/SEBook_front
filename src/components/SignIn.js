@@ -14,6 +14,11 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Session from "react-session-api";
+import Cookies from "js-cookie";
+
 
 function Copyright(props) {
   return (
@@ -38,21 +43,50 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get("email"),
+      userId: data.get("userId"),
       password: data.get("password"),
     });
-  };
+  
+    const userId = data.get("userId");
+    const password = data.get("password");
 
+    const reqData = new FormData();
+    reqData.append("username", userId)
+    reqData.append("password", password)
+  
+    axios
+      .post(
+        "http://127.0.0.1:8000/user/login",reqData,
+        { withCredentials: true }
+      )
+      .then((response) => {
+        console.log("응답 데이터",response.data);
+        console.log("sessionid 쿠키:", Cookies.get('sessionid'));
+        if (response.status === 200) {
+          console.log(response.data.userNum);
+          alert("로그인 성공!");
+          console.log("dddddd",document.cookie);
+          //navigate("/")
+        } 
+      })
+      .catch((error) => {
+        console.error("Login error:", error);
+        alert("로그인 실패. 회원계정을 다시 한번 확인하세요.");
+      });
+  };
+  
   return (
     <>
       <MainAppBar />
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
-      </Box>  
+      </Box>
       <ThemeProvider theme={defaultTheme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -80,10 +114,10 @@ export default function SignIn() {
                 margin="normal"
                 required
                 fullWidth
-                id="id"
+                id="userId"
                 label="아이디를 입력하세요."
-                name="id"
-                autoComplete="id"
+                name="userId"
+                autoComplete="userId"
                 autoFocus
               />
               <TextField
@@ -104,11 +138,9 @@ export default function SignIn() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, backgroundColor: "#F8E8EE"}}
+                sx={{ mt: 3, mb: 2, backgroundColor: "#F8E8EE" }}
               >
-                <Typography sx={{color:"black"}}>
-                로그인
-                </Typography>
+                <Typography sx={{ color: "black" }}>로그인</Typography>
               </Button>
               <Grid container>
                 <Grid item xs>

@@ -100,7 +100,7 @@ function MyBookReport() {
     };
 
     useEffect(() => {
-        axios.get("http://192.168.0.8:8000/bookReport/bookReportReadMy", {
+        axios.get("http://172.30.127.93:8000/bookReport/bookReportReadMy", {
             params: {
                 userNum: 1
             }

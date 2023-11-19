@@ -134,7 +134,7 @@ function Community() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/community/paragraphReadAll")
+      .get("http://172.30.127.93:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data); // Log the entire response
         setCommunityList(response.data.allPosts || []);

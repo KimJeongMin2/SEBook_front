@@ -59,20 +59,19 @@ export default function SignUp() {
 
   const submit = async () => {
     const userInfo = {
-      name: name,
-      id: id,
-      pw: pw,
-      pw_check: pwCheck
+      userId: id, // 백엔드가 요구하는 형식에 맞추어 key 변경
+      password: pw,
+      name: name, // 'name' 추가
     };
 
     if (pw === pwCheck) {
       try {
         const res = await axios.post(
-          "http://192.168.123.158:8000/user/memberReg",
+          "http://172.30.127.93:8000/user/memberReg",
           userInfo
         );
         console.log("회원가입"+res.data);
-        if (res.status === 200) {
+        if (res.status === 201) {
           alert("회원가입이 성공적으로 되었습니다. 환영합니다.");
           navigate("/");
         }
@@ -88,7 +87,7 @@ export default function SignUp() {
       alert("비밀번호를 입력하세요.")
     } else if (pwCheck === "") {
       alert("비밀번호 확인을 하세요.")
-    } else if (pw === pwCheck) {
+    } else if (pw !== pwCheck) {
       alert("비밀번호가 일치하지 않습니다.")
     } else {
       alert("등록에 실패했습니다. 다시 시도해주세요.")

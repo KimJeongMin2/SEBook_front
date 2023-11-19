@@ -132,7 +132,7 @@ function MyLikedBookList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/book/likeBookListRead", {
+      .get("http://172.30.127.93:8000/book/likeBookListRead", {
         params: {
           userNum: 1
         },

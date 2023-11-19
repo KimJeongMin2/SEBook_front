@@ -35,6 +35,7 @@ import { useHistory } from "react-router-dom";
 import ConfettiExplosion from "react-confetti-explosion";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
+import Cookies from 'js-cookie';
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -233,9 +234,12 @@ function MainPage() {
     slidesToScroll: 5,
   };
 
+  const userNum = Cookies.get('userNum');
+  console.log(userNum);
+
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/book/recommendBook/1")
+      .get("http://127.0.0.1:8000/book/recommendBook/1")
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -245,7 +249,7 @@ function MainPage() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/book/BestsellerListRead")
+      .get("http://127.0.0.1:8000/book/BestsellerListRead")
       .then((response) => {
         console.log("bestSeller: " + response.data.bestsellerList);
         setBestsellerList(response.data.bestsellerList);
@@ -255,7 +259,7 @@ function MainPage() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/bookReport/bookReportReadTop5")
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadTop5")
       .then((response) => {
         console.log(response.data);
         setBookTop5List(response.data);
@@ -265,7 +269,7 @@ function MainPage() {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://192.168.0.8:8000/book/searchBookByAuthor`, {
+      .get(`http://127.0.0.1:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -286,7 +290,7 @@ function MainPage() {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.0.8:8000/book/searchBookByTitle`, {
+      .get(`http://127.0.0.1:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -310,7 +314,7 @@ function MainPage() {
 
   const sendLikeBook = (isbn13) => {
     axios
-      .post("http://192.168.0.8:8000/book/bookLike", {
+      .post("http://127.0.0.1:8000/book/bookLike", {
         isbn13: isbn13,
         userNum: 1,
       })

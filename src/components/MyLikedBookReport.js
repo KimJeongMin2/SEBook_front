@@ -118,7 +118,7 @@ function MyLikedBookReport() {
     };
 
     const sendDeleteBook = (bookReportNum) => {
-        axios.delete("http://192.168.0.8:8000/bookReport/bookReportLike", {
+        axios.delete("http://172.30.127.93:8000/bookReport/bookReportLike", {
             params: {
                 reportNum: bookReportNum,
                 userNum: 1

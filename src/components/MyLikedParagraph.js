@@ -100,7 +100,7 @@ function MyLikedParagraph() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/community/paragraphReadLike", {
+      .get("http://172.30.127.93:8000/community/paragraphReadLike", {
         params: {
           userNum: 1
         },

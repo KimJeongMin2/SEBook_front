@@ -27,6 +27,8 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import MoodIcon from "@mui/icons-material/Mood";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import Cookies from 'js-cookie';
+
 // Generate Order Data
 function createData(id, title) {
   return { id, title };
@@ -105,7 +107,7 @@ export default function MyPage() {
     axios
       .get("http://192.168.0.8:8000/user/memberSearch", {
         params: {
-          userNum: 1,
+          userNum:1,
         },
       })
       .then((response) => {
@@ -117,11 +119,7 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/book/likeBookListRead", {
-        params: {
-          userNum: 1,
-        },
-      })
+      .get("http://192.168.0.8:8000/book/likeBookListRead", { withCredentials: true })
       .then((response) => {
         console.log(response.data.likeBookList);
         setReadLikeBook(response.data.likeBookList);
@@ -129,11 +127,11 @@ export default function MyPage() {
       .catch((error) => console.error(error));
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { 
     axios
-      .get("http://192.168.0.8:8000/bookReport/bookReportReadMy", {
+      .get("http://172.30.127.93:8000/bookReport/bookReportReadMy", {
         params: {
-          userNum: 1,
+          userNum:1,
         },
       })
       .then((response) => {
@@ -149,7 +147,7 @@ export default function MyPage() {
     axios
       .get("http://192.168.0.8:8000/bookReport/bookReportReadLike", {
         params: {
-          userNum: 1,
+          userNum: 1
         },
       })
       .then((response) => {
@@ -163,7 +161,7 @@ export default function MyPage() {
     axios
       .get("http://192.168.0.8:8000/community/paragraphReadMy", {
         params: {
-          userNum: 1,
+          userNum:1,
         },
       })
       .then((response) => {
@@ -177,7 +175,7 @@ export default function MyPage() {
     axios
       .get("http://192.168.0.8:8000/community/paragraphReadLike", {
         params: {
-          userNum: 1
+          userNum:1
         },
       })
       .then((response) => {
@@ -186,23 +184,6 @@ export default function MyPage() {
       })
       .catch((error) => console.error(error));
   }, []);
-
-
-  // const paragraphReadMy = (userNum) => {
-  //   axios
-  //     .post("http://192.168.0.8:8000/community/paragraphReadMy", {
-  //       params: {
-  //         userNum: 1,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       console.log(response);
-  //       setReadMyParagraph(response.data.userCommunityList);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   return (
     <React.Fragment>

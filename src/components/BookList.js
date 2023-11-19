@@ -25,6 +25,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import Cookies from 'js-cookie';
+
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -184,8 +186,8 @@ function BookList() {
     axios
       .post("http://192.168.0.8:8000/book/bookLike", {
         isbn13: isbn13,
-        userNum: 1,
-      })
+      },{withCredentials: true}
+      )
       .then((response) => {
         const updatedBookList = bookList.map((book) =>
           book.isbn13 === isbn13
@@ -201,7 +203,7 @@ function BookList() {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://192.168.0.8:8000/book/searchBookByAuthor`, {
+      .get(`http://192.168.0.8:8000:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
