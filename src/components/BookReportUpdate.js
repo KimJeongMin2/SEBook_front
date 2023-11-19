@@ -120,7 +120,7 @@ function BookReportUpdate({ PROXY }) {
 
     try {
       const res = await axios.put(
-        "http://192.168.0.8:8000/bookReport/bookReportUpdate", {
+        "http://172.30.127.93:8000/bookReport/bookReportUpdate", {
         reportNum: location.state.reportNum,
         reportContents: content,
         reportTitle: title

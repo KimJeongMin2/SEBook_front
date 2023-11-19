@@ -27,6 +27,8 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import MoodIcon from "@mui/icons-material/Mood";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import Cookies from 'js-cookie';
+
 // Generate Order Data
 function createData(id, title) {
   return { id, title };
@@ -105,7 +107,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://172.30.84.171:8000/user/memberSearch", {
         params: {
-          userNum: 1,
+          userNum:1,
         },
       })
       .then((response) => {
@@ -129,11 +131,11 @@ export default function MyPage({ PROXY }) {
       .catch((error) => console.error(error));
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { 
     axios
       .get("http://172.30.84.171:8000/bookReport/bookReportReadMy", {
         params: {
-          userNum: 1,
+          userNum:1,
         },
       })
       .then((response) => {
@@ -147,7 +149,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://172.30.84.171:8000/bookReport/bookReportReadLike", {
         params: {
-          userNum: 1,
+          userNum: 1
         },
       })
       .then((response) => {
@@ -161,7 +163,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://172.30.84.171:8000/community/paragraphReadMy", {
         params: {
-          userNum: 1,
+          userNum:1,
         },
       })
       .then((response) => {
@@ -175,7 +177,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://172.30.84.171:8000/community/paragraphReadLike", {
         params: {
-          userNum: 1
+          userNum:1
         },
       })
       .then((response) => {

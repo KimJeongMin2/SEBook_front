@@ -67,7 +67,7 @@ export default function SignUp({ PROXY }) {
     if (pw === pwCheck) {
       try {
         const res = await axios.post(
-          "http://192.168.123.158:8000/user/memberReg",
+          "http://172.30.127.93:8000/user/memberReg",
           userInfo
         );
 
@@ -86,7 +86,7 @@ export default function SignUp({ PROXY }) {
       alert("비밀번호를 입력하세요.")
     } else if (pwCheck === "") {
       alert("비밀번호 확인을 하세요.")
-    } else if (pw === pwCheck) {
+    } else if (pw !== pwCheck) {
       alert("비밀번호가 일치하지 않습니다.")
     } else {
       alert("등록에 실패했습니다. 다시 시도해주세요.")

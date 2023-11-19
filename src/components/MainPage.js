@@ -35,6 +35,7 @@ import { useHistory } from "react-router-dom";
 import ConfettiExplosion from "react-confetti-explosion";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
+import Cookies from 'js-cookie';
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -233,6 +234,9 @@ function MainPage({ PROXY }) {
     slidesToScroll: 5,
   };
 
+  const userNum = Cookies.get('userNum');
+  console.log(userNum);
+
   useEffect(() => {
     axios
       .get("http://192.168.123.158:8000/book/recommendBook/1")
@@ -245,7 +249,7 @@ function MainPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/book/BestsellerListRead")
+      .get("http://127.0.0.1:8000/book/BestsellerListRead")
       .then((response) => {
         console.log("bestSeller: " + response.data.bestsellerList);
         setBestsellerList(response.data.bestsellerList);
@@ -255,7 +259,7 @@ function MainPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/bookReport/bookReportReadTop5")
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadTop5")
       .then((response) => {
         console.log(response.data);
         setBookTop5List(response.data);
