@@ -40,7 +40,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {
+export default function SignUp({ PROXY }) {
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -59,9 +59,9 @@ export default function SignUp() {
 
   const submit = async () => {
     const userInfo = {
-      userId: id, // 백엔드가 요구하는 형식에 맞추어 key 변경
+      name: name,
+      userId: id,
       password: pw,
-      name: name, // 'name' 추가
     };
 
     if (pw === pwCheck) {
@@ -70,11 +70,10 @@ export default function SignUp() {
           "http://172.30.127.93:8000/user/memberReg",
           userInfo
         );
-        console.log("회원가입"+res.data);
-        if (res.status === 201) {
-          alert("회원가입이 성공적으로 되었습니다. 환영합니다.");
-          navigate("/");
-        }
+
+        console.log(res.data);
+        alert("회원가입이 성공적으로 되었습니다. 환영합니다.");
+        navigate("/");
       } catch (error) {
         console.error(error);
         alert("등록에 실패했습니다. 다시 시도해주세요.");

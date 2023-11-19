@@ -149,7 +149,8 @@ const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
 
-function BookList() {
+
+function BookList({ PROXY }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
@@ -170,7 +171,7 @@ function BookList() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.8:8000/book/bookListRead")
+      .get(`http://172.30.84.171:8000/book/bookListRead`)
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
@@ -184,7 +185,7 @@ function BookList() {
 
   const sendLikeBook = (isbn13) => {
     axios
-      .post("http://192.168.0.8:8000/book/bookLike", {
+      .post(`http://172.30.84.171:8000/book/bookLike`, {
         isbn13: isbn13,
       },{withCredentials: true}
       )
@@ -203,7 +204,7 @@ function BookList() {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://192.168.0.8:8000:8000/book/searchBookByAuthor`, {
+      .get(`http://172.30.84.171:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -222,7 +223,7 @@ function BookList() {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.0.8:8000/book/searchBookByTitle`, {
+      .get(`http://172.30.84.171:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -343,7 +344,7 @@ function BookList() {
                   style={{ width: "230px", height: "220px" }}
                 >
                   <CardHeader
-                    title={truncate(data.title, 15)}
+                    title={truncate(data.title, 10)}
                     action={
                       <Box
                         sx={{

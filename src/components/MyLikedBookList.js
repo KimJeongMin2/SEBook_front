@@ -109,7 +109,7 @@ const StyledInputBase = styled(InputBase, {
 //   },
 // ];
 
-function MyLikedBookList() {
+function MyLikedBookList({ PROXY }) {
 
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
@@ -132,7 +132,7 @@ function MyLikedBookList() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.127.93:8000/book/likeBookListRead", {
+      .get("http://192.168.123.158:8000/book/likeBookListRead", {
         params: {
           userNum: 1
         },
@@ -156,7 +156,7 @@ function MyLikedBookList() {
   const [likes, setLikes] = useState({});
 
   const sendDeleteBook = (isbn13) => {
-    axios.delete("http://192.168.0.8:8000/book/bookLike", {
+    axios.delete("http://192.168.123.158:8000/book/bookLike", {
       params: {
         isbn13: isbn13,
         userNum: 1
@@ -176,6 +176,10 @@ function MyLikedBookList() {
       ...likes,
       [id]: !likes[id],
     });
+  };
+
+  const truncate = (str, n) => {
+    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };
 
   return (

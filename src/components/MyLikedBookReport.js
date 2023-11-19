@@ -76,7 +76,7 @@ const StyledInputBase = styled(InputBase, {
     },
 }));
 
-function MyLikedBookReport() {
+function MyLikedBookReport({ PROXY }) {
     const location = useLocation();
     const navigate = new useNavigate();
 
@@ -96,7 +96,7 @@ function MyLikedBookReport() {
     };
 
     useEffect(() => {
-        axios.get("http://192.168.0.8:8000/bookReport/bookReportReadLike", {
+        axios.get("http://172.30.84.171:8000/bookReport/bookReportReadLike", {
             params: {
                 userNum: 1
             }
@@ -118,7 +118,7 @@ function MyLikedBookReport() {
     };
 
     const sendDeleteBook = (bookReportNum) => {
-        axios.delete("http://172.30.127.93:8000/bookReport/bookReportLike", {
+        axios.delete("http://172.30.84.171:8000/bookReport/bookReportLike", {
             params: {
                 reportNum: bookReportNum,
                 userNum: 1
@@ -179,7 +179,7 @@ function MyLikedBookReport() {
                                         {truncate(data.reportTitle, 20)}
                                     </TableCell>
                                     <TableCell>{truncate(data.title, 20)}</TableCell>
-                                    <TableCell>{truncate(data.author, 6)}</TableCell>
+                                    <TableCell>{truncate(data.author, 4)}</TableCell>
                                     <TableCell>{truncate(data.publisher, 6)}</TableCell>
                                     <TableCell>{truncate(data.username, 6)}</TableCell>
                                     <TableCell>{data.registDate_report.split('T')[0]}</TableCell>

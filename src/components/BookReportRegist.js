@@ -80,7 +80,7 @@ const StyledSelect = styled(Select, {
     width: "20ch",
   },
 }));
-function BookReportRegist() {
+function BookReportRegist({ PROXY }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [title, setTitle] = useState(location.state?.reportTitle || "");
@@ -97,8 +97,8 @@ function BookReportRegist() {
   const [isbn13, setIsbn13] = useState(location.state?.isbn13 || "");
 
   useEffect(() => {
-    console.log("도서명"+location.state.book);
-    console.log("도서명"+location.state.author);
+    console.log("도서명" + location.state.book);
+    console.log("도서명" + location.state.author);
   }, []);
 
   const handleClickOpen = () => {
@@ -118,10 +118,10 @@ function BookReportRegist() {
       publisher: publisher,
       reportContents: content,
     };
-    
+
     try {
       const res = await axios.post(
-        "http://192.168.0.8:8000/bookReport/bookReportCreate",
+        "http://192.168.0.7:8000/bookReport/bookReportCreate",
         bookReport
       );
       console.log(res.data);
@@ -144,7 +144,7 @@ function BookReportRegist() {
   };
 
   const searchBookByAuthor = () => {
-    axios.get(`http://192.168.0.8:8000/book/searchBookByAuthor`, {
+    axios.get(`http://192.168.0.7:8000/book/searchBookByAuthor`, {
       params: {
         author: searchTerm
       }
@@ -163,7 +163,7 @@ function BookReportRegist() {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.0.8:8000/book/searchBookByTitle`, {
+      .get(`http://192.168.0.7:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },

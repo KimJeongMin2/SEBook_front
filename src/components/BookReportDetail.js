@@ -7,7 +7,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import { useLocation } from "react-router";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
-
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -55,8 +55,7 @@ const StyledInputBase = styled(InputBase, {
     },
 }));
 
-
-function BookReportDetail() {
+function BookReportDetail({ PROXY }) {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -64,6 +63,57 @@ function BookReportDetail() {
 
     const selectLike = () => {
         setIsSelectedLike(!isSelectedLike)
+    }
+
+    const sendDeleteBook = (reportNum) => {
+        if (window.confirm("삭제하시겠습니까?")) {
+
+            axios.delete("http://192.168.0.7:8000/bookReport/bookReportDelete", {
+                params: {
+                    reportNum: reportNum,
+                }
+            })
+                .then((response) => {
+                    console.log(response);
+                    alert("삭제되었습니다.");
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else {
+            alert("취소합니다.");
+        }
+    }
+
+    const sendDeleteLikeBookReport = (reportNum) => {
+        axios.delete("http://172.30.84.171:8000/bookReport/bookReportLike", {
+            params: {
+                reportNum: reportNum,
+                userNum: 1
+            }
+        })
+            .then((response) => {
+                console.log(response);
+                window.location.reload();
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const sendLikeBookReport = (reportNum) => {
+        axios.post("http://172.30.84.171:8000/bookReport/bookReportLike", {
+            reportNum: reportNum,
+            userNum: 1
+        })
+            .then((response) => {
+                console.log(response);
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     return (
@@ -86,24 +136,54 @@ function BookReportDetail() {
                 </div>
                 <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '55%', height: '380px', borderRadius: '20px' }}>
                     <div style={{ marginLeft: '10px', width: '98%' }}>
-                        <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between', borderBottom: '1px solid #FDCEDF' }}>
+                        <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between' }}>
                             <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{location.state.reportTitle}</div>
                             <div>{location.state.username} | {`${location.state.registDate_report.split('T')[0]} ${location.state.registDate_report.split('T')[1]}`}</div>
+                        </div>
+                        <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between', borderBottom: '1px solid #FDCEDF' }}>
+                            <div style={{ fontSize: '14px' }}>{location.state.title}</div>
+                            <div style={{ fontSize: '14px' }}>{location.state.author} | {location.state.publisher}</div>
                         </div>
                         <div style={{ height: '340px', padding: '10px', fontSize: '15px' }}>
                             {location.state.reportContents}
                         </div>
                         <div style={{ display: 'flex', margin: '10px 5px 0 640px' }}>
-                            <Button
-                                variant="contained"
-                                style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
-                                onClick={() => navigate(`/BookReportUpdate`, { state: location.state })}
+                            {location.state && location.state.isUserWriteReportsLiked &&
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
+                                        onClick={() => navigate(`/BookReportUpdate`, { state: location.state })}
+                                    >
+                                        수정
+                                    </Button>
 
-                            >수정하기</Button>
-                            <div >
-                                {isSelectedLike ?
-                                    <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteIcon>
-                                    : <FavoriteBorderIcon style={{ fontSize: '30px', color: '#EF9A9A' }} onClick={selectLike}></FavoriteBorderIcon>}
+                                    <Button
+                                        variant="contained"
+                                        style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
+                                        onClick={() => sendDeleteBook(location.state.reportNum)}
+                                    >
+                                        삭제
+                                    </Button>
+                                </>
+                            }
+                            <div>
+                                {isSelectedLike || location.state.isUserLikeReportsLiked ?
+                                    <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            selectLike();
+                                            sendDeleteLikeBookReport(location.state.reportNum);
+                                        }}
+                                    ></FavoriteIcon>
+                                    : <FavoriteBorderIcon
+                                        style={{ fontSize: '30px', color: '#EF9A9A' }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            selectLike();
+                                            sendLikeBookReport(location.state.reportNum);
+                                        }}>
+                                    </FavoriteBorderIcon>}
                                 <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>{location.state.like_count}</div>
                             </div>
                             <ShareIcon style={{ fontSize: '35px' }}></ShareIcon>

@@ -23,7 +23,7 @@ import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import { TextField } from "@mui/material";
 import axios from "axios";
 
-function CommunityRegist() {
+function CommunityRegist({ PROXY }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [title, setTitle] = useState();
@@ -44,7 +44,7 @@ function CommunityRegist() {
 
     try {
       const res = await axios.post(
-        "http://172.30.127.93:8000/community/paragraphCreate",
+        "http://192.168.123.158:8000/community/paragraphCreate",
         paragraph
       );
 

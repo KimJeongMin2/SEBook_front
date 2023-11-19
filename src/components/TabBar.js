@@ -40,7 +40,7 @@ function a11yProps(index) {
   };
 }
 
-function TabBar() {
+function TabBar({ PROXY }) {
   const navigate = useNavigate();
 
   const location = useLocation();

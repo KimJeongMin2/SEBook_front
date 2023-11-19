@@ -84,7 +84,7 @@ const StyledInputBase = styled(InputBase, {
     },
   },
 }));
-function MyLikedParagraph() {
+function MyLikedParagraph({ PROXY }) {
   const navigate = new useNavigate();
 
   // const [rows, setRows] = useState(initialRows);
@@ -96,11 +96,11 @@ function MyLikedParagraph() {
   const [likes, setLikes] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
+  const itemsPerPage = 5;
 
   useEffect(() => {
     axios
-      .get("http://172.30.127.93:8000/community/paragraphReadLike", {
+      .get("http://192.168.123.158:8000/community/paragraphReadLike", {
         params: {
           userNum: 1
         },
@@ -123,13 +123,13 @@ function MyLikedParagraph() {
 
   const getPageData = () => {
     if (likeParagraph) {
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        return likeParagraph.slice(start, end);
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return likeParagraph.slice(start, end);
     } else {
-        return [];
+      return [];
     }
-};
+  };
 
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
 
@@ -142,9 +142,9 @@ function MyLikedParagraph() {
   };
 
   const sendDeleteParagraph = (postNum) => {
-    axios.delete("http://192.168.0.8:8000/community/paragraphLike", {
+    axios.delete("http://192.168.123.158:8000/community/paragraphLike", {
       params: {
-        postNum:postNum,
+        postNum: postNum,
         userNum: 1,
       }
     })
@@ -156,6 +156,10 @@ function MyLikedParagraph() {
         console.log(error);
       });
   }
+
+  const truncate = (str, n) => {
+    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+  };
 
   return (
     <>
@@ -206,7 +210,7 @@ function MyLikedParagraph() {
                       textAlign: "center",
                     }}
                   >
-                    {index+1}
+                    {index + 1}
                   </TableCell>
                   <TableCell
                     component="th"
@@ -239,14 +243,14 @@ function MyLikedParagraph() {
                     style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
                   >
                     <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleLike(row.isbn13);
-                          sendDeleteParagraph(row.postNum);
-                        }}
-                      >
-                        <FavoriteIcon style={{ color: likes[row.isbn13] ? "gray" : "#EF9A9A" }} />
-                      </IconButton>
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleLike(row.isbn13);
+                        sendDeleteParagraph(row.postNum);
+                      }}
+                    >
+                      <FavoriteIcon style={{ color: likes[row.isbn13] ? "gray" : "#EF9A9A" }} />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

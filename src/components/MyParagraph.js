@@ -85,7 +85,7 @@ const StyledInputBase = styled(InputBase, {
   },
 }));
 
-function MyParagraph() {
+function MyParagraph({ PROXY }) {
   const navigate = new useNavigate();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -122,17 +122,17 @@ function MyParagraph() {
 
   const getPageData = () => {
     if (paragraphReadMy) {
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        return paragraphReadMy.slice(start, end);
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return paragraphReadMy.slice(start, end);
     } else {
-        return [];
+      return [];
     }
-};
+  };
 
   useEffect(() => {
     axios
-      .get("http://172.30.127.93:8000/community/paragraphReadMy", {
+      .get("http://192.168.123.158:8000/community/paragraphReadMy", {
         params: {
           userNum: 1,
         },
@@ -146,7 +146,7 @@ function MyParagraph() {
 
   const sendDeleteParagraphMy = (postNum) => {
     axios
-      .delete("http://192.168.0.8:8000/community/paragraphDelete", {
+      .delete("http://192.168.123.158:8000/community/paragraphDelete", {
         params: {
           postNum: postNum,
           userNum: 1,
@@ -160,6 +160,10 @@ function MyParagraph() {
         console.log(error);
       });
   };
+  const truncate = (str, n) => {
+    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+  };
+
 
   return (
     <>
@@ -188,9 +192,9 @@ function MyParagraph() {
                 <TableCell>No</TableCell>
                 <TableCell>도서명</TableCell>
                 <TableCell>인상깊은 구절</TableCell>
-                <TableCell>작성자</TableCell>
-                <TableCell>등록일</TableCell>
-                <TableCell>좋아요</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>작성자</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>등록일</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>좋아요</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -199,7 +203,7 @@ function MyParagraph() {
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                 >
                   <TableCell
                     component="th"
@@ -217,18 +221,18 @@ function MyParagraph() {
                     scope="row"
                     style={{ width: "180px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.title}
+                    {truncate(row.title, 16)}
                   </TableCell>
                   <TableCell
                     style={{ width: "500px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.contents}
+                    {truncate(row.contents, 28)}
                   </TableCell>
-                  <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    {row.author}
+                  <TableCell style={{ width: "60px", textAlign: "center" }}>
+                    {truncate(row.username, 3)}
                   </TableCell>
                   <TableCell style={{ width: "80px", textAlign: "center" }}>
-                    {row.registDate_community}
+                    {row.registDate_community.split('T')[0]}
                   </TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
                     {row.like_count}

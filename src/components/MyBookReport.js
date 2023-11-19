@@ -75,7 +75,7 @@ const StyledInputBase = styled(InputBase, {
     },
 }));
 
-function MyBookReport() {
+function MyBookReport({ PROXY }) {
 
     const location = useLocation();
     const navigate = new useNavigate();
@@ -100,7 +100,7 @@ function MyBookReport() {
     };
 
     useEffect(() => {
-        axios.get("http://172.30.127.93:8000/bookReport/bookReportReadMy", {
+        axios.get("http://192.168.123.158:8000/bookReport/bookReportReadMy", {
             params: {
                 userNum: 1
             }
@@ -117,7 +117,7 @@ function MyBookReport() {
     const sendDeleteBook = (reportNum) => {
         if (window.confirm("삭제하시겠습니까?")) {
 
-            axios.delete("http://192.168.0.8:8000/bookReport/bookReportDelete", {
+            axios.delete("http://192.168.123.158:8000/bookReport/bookReportDelete", {
 
                 params: {
                     reportNum: reportNum,
