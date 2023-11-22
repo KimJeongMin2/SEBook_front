@@ -17,7 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
-
+import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
@@ -75,6 +75,8 @@ const StyledInputBase = styled(InputBase, {
     },
 }));
 
+const csrftoken = Cookies.get('csrftoken');
+
 function MyBookReport({ PROXY }) {
 
     const location = useLocation();
@@ -100,11 +102,11 @@ function MyBookReport({ PROXY }) {
     };
 
     useEffect(() => {
-        axios.get("http://192.168.123.158:8000/bookReport/bookReportReadMy", {
-            params: {
-                userNum: 1
-            }
-        })
+        axios.get("http://127.0.0.1:8000/bookReport/bookReportReadMy", {
+            headers: {
+              'X-CSRFToken': csrftoken 
+            },
+            withCredentials: true})
             .then((response) => {
                 console.log("data : " + response.data.userBookReportList);
                 const data = response.data.userBookReportList;
@@ -117,7 +119,7 @@ function MyBookReport({ PROXY }) {
     const sendDeleteBook = (reportNum) => {
         if (window.confirm("삭제하시겠습니까?")) {
 
-            axios.delete("http://192.168.123.158:8000/bookReport/bookReportDelete", {
+            axios.delete("http://127.0.0.1:8000/bookReport/bookReportDelete", {
 
                 params: {
                     reportNum: reportNum,

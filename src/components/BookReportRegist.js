@@ -27,7 +27,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-
+import Cookies from 'js-cookie';
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -80,6 +80,7 @@ const StyledSelect = styled(Select, {
     width: "20ch",
   },
 }));
+const csrftoken = Cookies.get('csrftoken');
 function BookReportRegist({ PROXY }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -95,7 +96,21 @@ function BookReportRegist({ PROXY }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [isbn13, setIsbn13] = useState(location.state?.isbn13 || "");
-
+  const [myInfo, setMyInfo] = useState();
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch",{
+        headers: {
+          'X-CSRFToken': csrftoken  
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
   useEffect(() => {
     console.log("도서명" + location.state.book);
     console.log("도서명" + location.state.author);
@@ -111,7 +126,7 @@ function BookReportRegist({ PROXY }) {
 
   const submit = async () => {
     const bookReport = {
-      userNum_report: writer,
+      userNum_report: myInfo.userNum,
       reportTitle: title,
       isbn13_report: isbn13,
       author: author,
@@ -121,7 +136,7 @@ function BookReportRegist({ PROXY }) {
 
     try {
       const res = await axios.post(
-        "http://192.168.0.7:8000/bookReport/bookReportCreate",
+        "http://127.0.0.1:8000/bookReport/bookReportCreate",
         bookReport
       );
       console.log(res.data);
@@ -144,7 +159,7 @@ function BookReportRegist({ PROXY }) {
   };
 
   const searchBookByAuthor = () => {
-    axios.get(`http://192.168.0.7:8000/book/searchBookByAuthor`, {
+    axios.get(`http://127.0.0.1:8000/book/searchBookByAuthor`, {
       params: {
         author: searchTerm
       }
@@ -163,7 +178,7 @@ function BookReportRegist({ PROXY }) {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.0.7:8000/book/searchBookByTitle`, {
+      .get(`http://127.0.0.1:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -380,7 +395,7 @@ function BookReportRegist({ PROXY }) {
               variant="outlined"
               fullWidth
               multiline
-              value={writer}
+              value={myInfo.userNum}
               rows={1}
               onChange={(e) => setWriter(e.target.value)}
               sx={{ fontSize: "10px", marginBottom: "10px" }}

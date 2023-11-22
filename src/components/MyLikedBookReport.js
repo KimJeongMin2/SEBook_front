@@ -22,19 +22,7 @@ import Button from '@mui/material/Button';
 
 import { useNavigate, useLocation } from "react-router-dom";
 
-function createData(id, title, bookName, author, publisher, writer, date, like) {
-    return { id, title, bookName, author, publisher, writer, date, like };
-}
-
-const initialRows = [
-    createData(1, "Frozen yoghurt를 읽고1", "Frozen yoghurt", "김작가", "김나라출판", "김정민", "2023-03-21", 12),
-    createData(2, "Frozen yoghurt를 읽고2", "Frozen yoghurt", "이작가", "김나라출판", "신영옥", "2023-05-12", 12),
-    createData(3, "Frozen yoghurt를 읽고3", "Frozen yoghurt", "정작가", "김나라출판", "정채연", "2023-08-23", 12),
-    createData(4, "Frozen yoghurt를 읽고4", "Frozen yoghurt", "신작가", "김나라출판", "박글쓴", "2023-11-07", 12),
-    createData(5, "Frozen yoghurt를 읽고5", "Frozen yoghurt", "박작가", "김나라출판", "최글쓴", "2023-11-21", 12),
-    createData(6, "Frozen yoghurt를 읽고나서", "Frozen yoghurt", "최작가", "김나라출판", "이글쓴", "2023-12-24", 12),
-];
-
+import Cookies from 'js-cookie';
 const Search = styled("div", {
     shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -76,6 +64,8 @@ const StyledInputBase = styled(InputBase, {
     },
 }));
 
+const csrftoken = Cookies.get('csrftoken');
+
 function MyLikedBookReport({ PROXY }) {
     const location = useLocation();
     const navigate = new useNavigate();
@@ -96,11 +86,11 @@ function MyLikedBookReport({ PROXY }) {
     };
 
     useEffect(() => {
-        axios.get("http://172.30.84.171:8000/bookReport/bookReportReadLike", {
-            params: {
-                userNum: 1
-            }
-        })
+        axios.get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
+            headers: {
+              'X-CSRFToken': csrftoken 
+            },
+            withCredentials: true})
             .then((response) => {
                 console.log("공감한 도서 : " + response.data.likeBookReportList[0]);
                 setBookReportList(response.data.likeBookReportList);
@@ -118,12 +108,15 @@ function MyLikedBookReport({ PROXY }) {
     };
 
     const sendDeleteBook = (bookReportNum) => {
-        axios.delete("http://172.30.84.171:8000/bookReport/bookReportLike", {
+        axios.delete("http://127.0.0.1:8000/bookReport/bookReportLike", {
             params: {
                 reportNum: bookReportNum,
-                userNum: 1
             }
-        })
+        },{
+            headers: {
+              'X-CSRFToken': csrftoken 
+            },
+            withCredentials: true})
             .then((response) => {
                 console.log(response);
                 window.location.reload();
