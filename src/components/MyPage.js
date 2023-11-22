@@ -29,62 +29,6 @@ import MoodIcon from "@mui/icons-material/Mood";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import Cookies from 'js-cookie';
 
-// Generate Order Data
-function createData(id, title) {
-  return { id, title };
-}
-
-function createBookLikeListDate(id, title, author) {
-  return { id, title, author };
-}
-
-const rows = [
-  createData(1, "어린왕자"),
-  createData(2, "백설공주"),
-  createData(3, "신데렐라"),
-  createData(4, "인어공주"),
-  createData(5, "앤서니 브라운 코끼리"),
-  //   createData(
-  //     1,
-  //     '16 Mar, 2019',
-  //     'Paul McCartney',
-  //     'London, UK',
-  //     'VISA ⠀•••• 2574',
-  //     866.99,
-  //   ),
-  //   createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  //   createData(
-  //     3,
-  //     '16 Mar, 2019',
-  //     'Michael Jackson',
-  //     'Gary, IN',
-  //     'AMEX ⠀•••• 2000',
-  //     654.39,
-  //   ),
-  //   createData(
-  //     4,
-  //     '15 Mar, 2019',
-  //     'Bruce Springsteen',
-  //     'Long Branch, NJ',
-  //     'VISA ⠀•••• 5919',
-  //     212.79,
-  //   ),
-];
-
-const bookLikeList = [
-  createBookLikeListDate(1, "어린왕자", "생텍쥐베리"),
-  createBookLikeListDate(2, "백설공주", "야코프 그림"),
-  createBookLikeListDate(3, "신데렐라", "샤를 페르"),
-  createBookLikeListDate(4, "엔서니 브라운 코끼리", "엔서니 브라운"),
-  createBookLikeListDate(5, "1%를 읽는 힘", "메르"),
-];
-const data = [
-  createBookLikeListDate(1, "어린왕자", "김정민"),
-  createBookLikeListDate(2, "백설공주", "김정민"),
-  createBookLikeListDate(3, "신데렐라", "김정민"),
-  createBookLikeListDate(4, "엔서니 브라운 코끼리", "김정민"),
-  createBookLikeListDate(5, "1%를 읽는 힘", "김정민"),
-];
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -93,7 +37,7 @@ const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
 
-export default function MyPage({ PROXY }) {
+export default function MyPage() {
   const navigate = useNavigate();
 
   const [myInfo, setMyInfo] = useState();
@@ -107,7 +51,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/user/memberSearch",{
         headers: {
-          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
+          'X-CSRFToken': csrftoken  
         },
         withCredentials: true
       })
@@ -122,7 +66,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/book/likeBookListRead", {
         headers: {
-          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
+          'X-CSRFToken': csrftoken  
         },
         withCredentials: true
       })
@@ -137,7 +81,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/bookReport/bookReportReadMy",{
         headers: {
-          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
+          'X-CSRFToken': csrftoken  
         },
         withCredentials: true
       })
@@ -152,7 +96,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
         headers: {
-          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
+          'X-CSRFToken': csrftoken  
         },
         withCredentials: true
       })
@@ -167,7 +111,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/community/paragraphReadMy", {
         headers: {
-          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
+          'X-CSRFToken': csrftoken  
         },
         withCredentials: true
       })
@@ -182,7 +126,7 @@ export default function MyPage({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/community/paragraphReadLike",{
         headers: {
-          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
+          'X-CSRFToken': csrftoken  
         },
         withCredentials: true
       })

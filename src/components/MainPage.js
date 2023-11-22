@@ -121,6 +121,22 @@ function MainPage() {
 
   const [open, setOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [myInfo, setMyInfo] = useState();
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch",{
+        headers: {
+          'X-CSRFToken': csrftoken  
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const settings = {
     arrows: true,
@@ -135,7 +151,13 @@ function MainPage() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/book/recommendBook/1")
+      .get("http://127.0.0.1:8000/book/recommendBook", 
+        {
+          headers: {
+            'X-CSRFToken': csrftoken 
+          },
+          withCredentials: true
+      })
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -323,7 +345,7 @@ function MainPage() {
             marginTop: "-28px",
           }}
         >
-          홍길동님, 맞춤 도서 추천
+          {myInfo?.name}님, 맞춤 도서 추천
         </Typography>
         {/* <>{isExploding && <ConfettiExplosion />} </>
         <Confetti

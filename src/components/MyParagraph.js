@@ -23,6 +23,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 function createData(id, title, paragraph, writer, date, like) {
   return { id, title, paragraph, writer, date, like };
 }
@@ -85,6 +86,8 @@ const StyledInputBase = styled(InputBase, {
   },
 }));
 
+const csrftoken = Cookies.get('csrftoken');
+
 function MyParagraph({ PROXY }) {
   const navigate = new useNavigate();
 
@@ -133,10 +136,10 @@ function MyParagraph({ PROXY }) {
   useEffect(() => {
     axios
       .get("http://192.168.123.158:8000/community/paragraphReadMy", {
-        params: {
-          userNum: 1,
+        headers: {
+          'X-CSRFToken': csrftoken 
         },
-      })
+        withCredentials: true})
       .then((response) => {
         console.log(response.data.userCommunityList);
         setParagraphReadMy(response.data.userCommunityList);
@@ -146,12 +149,15 @@ function MyParagraph({ PROXY }) {
 
   const sendDeleteParagraphMy = (postNum) => {
     axios
-      .delete("http://192.168.123.158:8000/community/paragraphDelete", {
+      .delete("http://127.0.0.1:8000/community/paragraphDelete", {
         params: {
           postNum: postNum,
-          userNum: 1,
+        }
+      },{
+        headers: {
+          'X-CSRFToken': csrftoken 
         },
-      })
+        withCredentials: true})
       .then((response) => {
         console.log(response);
         window.location.reload();

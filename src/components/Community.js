@@ -22,26 +22,10 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 function createData(id, title, paragraph, writer, date, like) {
   return { id, title, paragraph, writer, date, like };
 }
-
-const initialRows = [
-  createData(
-    1,
-    "신데렐라",
-    "잊지 말아야 할 것은, 인내와 선의가 항상 보상을 받는다는 것이다.",
-    "김글쓴",
-    "2023-03-21",
-    10
-  ),
-  createData(2, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 122),
-  createData(3, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 10),
-  createData(4, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 30),
-  createData(5, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 32),
-  createData(6, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 2),
-  createData(7, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 1),
-];
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -96,6 +80,8 @@ const StyledSelect = styled(Select, {
   },
 }));
 
+const csrftoken = Cookies.get('csrftoken');
+
 function Community({ PROXY }) {
   const navigate = new useNavigate();
 
@@ -105,10 +91,29 @@ function Community({ PROXY }) {
 
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
-
+  const [likeStatus, setLikeStatus] = useState({}); 
   const [searchTerm, setSearchTerm] = useState("");
   const [paragraphList, setParagraphList] = useState([]);
   const [searchType, setSearchType] = useState("도서명");
+  const [myInfo, setMyInfo] = useState();
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch",{
+        headers: {
+          'X-CSRFToken': csrftoken  
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        //setMyInfo(response.data);
+        const likedPostIds = response.data.userLikedPosts;
+        console.log(likedPostIds)
+        setLikeStatus(likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const handleOpen = (content) => {
     setOpen(true);
@@ -134,9 +139,9 @@ function Community({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/community/paragraphReadAll")
+      .get("http://127.0.0.1:8000/community/paragraphReadAll")
       .then((response) => {
-        console.log(response.data); // Log the entire response
+        console.log(response.data);
         setCommunityList(response.data.allPosts || []);
       })
       .catch((error) => console.error(error));
@@ -144,19 +149,25 @@ function Community({ PROXY }) {
 
   const sendLikeCommunity = (postNum) => {
     axios
-      .post("http://192.168.123.158:8000/community/paragraphLike", {
+      .post("http://127.0.0.1:8000/community/paragraphLike", {
         postNum: postNum,
-        userNum: 1,
+      },
+      {
+        headers: {
+          'X-CSRFToken': csrftoken 
+        },
+        withCredentials: true
       })
       .then((response) => {
         console.log(response);
+        window.location.reload();
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
+
 
   // Function to toggle the like status for a specific row
   const toggleLike = (id) => {
@@ -172,7 +183,7 @@ function Community({ PROXY }) {
 
   const searchParagraphByAuthor = () => {
     axios
-      .get(`http://192.168.123.158:8000/community/searchParagraphByAuthor`, {
+      .get(`http://127.0.0.1:8000/community/searchParagraphByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -195,7 +206,7 @@ function Community({ PROXY }) {
 
   const searchParagraphByTitle = () => {
     axios
-      .get(`http://192.168.123.158:8000/community/searchParagraphByTitle`, {
+      .get(`http://127.0.0.1:8000/community/searchParagraphByTitle`, {
         params: {
           title: searchTerm,
         },

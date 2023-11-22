@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,11 +17,12 @@ import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-
+import Cookies from 'js-cookie';
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 
 import { TextField } from "@mui/material";
 import axios from "axios";
+const csrftoken = Cookies.get('csrftoken');
 
 function CommunityRegist({ PROXY }) {
   const location = useLocation();
@@ -32,6 +33,22 @@ function CommunityRegist({ PROXY }) {
   const [writer, setWriter] = useState();
   const [publisher, setPublisher] = useState(location.state?.publisher || "");
   const [content, setContent] = useState();
+  const [myInfo, setMyInfo] = useState();
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch",{
+        headers: {
+          'X-CSRFToken': csrftoken  
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const submit = async () => {
     const paragraph = {
@@ -44,7 +61,7 @@ function CommunityRegist({ PROXY }) {
 
     try {
       const res = await axios.post(
-        "http://192.168.123.158:8000/community/paragraphCreate",
+        "http://127.0.0.1:8000/community/paragraphCreate",
         paragraph
       );
 
