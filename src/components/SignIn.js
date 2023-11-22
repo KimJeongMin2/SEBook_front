@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext, useEffect } from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,8 +16,6 @@ import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Session from "react-session-api";
-import Cookies from "js-cookie";
 
 
 function Copyright(props) {
@@ -44,7 +42,6 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -66,13 +63,12 @@ export default function SignIn() {
         { withCredentials: true }
       )
       .then((response) => {
-        console.log("응답 데이터",response.data);
-        console.log("sessionid 쿠키:", Cookies.get('sessionid'));
         if (response.status === 200) {
           console.log(response.data.userNum);
+          console.log(response.data.userName);
           alert("로그인 성공!");
-          console.log("dddddd",document.cookie);
-          //navigate("/")
+          //setAuth({ userNum: response.data.userNum, userName: response.data.userName });
+          navigate("/")
         } 
       })
       .catch((error) => {
@@ -80,7 +76,7 @@ export default function SignIn() {
         alert("로그인 실패. 회원계정을 다시 한번 확인하세요.");
       });
   };
-  
+
   return (
     <>
       <MainAppBar />

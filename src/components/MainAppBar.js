@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -20,7 +20,6 @@ const settings = ['Profile', 'Logout'];
 function MainAppBar({ PROXY }) {
 
   const navigate = useNavigate();
-
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -58,7 +57,7 @@ function MainAppBar({ PROXY }) {
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              <div style={{ marginLeft: '10px', fontSize: '15px' }}>홍길동</div>
+              <div style={{ marginLeft: '10px', fontSize: '15px' }}></div>
             </IconButton>
           </Tooltip>
           <Menu

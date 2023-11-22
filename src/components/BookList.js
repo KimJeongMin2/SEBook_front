@@ -68,70 +68,6 @@ const StyledInputBase = styled(InputBase, {
   },
 }));
 
-const cardData = [
-  {
-    id: 1,
-    title: "어린왕자",
-    author: "생텍쥐베리",
-    image: "https://www.munhak.com/data/book/img_201807275280055_b.jpg",
-    like: 1,
-  },
-  {
-    id: 2,
-    title: "백설공주",
-    author: "야코프 그림",
-    image:
-      "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788965671527.jpg",
-    like: 1,
-  },
-  {
-    id: 3,
-    title: "인어공주",
-    author: "한스 크리스티안 안데르센",
-    image:
-      "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788939570504.jpg",
-    like: 1,
-  },
-  {
-    id: 4,
-    title: "신데렐라",
-    author: "샤를 페르",
-    image:
-      "https://image.aladin.co.kr/product/1634/30/cover500/8965671566_1.jpg",
-    like: 1,
-  },
-  {
-    id: 5,
-    title: "앤서니 브라운 코끼리",
-    author: "앤서니 브라운",
-    image: "https://img.vogue.co.kr/vogue/2019/08/style_5d5cadfdadb7c.jpeg",
-    like: 1,
-  },
-  {
-    id: 6,
-    title: "1%를 읽는 힘",
-    author: "메르",
-    image:
-      "https://image.aladin.co.kr/product/32289/45/cover500/k852834850_1.jpg",
-    like: 1,
-  },
-  {
-    id: 7,
-    title: "아메리칸 프로메테우스",
-    author: "카이 버드",
-    image:
-      "https://image.aladin.co.kr/product/31892/3/cover500/k342833636_1.jpg",
-    like: 1,
-  },
-  {
-    id: 8,
-    title: "슈퍼노멀",
-    author: "주언규",
-    image:
-      "https://image.aladin.co.kr/product/32308/43/cover500/890127437x_1.jpg",
-    like: 1,
-  },
-];
 const StyledSelect = styled(Select, {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -149,8 +85,9 @@ const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
 
+const csrftoken = Cookies.get('csrftoken');
 
-function BookList({ PROXY }) {
+function BookList() {
   const location = useLocation();
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
@@ -171,7 +108,7 @@ function BookList({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get(`http://172.30.84.171:8000/book/bookListRead`)
+      .get(`http://127.0.0.1:8000/book/bookListRead`)
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
@@ -184,11 +121,16 @@ function BookList({ PROXY }) {
   }, []);
 
   const sendLikeBook = (isbn13) => {
+    console.log("cccc", csrftoken)
     axios
-      .post(`http://172.30.84.171:8000/book/bookLike`, {
+      .post("http://127.0.0.1:8000/book/bookLike", {
         isbn13: isbn13,
-      },{withCredentials: true}
-      )
+      },{
+        headers: {
+          'X-CSRFToken': csrftoken 
+        },
+        withCredentials: true
+      })
       .then((response) => {
         const updatedBookList = bookList.map((book) =>
           book.isbn13 === isbn13
@@ -202,9 +144,10 @@ function BookList({ PROXY }) {
       });
   };
 
+
   const searchBookByAuthor = () => {
     axios
-      .get(`http://172.30.84.171:8000/book/searchBookByAuthor`, {
+      .get(`http://127.0.0.1:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -223,7 +166,7 @@ function BookList({ PROXY }) {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://172.30.84.171:8000/book/searchBookByTitle`, {
+      .get(`http://127.0.0.1:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },
