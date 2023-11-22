@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useRef } from "react";
+import { React, useEffect, useState, useContext } from "react";
 import MainAppBar from "./MainAppBar";
 import { motion } from "framer-motion";
 import TabBar from "./TabBar";
@@ -36,6 +36,8 @@ import ConfettiExplosion from "react-confetti-explosion";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import Cookies from 'js-cookie';
+
+
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -89,119 +91,13 @@ const StyledSelect = styled(Select, {
   },
 }));
 
-// const mySwiper = new Swiper('.swiper-container', {
-//   navigation: {
-//     nextEl: '.swiper-button-next',
-//     prevEl: '.swiper-button-prev',
-//   },
-// });
-const cardData = [
-  {
-    title: "어린왕자",
-    author: "생텍쥐베리",
-    image: "https://www.munhak.com/data/book/img_201807275280055_b.jpg",
-  },
-  {
-    title: "백설공주",
-    author: "야코프 그림",
-    image:
-      "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788965671527.jpg",
-  },
-  {
-    title: "인어공주",
-    author: "한스 크리스티안 안데르센",
-    image:
-      "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788939570504.jpg",
-  },
-  {
-    title: "신데렐라",
-    author: "샤를 페르",
-    image:
-      "https://image.aladin.co.kr/product/1634/30/cover500/8965671566_1.jpg",
-  },
-  {
-    title: "앤서니 브라운 코끼리",
-    author: "앤서니 브라운",
-    image: "https://img.vogue.co.kr/vogue/2019/08/style_5d5cadfdadb7c.jpeg",
-  },
-];
-
-const bestCardData = [
-  {
-    id: 1,
-    title: "1%를 읽는 힘",
-    author: "메르",
-    image:
-      "https://image.aladin.co.kr/product/32289/45/cover500/k852834850_1.jpg",
-  },
-  {
-    id: 2,
-    title: "아메리칸 프로메테우스",
-    author: "카이 버드",
-    image:
-      "https://image.aladin.co.kr/product/31892/3/cover500/k342833636_1.jpg",
-  },
-  {
-    id: 3,
-    title: "슈퍼노멀",
-    author: "주언규",
-    image:
-      "https://image.aladin.co.kr/product/32308/43/cover500/890127437x_1.jpg",
-  },
-  {
-    id: 4,
-    title: "세이노의 가르침",
-    author: "세이노",
-    image:
-      "https://image.aladin.co.kr/product/30929/51/cover500/s302832892_1.jpg",
-  },
-  {
-    id: 5,
-    title: "우리 대화는 밤새도록 끝",
-    author: "허휘수",
-    image:
-      "https://image.aladin.co.kr/product/32294/82/cover500/k672834951_2.jpg",
-  },
-];
-
-const bookReportData = [
-  {
-    title: "1%를 읽는 힘",
-    writer: "김정민",
-    image:
-      "https://image.aladin.co.kr/product/32289/45/cover500/k852834850_1.jpg",
-  },
-  {
-    title: "아메리칸 프로메테우스",
-    writer: "신영옥",
-    image:
-      "https://image.aladin.co.kr/product/31892/3/cover500/k342833636_1.jpg",
-  },
-  {
-    title: "슈퍼노멀",
-    writer: "정채연",
-    image:
-      "https://image.aladin.co.kr/product/32308/43/cover500/890127437x_1.jpg",
-  },
-  {
-    title: "세이노의 가르침",
-    writer: "홍길동",
-    image:
-      "https://image.aladin.co.kr/product/30929/51/cover500/s302832892_1.jpg",
-  },
-  {
-    title: "우리 대화는 밤새도록 끝",
-    writer: "김길동",
-    image:
-      "https://image.aladin.co.kr/product/32294/82/cover500/k672834951_2.jpg",
-  },
-];
+const csrftoken = Cookies.get('csrftoken');
 
 const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
 
-function MainPage({ PROXY }) {
+function MainPage() {
   const navigate = useNavigate();
 
   const [isExploding, setIsExploding] = useState(false);
@@ -239,7 +135,7 @@ function MainPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/book/recommendBook/1")
+      .get("http://127.0.0.1:8000/book/recommendBook/1")
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -269,7 +165,7 @@ function MainPage({ PROXY }) {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://192.168.123.158:8000/book/searchBookByAuthor`, {
+      .get(`http://127.0.0.1:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -290,7 +186,7 @@ function MainPage({ PROXY }) {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.123.158:8000/book/searchBookByTitle`, {
+      .get(`http://127.0.0.1:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -313,10 +209,15 @@ function MainPage({ PROXY }) {
   };
 
   const sendLikeBook = (isbn13) => {
+    console.log("cccc", csrftoken)
     axios
-      .post("http://192.168.123.158:8000/book/bookLike", {
+      .post("http://127.0.0.1:8000/book/bookLike", {
         isbn13: isbn13,
-        userNum: 1,
+      },{
+        headers: {
+          'X-CSRFToken': csrftoken 
+        },
+        withCredentials: true
       })
       .then((response) => {
         const updatedBookList = bookList.map((book) =>

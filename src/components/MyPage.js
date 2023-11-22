@@ -88,7 +88,7 @@ const data = [
 function preventDefault(event) {
   event.preventDefault();
 }
-
+const csrftoken = Cookies.get('csrftoken');
 const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
@@ -105,10 +105,11 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/user/memberSearch", {
-        params: {
-          userNum:1,
+      .get("http://127.0.0.1:8000/user/memberSearch",{
+        headers: {
+          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
         },
+        withCredentials: true
       })
       .then((response) => {
         console.log("myInfo : " + response.data);
@@ -119,10 +120,11 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/book/likeBookListRead", {
-        params: {
-          userNum: 1,
+      .get("http://127.0.0.1:8000/book/likeBookListRead", {
+        headers: {
+          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
         },
+        withCredentials: true
       })
       .then((response) => {
         console.log(response.data.likeBookList);
@@ -133,10 +135,11 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => { 
     axios
-      .get("http://172.30.84.171:8000/bookReport/bookReportReadMy", {
-        params: {
-          userNum:1,
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadMy",{
+        headers: {
+          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
         },
+        withCredentials: true
       })
       .then((response) => {
         console.log(response.data.userBookReportList);
@@ -147,10 +150,11 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/bookReport/bookReportReadLike", {
-        params: {
-          userNum: 1
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
+        headers: {
+          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
         },
+        withCredentials: true
       })
       .then((response) => {
         console.log("공감한 도서 : " + response.data.likeBookReportList[0]);
@@ -161,10 +165,11 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/community/paragraphReadMy", {
-        params: {
-          userNum:1,
+      .get("http://127.0.0.1:8000/community/paragraphReadMy", {
+        headers: {
+          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
         },
+        withCredentials: true
       })
       .then((response) => {
 
@@ -175,10 +180,11 @@ export default function MyPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/community/paragraphReadLike", {
-        params: {
-          userNum:1
+      .get("http://127.0.0.1:8000/community/paragraphReadLike",{
+        headers: {
+          'X-CSRFToken': csrftoken   // 헤더에 CSRF 토큰을 추가합니다.
         },
+        withCredentials: true
       })
       .then((response) => {
         console.log(response.data.savedCommunityList);
