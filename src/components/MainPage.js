@@ -239,7 +239,7 @@ function MainPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/book/recommendBook/1")
+      .get("http://172.30.84.171:8000/book/recommendBook/1")
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -249,7 +249,7 @@ function MainPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/book/BestsellerListRead")
+      .get("http://172.30.84.171:8000/book/BestsellerListRead")
       .then((response) => {
         console.log("bestSeller: " + response.data.bestsellerList);
         setBestsellerList(response.data.bestsellerList);
@@ -259,7 +259,7 @@ function MainPage({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/bookReport/bookReportReadTop5")
+      .get("http://172.30.84.171:8000/bookReport/bookReportReadTop5")
       .then((response) => {
         console.log(response.data);
         setBookTop5List(response.data);
@@ -269,15 +269,18 @@ function MainPage({ PROXY }) {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://192.168.123.158:8000/book/searchBookByAuthor`, {
+      .get(`http://172.30.84.171:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
       })
       .then((response) => {
         setBookList(response.data);
-        console.log("book list : " + response.data.title);
-        // navigate(`/BookList`, { state: bookList })
+        navigate(`/BookList`, {
+          state: {
+            bookList: response.data,
+          },
+        });
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -290,16 +293,17 @@ function MainPage({ PROXY }) {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.123.158:8000/book/searchBookByTitle`, {
+      .get(`http://172.30.84.171:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },
       })
       .then((response) => {
         setBookList(response.data);
+        console.log("검색결과 : " + response.data);
         navigate(`/BookList`, {
           state: {
-            bookList: bookList,
+            bookList: response.data,
           },
         });
       })
@@ -314,7 +318,7 @@ function MainPage({ PROXY }) {
 
   const sendLikeBook = (isbn13) => {
     axios
-      .post("http://192.168.123.158:8000/book/bookLike", {
+      .post("http://172.30.84.171:8000/book/bookLike", {
         isbn13: isbn13,
         userNum: 1,
       })

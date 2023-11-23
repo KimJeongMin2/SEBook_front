@@ -170,14 +170,13 @@ function BookList({ PROXY }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+
     axios
       .get(`http://172.30.84.171:8000/book/bookListRead`)
       .then((response) => {
-        console.log(response.data.bookList);
         setBookList(response.data.bookList);
-
-        if (location.state && location.state.bookList) {
-          console.log("look ..: " + location.state.bookList);
+        if (location.state.bookList) {
+          setBookList(location.state.bookList);
         }
       })
       .catch((error) => console.error(error));
@@ -187,7 +186,7 @@ function BookList({ PROXY }) {
     axios
       .post(`http://172.30.84.171:8000/book/bookLike`, {
         isbn13: isbn13,
-      },{withCredentials: true}
+      }, { withCredentials: true }
       )
       .then((response) => {
         const updatedBookList = bookList.map((book) =>
