@@ -107,13 +107,14 @@ function BookList() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-
     axios
       .get(`http://127.0.0.1:8000/book/bookListRead`)
       .then((response) => {
+        console.log(response.data.bookList);
         setBookList(response.data.bookList);
-        if (location.state.bookList) {
-          setBookList(location.state.bookList);
+
+        if (location.state && location.state.bookList) {
+          console.log("look ..: " + location.state.bookList);
         }
       })
       .catch((error) => console.error(error));
@@ -124,8 +125,12 @@ function BookList() {
     axios
       .post("http://127.0.0.1:8000/book/bookLike", {
         isbn13: isbn13,
-      }, { withCredentials: true }
-      )
+      },{
+        headers: {
+          'X-CSRFToken': csrftoken 
+        },
+        withCredentials: true
+      })
       .then((response) => {
         const updatedBookList = bookList.map((book) =>
           book.isbn13 === isbn13

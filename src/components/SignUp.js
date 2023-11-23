@@ -67,7 +67,7 @@ export default function SignUp({ PROXY }) {
     if (pw === pwCheck) {
       try {
         const res = await axios.post(
-          "http://172.30.84.171:8000/user/memberReg",
+          "http://127.0.0.1:8000/user/memberReg",
           userInfo
         );
 

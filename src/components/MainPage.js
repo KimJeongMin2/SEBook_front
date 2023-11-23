@@ -37,7 +37,6 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import Cookies from 'js-cookie';
 
-
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -97,6 +96,7 @@ const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
 
+
 function MainPage() {
   const navigate = useNavigate();
 
@@ -151,7 +151,13 @@ function MainPage() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/book/recommendBook/1")
+      .get("http://127.0.0.1:8000/book/recommendBook",
+        {
+          headers: {
+            'X-CSRFToken': csrftoken
+          },
+          withCredentials: true
+        })
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -161,7 +167,7 @@ function MainPage() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/book/BestsellerListRead")
+      .get("http://127.0.0.1:8000/book/BestsellerListRead")
       .then((response) => {
         console.log("bestSeller: " + response.data.bestsellerList);
         setBestsellerList(response.data.bestsellerList);
@@ -171,7 +177,7 @@ function MainPage() {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/bookReport/bookReportReadTop5")
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadTop5")
       .then((response) => {
         console.log(response.data);
         setBookTop5List(response.data);
@@ -181,7 +187,7 @@ function MainPage() {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://172.30.84.171:8000/book/searchBookByAuthor`, {
+      .get(`http://127.0.0.1:8000/book/searchBookByAuthor`, {
         params: {
           author: searchTerm,
         },
@@ -231,7 +237,7 @@ function MainPage() {
   const sendLikeBook = (isbn13) => {
     console.log("cccc", csrftoken)
     axios
-      .post("http://172.30.84.171:8000/book/bookLike", {
+      .post("http://127.0.0.1:8000/book/bookLike", {
         isbn13: isbn13,
       }, {
         headers: {
