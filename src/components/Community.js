@@ -108,9 +108,7 @@ function Community({ PROXY }) {
       .then((response) => {
         console.log("myInfo : " + response.data);
         //setMyInfo(response.data);
-        const likedPostIds = response.data.userLikedPosts;
-        console.log(likedPostIds)
-        setLikeStatus(likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
+        
       })
       .catch((error) => console.error(error));
   }, []);
@@ -143,6 +141,9 @@ function Community({ PROXY }) {
       .then((response) => {
         console.log(response.data);
         setCommunityList(response.data.allPosts || []);
+        const likedPostIds = response.data.userLikeReports;
+        console.log(likedPostIds)
+        setLikeStatus(likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
       })
       .catch((error) => console.error(error));
   }, []);
@@ -300,9 +301,10 @@ function Community({ PROXY }) {
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
               <TableRow>
                 <TableCell>No</TableCell>
-                <TableCell>도서명</TableCell>
-                <TableCell>인상깊은 구절</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>도서명</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>인상깊은 구절</TableCell>
                 <TableCell style={{ textAlign: 'center' }}>글쓴이</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>작가명</TableCell>
                 <TableCell style={{ textAlign: 'center' }}>등록일</TableCell>
                 <TableCell style={{ textAlign: 'center' }}>좋아요</TableCell>
               </TableRow>
@@ -353,6 +355,15 @@ function Community({ PROXY }) {
                       }}
                     >
                       {truncate(data.username, 9)}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        width: "80px",
+                        borderRight: "1px solid #F8E8EE",
+                        textAlign: "center",
+                      }}
+                    >
+                      {truncate(data.author, 9)}
                     </TableCell>
                     <TableCell style={{ width: "90px", textAlign: "center" }}>
                       {data.registDate_community.split('T')[0]}
