@@ -49,9 +49,9 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/user/memberSearch",{
+      .get("http://127.0.0.1:8000/user/memberSearch", {
         headers: {
-          'X-CSRFToken': csrftoken  
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
@@ -66,7 +66,7 @@ export default function MyPage() {
     axios
       .get("http://127.0.0.1:8000/book/likeBookListRead", {
         headers: {
-          'X-CSRFToken': csrftoken  
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
@@ -77,11 +77,11 @@ export default function MyPage() {
       .catch((error) => console.error(error));
   }, []);
 
-  useEffect(() => { 
+  useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/bookReport/bookReportReadMy",{
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadMy", {
         headers: {
-          'X-CSRFToken': csrftoken  
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
@@ -96,7 +96,7 @@ export default function MyPage() {
     axios
       .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
         headers: {
-          'X-CSRFToken': csrftoken  
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
@@ -111,7 +111,7 @@ export default function MyPage() {
     axios
       .get("http://127.0.0.1:8000/community/paragraphReadMy", {
         headers: {
-          'X-CSRFToken': csrftoken  
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
@@ -124,9 +124,9 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/community/paragraphReadLike",{
+      .get("http://127.0.0.1:8000/community/paragraphReadLike", {
         headers: {
-          'X-CSRFToken': csrftoken  
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })

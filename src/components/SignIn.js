@@ -16,7 +16,7 @@ import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import Cookies from 'js-cookie';
 
 function Copyright(props) {
   return (
@@ -70,7 +70,7 @@ export default function SignIn() {
           console.log(response.data.userName);
           alert("로그인 성공!");
           console.log("dddddd", document.cookie);
-          //navigate("/")
+          navigate("/")
         }
       })
       .catch((error) => {
