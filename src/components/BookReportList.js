@@ -90,7 +90,7 @@ const StyledSelect = styled(Select, {
 
 const csrftoken = Cookies.get('csrftoken');
 
-function BookReportList({ PROXY }) {
+function BookReportList() {
   const navigate = new useNavigate();
   const location = useLocation();
   const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
