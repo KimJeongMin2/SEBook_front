@@ -6,7 +6,10 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { useLocation } from 'react-router-dom';
+import axios from "axios";
+import Cookies from 'js-cookie';
 
+const csrftoken = Cookies.get('csrftoken');
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -40,11 +43,32 @@ function a11yProps(index) {
   };
 }
 
-function TabBar({ PROXY }) {
+function TabBar() {
   const navigate = useNavigate();
 
+  const [myInfo, setMyInfo] = useState();
   const location = useLocation();
   const [value, setValue] = useState(getInitialTab());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch",{
+        headers: {
+          'X-CSRFToken': csrftoken  
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+        setIsLoggedIn(true); 
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoggedIn(false);
+      });
+  }, []);
 
   function getInitialTab() {
     switch (location.pathname) {
@@ -74,7 +98,11 @@ function TabBar({ PROXY }) {
         navigate("/Community");
         break;
       case 3:
-        navigate("/MyPage");
+        if (isLoggedIn) {
+          navigate("/MyPage");
+        } else {
+          navigate("/signin");
+        }
         break;
       default:
         break;

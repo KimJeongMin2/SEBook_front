@@ -58,7 +58,7 @@ function MainAppBar() {
     axios.post("http://127.0.0.1:8000/user/logout", { withCredentials : true })
     .then(response => {
       if (response.status === 200) {
-        window.location.reload();
+        //window.location.reload();
       }
     });
   }
@@ -111,8 +111,8 @@ function MainAppBar() {
               >
                 <MenuItem key={1} onClick={handleCloseUserMenu}>
                   <div style={{ width: '200px', height: '100px' }}>
-                    <div style={{ height: '50px', textAlign: 'center', lineHeight: '50px' }}>{myInfo?.name}</div>
-                    <div style={{ textAlign: 'center' }}>abc1234@naver.com</div>
+                    <div style={{ height: '50px', textAlign: 'center', lineHeight: '50px' }}>{myInfo?.name}님</div>
+                    <div style={{ textAlign: 'center' }}>사용자 계정 : {myInfo?.userId}</div>
                   </div>
                 </MenuItem>
                 <MenuItem key={2}  onClick={logout}>
@@ -122,8 +122,8 @@ function MainAppBar() {
             </>
           ) : (
             <>
-              <Button variant="outlined" style={{ backgroundColor: "#F8E8EE" }} onClick={() => navigate("/signin")}>로그인</Button>
-              <Button variant="outlined" style={{ backgroundColor: "#F8E8EE" }} onClick={() => navigate("/signup")}>회원가입</Button>
+              <Button variant="contained" style={{backgroundColor: "#EF9A9A",color: "#ffffff", marginRight:"10px"}} onClick={() => navigate("/signin")}>로그인</Button>
+              <Button variant="contained" style={{backgroundColor: "#EF9A9A", color: "#ffffff"}} onClick={() => navigate("/signup")}>회원가입</Button>
             </>
           )}
         </Box>
