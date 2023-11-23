@@ -23,7 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import "../bookReportList.css";
-
+import Cookies from 'js-cookie';
 function createData(
   id,
   title,
@@ -36,60 +36,6 @@ function createData(
 ) {
   return { id, title, bookName, author, publisher, writer, date, like };
 }
-
-const initialRows = [
-  createData(
-    1,
-    "Frozen yoghurt를 읽고1",
-    "Frozen yoghurt",
-    "김작가",
-    "김나라출판",
-    "정채연",
-    "2023-03-21",
-    10
-  ),
-  createData(
-    2,
-    "Frozen yoghurt를 읽고2",
-    "Frozen yoghurt",
-    "김작가",
-    "김나라출판",
-    "정채연",
-    "2023-03-21",
-    10
-  ),
-  createData(
-    3,
-    "Frozen yoghurt를 읽고3",
-    "Frozen yoghurt",
-    "김작가",
-    "김나라출판",
-    "정채연",
-    "2023-03-21",
-    10
-  ),
-  createData(
-    4,
-    "Frozen yoghurt를 읽고4",
-    "Frozen yoghurt",
-    "김작가",
-    "김나라출판",
-    "정채연",
-    "2023-03-21",
-    10
-  ),
-  createData(
-    5,
-    "Frozen yoghurt를 읽고5",
-    "Frozen yoghurt",
-    "김작가",
-    "김나라출판",
-    "정채연",
-    "2023-03-21",
-    10
-  ),
-];
-
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -142,7 +88,9 @@ const StyledSelect = styled(Select, {
   },
 }));
 
-function BookReportList({ PROXY }) {
+const csrftoken = Cookies.get('csrftoken');
+
+function BookReportList() {
   const navigate = new useNavigate();
   const location = useLocation();
   const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
@@ -182,7 +130,7 @@ function BookReportList({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/bookReport/bookReportReadAll")
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadAll")
       .then((response) => {
         console.log("bookReportList: " + response.data.allReports);
         const bookReportData = response.data.allReports.reverse();
@@ -193,11 +141,7 @@ function BookReportList({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/bookReport/bookReportReadAll", {
-        params: {
-          userNum: 1
-        }
-      })
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadAll")
       .then((response) => {
         console.log("userLikeReports: " + response.data.userLikeReports);
         setUserLikeReports(response.data.userLikeReports);
@@ -209,10 +153,11 @@ function BookReportList({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://172.30.84.171:8000/bookReport/bookReportReadLike", {
-        params: {
-          userNum: 1
-        }
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadLike",{
+        headers: {
+          'X-CSRFToken': csrftoken 
+        },
+        withCredentials: true
       })
       .then((response) => {
         setLikedBookReportList(response.data.likeBookReportList);
@@ -222,9 +167,13 @@ function BookReportList({ PROXY }) {
 
 
   const sendLikeBookReport = (bookReportNum) => {
-    axios.post("http://172.30.84.171:8000/bookReport/bookReportLike", {
+    axios.post("http://127.0.0.1:8000/bookReport/bookReportLike", {
       reportNum: bookReportNum,
-      userNum: 1
+    },{
+      headers: {
+        'X-CSRFToken': csrftoken 
+      },
+      withCredentials: true
     })
       .then((response) => {
         console.log(response);
@@ -236,11 +185,15 @@ function BookReportList({ PROXY }) {
   }
 
   const sendDeleteLikeBookReport = (bookReportNum) => {
-    axios.delete("http://172.30.84.171:8000/bookReport/bookReportLike", {
+    axios.delete("http://127.0.0.1:8000/bookReport/bookReportLike", {
       params: {
         reportNum: bookReportNum,
-        userNum: 1
       }
+    },{
+      headers: {
+        'X-CSRFToken': csrftoken 
+      },
+      withCredentials: true
     })
       .then((response) => {
         console.log(response);
@@ -253,7 +206,7 @@ function BookReportList({ PROXY }) {
 
 
   const searchBookByTitle = () => {
-    axios.get(`http://172.30.84.171:8000/bookReport/bookReportSearch`, {
+    axios.get(`http://127.0.0.1:8000/bookReport/bookReportSearch`, {
       params: {
         title: searchTerm
       }

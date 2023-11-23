@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
-
+import Cookies from 'js-cookie';
 const Search = styled("div", {
     shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -55,6 +55,7 @@ const StyledInputBase = styled(InputBase, {
     },
 }));
 
+const csrftoken = Cookies.get('csrftoken');
 function BookReportDetail({ PROXY }) {
     const location = useLocation();
     const navigate = useNavigate();
@@ -86,7 +87,7 @@ function BookReportDetail({ PROXY }) {
     }
 
     const sendDeleteLikeBookReport = (reportNum) => {
-        axios.delete("http://172.30.84.171:8000/bookReport/bookReportLike", {
+        axios.delete("http://127.0.0.1:8000/bookReport/bookReportLike", {
             params: {
                 reportNum: reportNum,
                 userNum: 1
@@ -103,10 +104,15 @@ function BookReportDetail({ PROXY }) {
     }
 
     const sendLikeBookReport = (reportNum) => {
-        axios.post("http://172.30.84.171:8000/bookReport/bookReportLike", {
+        axios.post("http://127.0.0.1:8000/bookReport/bookReportLike", {
             reportNum: reportNum,
-            userNum: 1
-        })
+            // userNum: 1
+        },{
+            headers: {
+              'X-CSRFToken': csrftoken 
+            },
+            withCredentials: true
+          })
             .then((response) => {
                 console.log(response);
                 window.location.reload();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -12,18 +12,19 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-
+import axios from "axios";
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import Cookies from 'js-cookie';
 
 const settings = ['Profile', 'Logout'];
-
-function MainAppBar({ PROXY }) {
-
+const csrftoken = Cookies.get('csrftoken');
+function MainAppBar() {
+  const [myInfo, setMyInfo] = useState();
   const navigate = useNavigate();
-
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -32,6 +33,35 @@ function MainAppBar({ PROXY }) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch",{
+        headers: {
+          'X-CSRFToken': csrftoken  
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+        setIsLoggedIn(true); 
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoggedIn(false);
+      });
+  }, []);
+
+
+  const logout = () => {
+    axios.post("http://127.0.0.1:8000/user/logout", { withCredentials : true })
+    .then(response => {
+      if (response.status === 200) {
+        //window.location.reload();
+      }
+    });
+  }
 
   return (
     <AppBar position="fixed">
@@ -55,38 +85,47 @@ function MainAppBar({ PROXY }) {
         </Typography>
         <AutoStoriesIcon style={{ color: 'black', marginLeft: '-10px' }}></AutoStoriesIcon>
         <Box sx={{ flexGrow: 0, marginLeft: '600px' }}>
-          <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              <div style={{ marginLeft: '10px', fontSize: '15px' }}>홍길동</div>
-            </IconButton>
-          </Tooltip>
-          <Menu
-            sx={{ mt: '45px' }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            <MenuItem key={1} onClick={handleCloseUserMenu}>
-              <div style={{ width: '200px', height: '100px' }}>
-                <div style={{ height: '50px', textAlign: 'center', lineHeight: '50px' }}>홍길동</div>
-                <div style={{ textAlign: 'center' }}>abc1234@naver.com</div>
-              </div>
-            </MenuItem>
-            <MenuItem key={2} onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">LOGOUT</Typography>
-            </MenuItem>
-          </Menu>
+          {isLoggedIn ? (
+            <>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <div style={{ marginLeft: '10px', fontSize: '15px' }}></div>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem key={1} onClick={handleCloseUserMenu}>
+                  <div style={{ width: '200px', height: '100px' }}>
+                    <div style={{ height: '50px', textAlign: 'center', lineHeight: '50px' }}>{myInfo?.name}님</div>
+                    <div style={{ textAlign: 'center' }}>사용자 계정 : {myInfo?.userId}</div>
+                  </div>
+                </MenuItem>
+                <MenuItem key={2}  onClick={logout}>
+                  <Typography textAlign="center">LOGOUT</Typography>
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <>
+              <Button variant="contained" style={{backgroundColor: "#EF9A9A",color: "#ffffff", marginRight:"10px"}} onClick={() => navigate("/signin")}>로그인</Button>
+              <Button variant="contained" style={{backgroundColor: "#EF9A9A", color: "#ffffff"}} onClick={() => navigate("/signup")}>회원가입</Button>
+            </>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

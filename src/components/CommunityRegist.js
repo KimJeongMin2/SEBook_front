@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,11 +17,12 @@ import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-
+import Cookies from 'js-cookie';
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 
 import { TextField } from "@mui/material";
 import axios from "axios";
+const csrftoken = Cookies.get('csrftoken');
 
 function CommunityRegist({ PROXY }) {
   const location = useLocation();
@@ -29,23 +30,51 @@ function CommunityRegist({ PROXY }) {
   const [title, setTitle] = useState();
   const [book, setBook] = useState(location.state?.book || "");
   const [author, setAuthor] = useState(location.state?.author || "");
-  const [writer, setWriter] = useState();
+  //const [writer, setWriter] = useState();
+  const [isbn13, setIsbn13] = useState(location.state?.isbn13 || "");
   const [publisher, setPublisher] = useState(location.state?.publisher || "");
   const [content, setContent] = useState();
+  const [myInfo, setMyInfo] = useState();
+  const [myInfoName, setMyInfoName] = useState();
+
+  useEffect(() => {
+    console.log("isbn13" + location.state.isbn13);
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch",{
+        headers: {
+          'X-CSRFToken': csrftoken  
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data.userNum);
+        setMyInfoName(response.data.name);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const submit = async () => {
     const paragraph = {
       book: book,
       author: author,
       contents: content,
-      userNum_community: writer,
-      isbn13_community: location.state.isbn13,
+      myInfoName:myInfoName,
+      isbn13_community: isbn13,
     };
 
     try {
       const res = await axios.post(
-        "http://192.168.123.158:8000/community/paragraphCreate",
-        paragraph
+        "http://127.0.0.1:8000/community/paragraphCreate",{
+          paragraph
+        },{
+          headers: {
+            'X-CSRFToken': csrftoken 
+          },
+          withCredentials: true
+        }
       );
 
       if (res.status === 200) {
@@ -60,7 +89,7 @@ function CommunityRegist({ PROXY }) {
 
 
   const handleSubmit = () => {
-    if (book && author && writer && content) {
+    if (book && author && myInfoName && content) {
       submit();
     } else {
       alert("모든 값을 입력하시고 등록 버튼을 눌러주세요.");
@@ -141,8 +170,9 @@ function CommunityRegist({ PROXY }) {
               fullWidth
               multiline
               rows={1}
-              value={writer}
-              onChange={e => setWriter(e.target.value)}
+              value={myInfoName}
+              disabled={!!location.state}
+              //onChange={e => setWriter(e.target.value)}
               sx={{ fontSize: "10px", marginBottom: "10px" }}
               InputProps={{
                 style: {

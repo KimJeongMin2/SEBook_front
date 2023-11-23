@@ -27,7 +27,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-
+import Cookies from 'js-cookie';
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -80,6 +80,7 @@ const StyledSelect = styled(Select, {
     width: "20ch",
   },
 }));
+const csrftoken = Cookies.get('csrftoken');
 function BookReportRegist({ PROXY }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -95,10 +96,27 @@ function BookReportRegist({ PROXY }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [isbn13, setIsbn13] = useState(location.state?.isbn13 || "");
-
+  const [myInfo, setMyInfo] = useState();
+  const [myInfoName, setMyInfoName] = useState();
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch",{
+        headers: {
+          'X-CSRFToken': csrftoken  
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data.userNum);
+        setMyInfo(response.data.userNum);
+        setMyInfoName(response.data.name);
+        console.log("userName",myInfoName)
+      })
+      .catch((error) => console.error(error));
+  }, []);
   useEffect(() => {
     console.log("도서명" + location.state.book);
-    console.log("도서명" + location.state.author);
+    console.log("작가명" + location.state.author);
   }, []);
 
   const handleClickOpen = () => {
@@ -111,19 +129,25 @@ function BookReportRegist({ PROXY }) {
 
   const submit = async () => {
     const bookReport = {
-      userNum_report: writer,
       reportTitle: title,
       isbn13_report: isbn13,
       author: author,
       publisher: publisher,
       reportContents: content,
+      myInfoName:myInfoName
     };
 
     try {
       const res = await axios.post(
-        "http://192.168.0.7:8000/bookReport/bookReportCreate",
-        bookReport
-      );
+        "http://127.0.0.1:8000/bookReport/bookReportCreate",{
+          bookReport
+        },{
+          headers: {
+            'X-CSRFToken': csrftoken 
+          },
+          withCredentials: true
+        }
+      )
       console.log(res.data);
       if (res.status === 200) {
         alert("독후감이 성공적으로 등록 되었습니다.");
@@ -136,7 +160,7 @@ function BookReportRegist({ PROXY }) {
   };
 
   const handleSubmit = () => {
-    if (title && book && author && writer && publisher && content) {
+    if (title && book && author && myInfoName && publisher && content) {
       submit();
     } else {
       alert("모든 값을 입력하시고 등록 버튼을 눌러주세요.");
@@ -144,7 +168,7 @@ function BookReportRegist({ PROXY }) {
   };
 
   const searchBookByAuthor = () => {
-    axios.get(`http://192.168.0.7:8000/book/searchBookByAuthor`, {
+    axios.get(`http://127.0.0.1:8000/book/searchBookByAuthor`, {
       params: {
         author: searchTerm
       }
@@ -163,7 +187,7 @@ function BookReportRegist({ PROXY }) {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://192.168.0.7:8000/book/searchBookByTitle`, {
+      .get(`http://127.0.0.1:8000/book/searchBookByTitle`, {
         params: {
           title: searchTerm,
         },
@@ -380,9 +404,10 @@ function BookReportRegist({ PROXY }) {
               variant="outlined"
               fullWidth
               multiline
-              value={writer}
               rows={1}
-              onChange={(e) => setWriter(e.target.value)}
+              value={myInfoName}
+              disabled={!!location.state}
+              //onChange={(e) => setWriter(e.target.value)}
               sx={{ fontSize: "10px", marginBottom: "10px" }}
               InputProps={{
                 style: { height: "40px", fontSize: "14px" },

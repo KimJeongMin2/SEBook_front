@@ -23,6 +23,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
+
+import Cookies from 'js-cookie';
 function createData(id, title, paragraph, writer, date, like) {
   return { id, title, paragraph, writer, date, like };
 }
@@ -84,6 +86,9 @@ const StyledInputBase = styled(InputBase, {
     },
   },
 }));
+
+const csrftoken = Cookies.get('csrftoken');
+
 function MyLikedParagraph({ PROXY }) {
   const navigate = new useNavigate();
 
@@ -100,11 +105,11 @@ function MyLikedParagraph({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/community/paragraphReadLike", {
-        params: {
-          userNum: 1
+      .get("http://127.0.0.1:8000/community/paragraphReadLike", {
+        headers: {
+          'X-CSRFToken': csrftoken 
         },
-      })
+        withCredentials: true})
       .then((response) => {
         console.log(response.data.savedCommunityList);
         setLikeParagraph(response.data.savedCommunityList);
@@ -142,12 +147,15 @@ function MyLikedParagraph({ PROXY }) {
   };
 
   const sendDeleteParagraph = (postNum) => {
-    axios.delete("http://192.168.123.158:8000/community/paragraphLike", {
+    axios.delete("http://127.0.0.1:8000/community/paragraphLike", {
       params: {
         postNum: postNum,
-        userNum: 1,
       }
-    })
+    },{
+      headers: {
+        'X-CSRFToken': csrftoken 
+      },
+      withCredentials: true})
       .then((response) => {
         console.log(response);
         window.location.reload();
