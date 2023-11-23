@@ -55,13 +55,14 @@ function MainAppBar() {
 
 
   const logout = () => {
-    axios.post("http://127.0.0.1:8000/user/logout", { withCredentials : true })
+    axios.get("http://127.0.0.1:8000/user/logout", { withCredentials: true })
     .then(response => {
-      if (response.status === 200) {
-        //window.location.reload();
+      if (response.status === 202) {
+        window.location.reload();
       }
     });
   }
+  
 
   return (
     <AppBar position="fixed">
