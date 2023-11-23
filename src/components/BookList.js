@@ -19,6 +19,7 @@ import MainAppBar from "./MainAppBar";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, useTheme } from "@mui/material/styles";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuItem from "@mui/material/MenuItem";
@@ -107,10 +108,10 @@ function BookList() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-
     axios
       .get(`http://127.0.0.1:8000/book/bookListRead`)
       .then((response) => {
+        console.log(response.data.bookList);
         setBookList(response.data.bookList);
         if (location.state.bookList) {
           setBookList(location.state.bookList);
@@ -124,8 +125,12 @@ function BookList() {
     axios
       .post("http://127.0.0.1:8000/book/bookLike", {
         isbn13: isbn13,
-      }, { withCredentials: true }
-      )
+      }, {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
       .then((response) => {
         const updatedBookList = bookList.map((book) =>
           book.isbn13 === isbn13
@@ -133,6 +138,7 @@ function BookList() {
             : book
         );
         setBookList(updatedBookList);
+        window.location.reload();
       })
       .catch((error) => {
         console.log(error);
@@ -298,11 +304,19 @@ function BookList() {
                             sendLikeBook(data.isbn13);
                           }}
                         >
-                          <FavoriteIcon
-                            style={{
-                              color: likes[data.isbn13] ? "#EF9A9A" : "gray",
-                            }}
-                          />
+                          {
+                            likes[data.isbn13] ?
+                              <FavoriteIcon
+                                style={{
+                                  color: "#EF9A9A"
+                                }}
+                              /> :
+                              <FavoriteBorderIcon
+                                style={{
+                                  color: "#EF9A9A"
+                                }}
+                              />
+                          }
                         </IconButton>
                         <Typography variant="body2">
                           {data.num_likes}
@@ -327,7 +341,7 @@ function BookList() {
                   />
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
+                      <FavoriteBorderIcon />
                       {data.like}
                     </IconButton>
                     <IconButton aria-label="share">

@@ -100,23 +100,22 @@ function BookReportRegist({ PROXY }) {
   const [myInfoName, setMyInfoName] = useState();
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/user/memberSearch",{
+      .get("http://127.0.0.1:8000/user/memberSearch", {
         headers: {
-          'X-CSRFToken': csrftoken  
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
       .then((response) => {
-        console.log("myInfo : " + response.data.userNum);
         setMyInfo(response.data.userNum);
         setMyInfoName(response.data.name);
-        console.log("userName",myInfoName)
+        console.log("userName", myInfoName)
       })
       .catch((error) => console.error(error));
   }, []);
   useEffect(() => {
-    console.log("도서명" + location.state.book);
-    console.log("작가명" + location.state.author);
+    console.log("도서명" + location.state?.book);
+    console.log("작가명" + location.state?.author);
   }, []);
 
   const handleClickOpen = () => {
@@ -134,16 +133,16 @@ function BookReportRegist({ PROXY }) {
       author: author,
       publisher: publisher,
       reportContents: content,
-      myInfoName:myInfoName
+      myInfoName: myInfoName
     };
 
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/bookReport/bookReportCreate",{
-          bookReport
-        },{
+        "http://127.0.0.1:8000/bookReport/bookReportCreate",
+        bookReport
+        , {
           headers: {
-            'X-CSRFToken': csrftoken 
+            'X-CSRFToken': csrftoken
           },
           withCredentials: true
         }

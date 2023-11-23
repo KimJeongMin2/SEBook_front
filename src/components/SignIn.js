@@ -59,12 +59,10 @@ export default function SignIn() {
 
     axios
       .post(
-        "http://172.30.84.171:8000/user/login", reqData,
+        "http://127.0.0.1:8000/user/login", reqData,
         { withCredentials: true }
       )
       .then((response) => {
-        console.log("응답 데이터", response.data);
-        console.log("sessionid 쿠키:", Cookies.get('sessionid'));
         if (response.status === 200) {
           console.log(response.data.userNum);
           console.log(response.data.userName);
@@ -78,6 +76,8 @@ export default function SignIn() {
         alert("로그인 실패. 회원계정을 다시 한번 확인하세요.");
       });
   };
+
+
 
   return (
     <>

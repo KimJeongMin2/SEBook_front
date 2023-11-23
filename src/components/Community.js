@@ -91,7 +91,7 @@ function Community({ PROXY }) {
 
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
-  const [likeStatus, setLikeStatus] = useState({}); 
+  const [likeStatus, setLikeStatus] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [paragraphList, setParagraphList] = useState([]);
   const [searchType, setSearchType] = useState("도서명");
@@ -99,18 +99,16 @@ function Community({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/user/memberSearch",{
+      .get("http://127.0.0.1:8000/user/memberSearch", {
         headers: {
-          'X-CSRFToken': csrftoken  
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
       .then((response) => {
         console.log("myInfo : " + response.data);
         //setMyInfo(response.data);
-        const likedPostIds = response.data.userLikedPosts;
-        console.log(likedPostIds)
-        setLikeStatus(likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
+
       })
       .catch((error) => console.error(error));
   }, []);
@@ -143,6 +141,9 @@ function Community({ PROXY }) {
       .then((response) => {
         console.log(response.data);
         setCommunityList(response.data.allPosts || []);
+        const likedPostIds = response.data.userLikeReports;
+        console.log(likedPostIds)
+        setLikeStatus(likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
       })
       .catch((error) => console.error(error));
   }, []);
@@ -152,12 +153,12 @@ function Community({ PROXY }) {
       .post("http://127.0.0.1:8000/community/paragraphLike", {
         postNum: postNum,
       },
-      {
-        headers: {
-          'X-CSRFToken': csrftoken 
-        },
-        withCredentials: true
-      })
+        {
+          headers: {
+            'X-CSRFToken': csrftoken
+          },
+          withCredentials: true
+        })
       .then((response) => {
         console.log(response);
         window.location.reload();
@@ -300,9 +301,10 @@ function Community({ PROXY }) {
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
               <TableRow>
                 <TableCell>No</TableCell>
-                <TableCell>도서명</TableCell>
-                <TableCell>인상깊은 구절</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>도서명</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>인상깊은 구절</TableCell>
                 <TableCell style={{ textAlign: 'center' }}>글쓴이</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>작가명</TableCell>
                 <TableCell style={{ textAlign: 'center' }}>등록일</TableCell>
                 <TableCell style={{ textAlign: 'center' }}>좋아요</TableCell>
               </TableRow>
@@ -330,7 +332,7 @@ function Community({ PROXY }) {
                       component="th"
                       scope="row"
                       style={{
-                        width: "250px",
+                        width: "200px",
                         borderRight: "1px solid #F8E8EE",
                       }}
                     >
@@ -338,12 +340,12 @@ function Community({ PROXY }) {
                     </TableCell>
                     <TableCell
                       style={{
-                        width: "500px",
+                        width: "450px",
                         borderRight: "1px solid #F8E8EE",
 
                       }}
                     >
-                      {truncate(data.contents, 28)}
+                      {truncate(data.contents, 22)}
                     </TableCell>
                     <TableCell
                       style={{
@@ -353,6 +355,15 @@ function Community({ PROXY }) {
                       }}
                     >
                       {truncate(data.username, 9)}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        width: "100px",
+                        borderRight: "1px solid #F8E8EE",
+                        textAlign: "center",
+                      }}
+                    >
+                      {truncate(data.author, 6)}
                     </TableCell>
                     <TableCell style={{ width: "90px", textAlign: "center" }}>
                       {data.registDate_community.split('T')[0]}
