@@ -139,9 +139,9 @@ function BookReportRegist({ PROXY }) {
 
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/bookReport/bookReportCreate",{
+        "http://127.0.0.1:8000/bookReport/bookReportCreate",
           bookReport
-        },{
+        ,{
           headers: {
             'X-CSRFToken': csrftoken 
           },

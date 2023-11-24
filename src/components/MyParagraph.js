@@ -135,7 +135,7 @@ function MyParagraph({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://192.168.123.158:8000/community/paragraphReadMy", {
+      .get("http://127.0.0.1:8000/community/paragraphReadMy", {
         headers: {
           'X-CSRFToken': csrftoken 
         },
@@ -148,6 +148,7 @@ function MyParagraph({ PROXY }) {
   }, []);
 
   const sendDeleteParagraphMy = (postNum) => {
+    if (window.confirm("삭제하시겠습니까?")) {
     axios
       .delete("http://127.0.0.1:8000/community/paragraphDelete", {
         params: {
@@ -165,6 +166,9 @@ function MyParagraph({ PROXY }) {
       .catch((error) => {
         console.log(error);
       });
+    } else {
+      alert("취소합니다.");
+  }
   };
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;

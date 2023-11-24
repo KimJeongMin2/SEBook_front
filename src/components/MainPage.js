@@ -349,7 +349,7 @@ function MainPage() {
             marginTop: "-28px",
           }}
         >
-          {myInfo?.name}님, 맞춤 도서 추천
+          {myInfo?.name ? `${myInfo?.name}님, 맞춤 도서 추천` : "회원님을 위한 맞춤도서를 추천 받아 보고 싶으시다면 로그인 하세요!"}
         </Typography>
         {/* <>{isExploding && <ConfettiExplosion />} </>
         <Confetti

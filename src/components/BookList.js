@@ -112,9 +112,8 @@ function BookList() {
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
-
-        if (location.state && location.state.bookList) {
-          console.log("look ..: " + location.state.bookList);
+        if (location.state.bookList) {
+          setBookList(location.state.bookList);
         }
       })
       .catch((error) => console.error(error));
@@ -125,9 +124,9 @@ function BookList() {
     axios
       .post("http://127.0.0.1:8000/book/bookLike", {
         isbn13: isbn13,
-      },{
+      }, {
         headers: {
-          'X-CSRFToken': csrftoken 
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
@@ -138,6 +137,7 @@ function BookList() {
             : book
         );
         setBookList(updatedBookList);
+        window.location.reload();
       })
       .catch((error) => {
         console.log(error);
