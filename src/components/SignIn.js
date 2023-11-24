@@ -16,7 +16,7 @@ import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import Cookies from 'js-cookie';
 
 function Copyright(props) {
   return (
@@ -50,17 +50,17 @@ export default function SignIn() {
       userId: data.get("userId"),
       password: data.get("password"),
     });
-  
+
     const userId = data.get("userId");
     const password = data.get("password");
 
     const reqData = new FormData();
     reqData.append("username", userId)
     reqData.append("password", password)
-  
+
     axios
       .post(
-        "http://127.0.0.1:8000/user/login",reqData,
+        "http://127.0.0.1:8000/user/login", reqData,
         { withCredentials: true }
       )
       .then((response) => {
@@ -72,7 +72,7 @@ export default function SignIn() {
           console.log("상태",isLoggedIn)
           //setAuth({ userNum: response.data.userNum, userName: response.data.userName });
           navigate("/")
-        } 
+        }
       })
       .catch((error) => {
         console.error("Login error:", error);
@@ -80,7 +80,7 @@ export default function SignIn() {
       });
   };
 
-  
+
 
   return (
     <>

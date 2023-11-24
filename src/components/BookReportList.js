@@ -135,27 +135,17 @@ function BookReportList() {
         console.log("bookReportList: " + response.data.allReports);
         const bookReportData = response.data.allReports.reverse();
         setBookReportList(bookReportData);
-      })
-      .catch((error) => console.error(error));
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/bookReport/bookReportReadAll")
-      .then((response) => {
-        console.log("userLikeReports: " + response.data.userLikeReports);
         setUserLikeReports(response.data.userLikeReports);
         setUserWriteReports(response.data.userWriteReports);
       })
       .catch((error) => console.error(error));
   }, []);
 
-
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/bookReport/bookReportReadLike",{
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
         headers: {
-          'X-CSRFToken': csrftoken 
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
@@ -169,9 +159,9 @@ function BookReportList() {
   const sendLikeBookReport = (bookReportNum) => {
     axios.post("http://127.0.0.1:8000/bookReport/bookReportLike", {
       reportNum: bookReportNum,
-    },{
+    }, {
       headers: {
-        'X-CSRFToken': csrftoken 
+        'X-CSRFToken': csrftoken
       },
       withCredentials: true
     })
@@ -189,9 +179,9 @@ function BookReportList() {
       params: {
         reportNum: bookReportNum,
       }
-    },{
+    }, {
       headers: {
-        'X-CSRFToken': csrftoken 
+        'X-CSRFToken': csrftoken
       },
       withCredentials: true
     })
@@ -357,8 +347,10 @@ function BookReportList() {
                           }
                         }}
                       >
-                        <FavoriteIcon
-                          style={{ color: isUserLikeReportsLiked || likes[data.reportNum] ? "#EF9A9A" : "gray" }} />
+                        {isUserLikeReportsLiked || likes[data.reportNum] ?
+                          <FavoriteIcon style={{ color: "#EF9A9A" }} />
+                          : <FavoriteBorderIcon style={{ color: "#EF9A9A" }} />
+                        }
                       </IconButton>
                       <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
                     </TableCell>
