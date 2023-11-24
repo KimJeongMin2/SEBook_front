@@ -44,6 +44,7 @@ function MainAppBar() {
         console.log("myInfo : " + response.data);
         setMyInfo(response.data);
         setIsLoggedIn(true);
+        console.log("로그인 상태",isLoggedIn)
       })
       .catch((error) => {
         console.error(error);
@@ -60,6 +61,8 @@ function MainAppBar() {
         }
       });
   };
+
+  
 
   return (
     <AppBar position="fixed">

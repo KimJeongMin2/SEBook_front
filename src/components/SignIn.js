@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState,useContext, useEffect } from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -42,6 +42,7 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -67,7 +68,9 @@ export default function SignIn() {
           console.log(response.data.userNum);
           console.log(response.data.userName);
           alert("로그인 성공!");
-          console.log("dddddd", document.cookie);
+          setIsLoggedIn(true);
+          console.log("상태",isLoggedIn)
+          //setAuth({ userNum: response.data.userNum, userName: response.data.userName });
           navigate("/")
         }
       })
