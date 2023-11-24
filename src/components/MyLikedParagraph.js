@@ -150,20 +150,20 @@ function MyLikedParagraph({ PROXY }) {
     axios.delete("http://127.0.0.1:8000/community/paragraphLike", {
       params: {
         postNum: postNum,
-      }
-    },{
+      },
       headers: {
         'X-CSRFToken': csrftoken 
       },
-      withCredentials: true})
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+      withCredentials: true
+    })
+    .then((response) => {
+      console.log(response);
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;

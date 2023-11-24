@@ -101,22 +101,23 @@ function MyLikedBookList({ PROXY }) {
 
   const sendDeleteBook = (isbn13) => {
     axios.delete("http://127.0.0.1:8000/book/bookLike", {
-      params: {
-        isbn13: isbn13,
-      }
-    },{
-      headers: {
-        'X-CSRFToken': csrftoken 
-      },
-      withCredentials: true})
-      .then((response) => {
+        params: {
+            isbn13: isbn13,
+        },
+        headers: {
+            'X-CSRFToken': csrftoken 
+        },
+        withCredentials: true
+    })
+    .then((response) => {
         console.log(response);
         window.location.reload();
-      })
-      .catch((error) => {
+    })
+    .catch((error) => {
         console.log(error);
-      });
-  }
+    });
+}
+
 
   const toggleLike = (id) => {
     setLikes({
