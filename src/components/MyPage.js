@@ -137,23 +137,6 @@ export default function MyPage() {
       .catch((error) => console.error(error));
   }, []);
 
-
-  // const paragraphReadMy = (userNum) => {
-  //   axios
-  //     .post("http://192.168.0.8:8000/community/paragraphReadMy", {
-  //       params: {
-  //         userNum: 1,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       console.log(response);
-  //       setReadMyParagraph(response.data.userCommunityList);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };

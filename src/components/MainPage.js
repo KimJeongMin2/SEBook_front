@@ -7,8 +7,6 @@ import {
   Card,
   CardActions,
   CardHeader,
-  CardMedia,
-  Collapse,
   Grid,
   IconButton,
   InputBase,
@@ -32,11 +30,9 @@ import "../slick.css";
 import "../slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import ConfettiExplosion from "react-confetti-explosion";
-import useWindowSize from "react-use/lib/useWindowSize";
-import Confetti from "react-confetti";
-import Cookies from 'js-cookie';
-
+import Cookies from "js-cookie";
+import {ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -90,19 +86,14 @@ const StyledSelect = styled(Select, {
   },
 }));
 
-const csrftoken = Cookies.get('csrftoken');
+const csrftoken = Cookies.get("csrftoken");
 
 const truncate = (str, n) => {
   return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 };
 
-
 function MainPage() {
   const navigate = useNavigate();
-
-  const [isExploding, setIsExploding] = useState(false);
-  const { width, height } = useWindowSize();
-
   const [expandedId, setExpandedId] = useState(-1);
   const handleExpandClick = (id) => {
     setExpandedId(expandedId === id ? -1 : id);
@@ -121,15 +112,17 @@ function MainPage() {
 
   const [open, setOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [selectedBookReport, setSelectedBookReport] = useState(null);
   const [myInfo, setMyInfo] = useState();
+  const [likedBookReportList, setLikedBookReportList] = useState([]);
 
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/user/memberSearch", {
         headers: {
-          'X-CSRFToken': csrftoken
+          "X-CSRFToken": csrftoken,
         },
-        withCredentials: true
+        withCredentials: true,
       })
       .then((response) => {
         console.log("myInfo : " + response.data);
@@ -146,18 +139,14 @@ function MainPage() {
     slidesToScroll: 5,
   };
 
-  const userNum = Cookies.get('userNum');
-  console.log(userNum);
-
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/book/recommendBook",
-        {
-          headers: {
-            'X-CSRFToken': csrftoken
-          },
-          withCredentials: true
-        })
+      .get("http://127.0.0.1:8000/book/recommendBook", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
       .then((response) => {
         console.log(response.data);
         setRecommendBook(response.data.recommendations);
@@ -180,6 +169,7 @@ function MainPage() {
       .get("http://127.0.0.1:8000/bookReport/bookReportReadTop5")
       .then((response) => {
         console.log(response.data);
+        console.log("bookreportNum", response.data.reportNum);
         setBookTop5List(response.data);
       })
       .catch((error) => console.error(error));
@@ -235,28 +225,116 @@ function MainPage() {
   };
 
   const sendLikeBook = (isbn13) => {
-    console.log("cccc", csrftoken)
+    console.log("myInfo", myInfo);
+    if (!myInfo) {
+      toast.warning(
+        "로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          action: (
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+            >
+              네
+            </Button>
+          ),
+        }
+      );
+    } else {
+      console.log("cccc", csrftoken);
+      axios
+        .post(
+          "http://127.0.0.1:8000/book/bookLike",
+          {
+            isbn13: isbn13,
+          },
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          const updatedBookList = bookList.map((book) =>
+            book.isbn13 === isbn13
+              ? { ...book, num_likes: response.data.num_likes }
+              : book
+          );
+          setBookList(updatedBookList);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+  const sendLikeBookReport = (bookReportNum) => {
+    if (!myInfo) {
+      toast.warning(() => (
+        <div>
+          로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+          <Button
+            color="inherit"
+            size="small"
+            onClick={() => navigate("/signin")}
+          >
+            네
+          </Button>
+        </div>
+      ), {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      axios
+        .post(
+          "http://127.0.0.1:8000/bookReport/bookReportLike",
+          {
+            reportNum: bookReportNum,
+          },
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  useEffect(() => {
     axios
-      .post("http://127.0.0.1:8000/book/bookLike", {
-        isbn13: isbn13,
-      }, {
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
         headers: {
-          'X-CSRFToken': csrftoken
+          "X-CSRFToken": csrftoken,
         },
-        withCredentials: true
+        withCredentials: true,
       })
       .then((response) => {
-        const updatedBookList = bookList.map((book) =>
-          book.isbn13 === isbn13
-            ? { ...book, num_likes: response.data.num_likes }
-            : book
-        );
-        setBookList(updatedBookList);
+        setLikedBookReportList(response.data.likeBookReportList);
       })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+      .catch((error) => console.error(error));
+  }, []);
 
   const handleSearchKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -288,6 +366,17 @@ function MainPage() {
     setSelectedBook(null);
     setOpen(false);
   };
+
+  const handleOpenBookReport = (bookReport) => {
+    setSelectedBookReport(bookReport);
+    setOpen(true);
+  };
+
+  const handleCloseBookReport = () => {
+    setSelectedBookReport(null);
+    setOpen(false);
+  };
+  const currentUser = myInfo?.userNum;
 
   return (
     <>
@@ -349,7 +438,9 @@ function MainPage() {
             marginTop: "-28px",
           }}
         >
-          {myInfo?.name ? `${myInfo?.name}님, 맞춤 도서 추천` : "맞춤도서를 추천 받아 보고 싶으시다면 로그인 하세요!"}
+          {myInfo?.name
+            ? `${myInfo?.name}님, 맞춤 도서 추천`
+            : "맞춤도서를 추천 받아 보고 싶으시다면 로그인 하세요!"}
         </Typography>
         {/* <>{isExploding && <ConfettiExplosion />} </>
         <Confetti
@@ -482,7 +573,7 @@ function MainPage() {
             }}
           >
             {bestsellerList.map((data, index) => (
-              <Grid>
+              <Grid onClick={() => handleOpen(data)}>
                 <Card
                   sx={{ maxWidth: 280, margin: "10px" }}
                   style={{ width: "220px" }}
@@ -506,10 +597,13 @@ function MainPage() {
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
                       <FavoriteIcon
-                        style={{ color: likes[data.id] ? "#EF9A9A" : "gray" }}
-                        onClick={() => {
-                          toggleLike(data.id);
-                          sendLikeBook(data.id);
+                        style={{
+                          color: likes[data.isbn13] ? "#EF9A9A" : "gray",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(data.isbn13);
+                          sendLikeBook(data.isbn13);
                         }}
                       />
                     </IconButton>
@@ -528,6 +622,57 @@ function MainPage() {
               </Grid>
             ))}
           </Box>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              {"도서 정보"}
+              {selectedBook ? (
+                <FavoriteIcon
+                  style={
+                    {
+                      // color: selectedBook.user_liked.includes(currentUser) ? "#EF9A9A" : "gray",
+                    }
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleLike(selectedBook.isbn13);
+                    sendLikeBook(selectedBook.isbn13);
+                  }}
+                />
+              ) : null}
+            </DialogTitle>
+            <DialogContent>
+              {selectedBook ? (
+                <>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontFamily: "bold",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    {selectedBook.title}
+                  </div>
+                  <div style={{ marginBottom: "5px" }}>
+                    {selectedBook.author}
+                  </div>
+                  <div style={{ fontSize: "15px" }}>
+                    {selectedBook.description
+                      .replace(/&lt;/g, "<")
+                      .replace(/&gt;/g, ">")}
+                  </div>
+                </>
+              ) : null}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>닫기</Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
         <Typography
           sx={{
@@ -551,7 +696,7 @@ function MainPage() {
             }}
           >
             {bookTop5List.map((data) => (
-              <Grid>
+              <Grid onClick={() => handleOpenBookReport(data)}>
                 <Card
                   sx={{ maxWidth: 280, margin: 1 }}
                   style={{ width: "220px" }}
@@ -574,23 +719,55 @@ function MainPage() {
                   />
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
+                      <FavoriteIcon
+                        style={{
+                          color: data.user_liked.includes(currentUser)
+                            ? "#EF9A9A"
+                            : "gray",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(data.reportNum);
+                          sendLikeBookReport(data.reportNum);
+                        }}
+                      />
                     </IconButton>
+
                     <IconButton aria-label="share">
                       <ShareIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-expanded={expandedId}
-                      aria-label="show more"
-                      onClick={handleExpandClick}
-                    >
-                      <ExpandMoreIcon />
                     </IconButton>
                   </CardActions>
                 </Card>
               </Grid>
             ))}
           </Box>
+          <Dialog open={open} onClose={handleCloseBookReport}>
+            <DialogTitle>{"독후감 정보"}</DialogTitle>
+            <DialogContent>
+              {selectedBookReport ? (
+                <>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontFamily: "bold",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    {selectedBookReport.title}
+                  </div>
+                  <div style={{ marginBottom: "5px" }}>
+                    {selectedBookReport.writer}
+                  </div>
+                  <div style={{ fontSize: "15px" }}>
+                    {selectedBookReport.reportContents}
+                  </div>
+                </>
+              ) : null}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseBookReport}>닫기</Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
       </Box>
     </>
