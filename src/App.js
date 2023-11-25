@@ -19,12 +19,15 @@ import MyParagraph from "./components/MyParagraph";
 import MyLikedParagraph from "./components/MyLikedParagraph";
 import BookReportUpdate from "./components/BookReportUpdate.js";
 import React, { useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 function App() {
 
   const PROXY = process.env.REACT_APP_PROXY;
 
   <link href="https://font.elice.io/css?family=Elice+DX+Neolli" rel="stylesheet"></link>
   return (
+    <>
+      <ToastContainer />
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainPage />} PROXY={PROXY} />
@@ -47,6 +50,7 @@ function App() {
         <Route path="/MyLikedParagraph" element={<MyLikedParagraph />} PROXY={PROXY} />
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 
