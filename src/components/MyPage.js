@@ -197,11 +197,8 @@ export default function MyPage() {
                 <Link color="primary" href="#" onClick={preventDefault}></Link>
                 <Table
                   size="small"
-                  sx={{
-                    marginTop: "10px",
-                    backgroundColor: "#F9F5F6",
-                    width: "350px",
-                  }}
+                  style={{ width: "360px", height: "200px" }}
+                  sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
                 >
                   <TableHead>
                     <TableRow>
@@ -260,7 +257,7 @@ export default function MyPage() {
                 <Link color="primary" href="#" onClick={preventDefault}></Link>
                 <Table
                   size="small"
-                  style={{ width: "360px", height: "200px" }}
+                  style={{ width: "360px", height: "200px", marginTop: '0px'}}
                   sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
                 >
                   <TableHead>
