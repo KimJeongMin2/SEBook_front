@@ -13,6 +13,7 @@ import {
   Pagination,
   Toolbar,
   Typography,
+  Button,
 } from "@mui/material";
 import TabBar from "./TabBar";
 import MainAppBar from "./MainAppBar";
@@ -27,6 +28,7 @@ import Select from "@mui/material/Select";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import Cookies from 'js-cookie';
+import { ToastContainer, toast } from "react-toastify";
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -105,8 +107,22 @@ function BookList() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-
+  const [myInfo, setMyInfo] = useState();
   const [searchTerm, setSearchTerm] = useState("");
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   useEffect(() => {
     axios
@@ -138,28 +154,68 @@ function BookList() {
   }, []);
 
   const sendLikeBook = (isbn13) => {
-    console.log("cccc", csrftoken)
-    axios
-      .post("http://127.0.0.1:8000/book/bookLike", {
-        isbn13: isbn13,
-      }, {
-        headers: {
-          'X-CSRFToken': csrftoken
-        },
-        withCredentials: true
-      })
-      .then((response) => {
-        const updatedBookList = bookList.map((book) =>
-          book.isbn13 === isbn13
-            ? { ...book, num_likes: response.data.num_likes }
-            : book
-        );
-        setBookList(updatedBookList);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (!myInfo) {
+      toast.warning(
+        () => (
+          <div>
+            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+            <br />
+            <br />
+            <br />
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+              style={{
+                position: "absolute",
+                right: "10px",
+                bottom: "15px",
+                backgroundColor: "#EF9A9A",
+                color: "white",
+                border: "1px solid #EF9A9A",
+              }}
+            >
+              네
+            </Button>
+          </div>
+        ),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    } else {
+      axios
+        .post(
+          "http://127.0.0.1:8000/book/bookLike",
+          {
+            isbn13: isbn13,
+          },
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          if (response.status === 200 || response.status === 201) {
+            setLikes((likes) => ({
+              ...likes,
+              [isbn13]: !likes[isbn13],
+            }));
+          }
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
 

@@ -113,24 +113,33 @@ function MyLikedBookReport({ PROXY }) {
     });
   };
 
-  const sendDeleteBook = (bookReportNum) => {
+  const sendDeleteBookReport = (bookReportNum) => {
     axios
-      .delete("http://127.0.0.1:8000/bookReport/bookReportLike", {
-        params: {
-          reportNum: bookReportNum,
-        },
-        headers: {
-          "X-CSRFToken": csrftoken,
-        },
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .post(
+          "http://127.0.0.1:8000/bookReport/bookReportLike",
+          {
+            reportNum: bookReportNum,
+          },
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          if (response.status === 200 || response.status === 201) {
+            setLikes({
+              ...likes,
+              [bookReportNum]: !likes[bookReportNum],
+            });
+          }
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    
   };
 
   const truncate = (str, n) => {
@@ -197,7 +206,7 @@ function MyLikedBookReport({ PROXY }) {
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleLike(data.reportNum);
-                        sendDeleteBook(data.reportNum);
+                        sendDeleteBookReport(data.reportNum);
                       }}
                     >
                       <FavoriteIcon
