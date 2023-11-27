@@ -345,11 +345,11 @@ function BookList() {
                           <IconButton
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (likes[data.isbn13]) {
-                                sendDeleteLikeBook(data.reportNum);
-                              } else {
+                              if (!likes[data.isbn13]) {
                                 toggleLike(data.isbn13);
                                 sendLikeBook(data.isbn13);
+                              } else {
+                                sendDeleteLikeBook(data.isbn13);
                               }
                             }}
                           >
@@ -375,7 +375,7 @@ function BookList() {
                       image={data.cover}
                       alt="Paella dish"
                       onClick={() =>
-                        navigate(`/BookDetail/${data.isbn13}`, { state: data })
+                        navigate(`/BookDetail/${data.isbn13}`, { state: rowData })
                       }
                     />
                     <CardActions disableSpacing>

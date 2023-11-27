@@ -107,9 +107,10 @@ function MyLikedParagraph({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/community/paragraphReadLike", {
         headers: {
-          'X-CSRFToken': csrftoken 
+          'X-CSRFToken': csrftoken
         },
-        withCredentials: true})
+        withCredentials: true
+      })
       .then((response) => {
         console.log(response.data.savedCommunityList);
         setLikeParagraph(response.data.savedCommunityList);
@@ -152,18 +153,18 @@ function MyLikedParagraph({ PROXY }) {
         postNum: postNum,
       },
       headers: {
-        'X-CSRFToken': csrftoken 
+        'X-CSRFToken': csrftoken
       },
       withCredentials: true
     })
-    .then((response) => {
-      console.log(response);
-      window.location.reload();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
@@ -183,7 +184,7 @@ function MyLikedParagraph({ PROXY }) {
               fontWeight: "bold",
             }}
           >
-            좋아요 누른 구절
+            공감한 구절
           </div>
         </div>
         <TableContainer
@@ -199,7 +200,6 @@ function MyLikedParagraph({ PROXY }) {
                 <TableCell>작가</TableCell>
                 <TableCell>등록일</TableCell>
                 <TableCell>좋아요</TableCell>
-                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -225,27 +225,22 @@ function MyLikedParagraph({ PROXY }) {
                     scope="row"
                     style={{ width: "180px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.title}
+                    {truncate(row.title, 12)}
                   </TableCell>
                   <TableCell
                     style={{ width: "600px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.contents}
-                  </TableCell>
-                  <TableCell
-                    style={{ width: "60px", borderRight: "1px solid #F8E8EE" }}
-                  >
-                    {row.author}
+                    {truncate(row.contents, 22)}
                   </TableCell>
                   <TableCell
                     style={{ width: "100px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.registDate_community}
+                    {truncate(row.author, 5)}
                   </TableCell>
                   <TableCell
-                    style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
+                    style={{ width: "90px", borderRight: "1px solid #F8E8EE" }}
                   >
-                    {row.like_count}
+                    {row.registDate_community.split("T")[0]}
                   </TableCell>
                   <TableCell
                     style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
@@ -259,6 +254,7 @@ function MyLikedParagraph({ PROXY }) {
                     >
                       <FavoriteIcon style={{ color: likes[row.isbn13] ? "gray" : "#EF9A9A" }} />
                     </IconButton>
+                    <div style={{ marginTop: '-10px' }}>{row.like_count}</div>
                   </TableCell>
                 </TableRow>
               ))}

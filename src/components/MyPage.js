@@ -343,13 +343,13 @@ export default function MyPage() {
                     style={{
                       color: "#F2BED1",
                       marginBottom: "-6px",
-                      marginLeft: "3px",
+                      marginLeft: "5px",
                     }}
                   ></ThumbUpAltIcon>
                   공감한 독후감
                   <AddIcon
                     style={{
-                      marginLeft: "165px",
+                      marginLeft: "205px",
                       color: "#F2BED1",
                       marginBottom: "-5px",
                     }}
@@ -409,12 +409,13 @@ export default function MyPage() {
                       color: "#F2BED1",
                       marginBottom: "-7px",
                       marginRight: "2px",
+                      marginLeft: '3px'
                     }}
                   ></MoodIcon>
                   공감한 도서
                   <AddIcon
                     style={{
-                      marginLeft: "178px",
+                      marginLeft: "220px",
                       color: "#F2BED1",
                       mt: "2rem",
                       marginBottom: "-5px",
@@ -475,12 +476,13 @@ export default function MyPage() {
                       color: "#F2BED1",
                       marginBottom: "-6px",
                       marginRight: "2px",
+
                     }}
                   ></FavoriteIcon>
                   공감한 구절
                   <AddIcon
                     style={{
-                      marginLeft: "178px",
+                      marginLeft: "210px",
                       color: "#F2BED1",
                       marginBottom: "-5px",
                     }}

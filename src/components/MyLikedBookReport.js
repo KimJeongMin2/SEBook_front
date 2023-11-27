@@ -164,12 +164,12 @@ function MyLikedBookReport({ PROXY }) {
               <TableRow>
                 <TableCell style={{ width: "10px" }}>No</TableCell>
                 <TableCell style={{ width: "300px" }}>제목</TableCell>
-                <TableCell style={{ width: "200px" }}>도서명</TableCell>
-                <TableCell style={{ width: "95px" }}>작가</TableCell>
-                <TableCell style={{ width: "100px" }}>출판사</TableCell>
-                <TableCell style={{ width: "100px" }}>글쓴이</TableCell>
-                <TableCell style={{ width: "90px" }}>등록일</TableCell>
-                <TableCell style={{ width: "45px" }}>좋아요</TableCell>
+                <TableCell style={{ width: "250px" }}>도서명</TableCell>
+                <TableCell style={{ width: "95px", textAlign: "center" }}>작가</TableCell>
+                <TableCell style={{ width: "100px", textAlign: "center" }}>출판사</TableCell>
+                <TableCell style={{ width: "50px", textAlign: "center" }}>글쓴이</TableCell>
+                <TableCell style={{ width: "80px", textAlign: "center" }}>등록일</TableCell>
+                <TableCell style={{ width: "45px", textAlign: "center" }}>좋아요</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -188,7 +188,7 @@ function MyLikedBookReport({ PROXY }) {
                     {truncate(data.reportTitle, 20)}
                   </TableCell>
                   <TableCell>{truncate(data.title, 20)}</TableCell>
-                  <TableCell>{truncate(data.author, 4)}</TableCell>
+                  <TableCell>{truncate(data.author, 6)}</TableCell>
                   <TableCell>{truncate(data.publisher, 6)}</TableCell>
                   <TableCell>{truncate(data.username, 6)}</TableCell>
                   <TableCell>{data.registDate_report.split("T")[0]}</TableCell>

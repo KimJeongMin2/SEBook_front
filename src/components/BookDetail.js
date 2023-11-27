@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Box,
@@ -243,7 +243,7 @@ function BookDetail({ PROXY }) {
               </Stack>
               <div style={{ display: "flex", margin: "5px 5px 0 0px" }}>
                 <div>
-                  {isSelectedLike ? (
+                  {isSelectedLike || location.state.isUserLikeBook ? (
                     <FavoriteIcon
                       style={{ fontSize: "30px", color: "#EF9A9A" }}
                       onClick={selectLike}
@@ -262,7 +262,7 @@ function BookDetail({ PROXY }) {
                       fontSize: "13px",
                     }}
                   >
-                    10
+                    {location.state.num_likes}
                   </div>
                 </div>
               </div>
