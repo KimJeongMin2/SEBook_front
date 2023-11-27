@@ -1,4 +1,4 @@
-import React, { useState,useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -43,6 +43,9 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const csrftoken = Cookies.get('csrftoken');
+  const [myInfo, setMyInfo] = useState();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -67,9 +70,9 @@ export default function SignIn() {
         if (response.status === 200) {
           console.log(response.data.userNum);
           console.log(response.data.userName);
-          alert("로그인 성공!");
+          alert(`환영합니다!`);
           setIsLoggedIn(true);
-          console.log("상태",isLoggedIn)
+          console.log("상태", isLoggedIn)
           //setAuth({ userNum: response.data.userNum, userName: response.data.userName });
           navigate("/")
         }
@@ -80,7 +83,20 @@ export default function SignIn() {
       });
   };
 
-
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   return (
     <>

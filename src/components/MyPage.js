@@ -33,9 +33,6 @@ function preventDefault(event) {
   event.preventDefault();
 }
 const csrftoken = Cookies.get('csrftoken');
-const truncate = (str, n) => {
-  return str?.length > n ? str.substr(0, n - 1) + "..." : str;
-};
 
 export default function MyPage() {
   const navigate = useNavigate();
@@ -46,6 +43,8 @@ export default function MyPage() {
   const [myLikedBookReport, setMyLikedBookReport] = useState([]);
   const [readMyParagraph, setReadMyParagraph] = useState([]);
   const [likeParagraph, setLikeParagraph] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
   useEffect(() => {
     axios
@@ -56,11 +55,16 @@ export default function MyPage() {
         withCredentials: true
       })
       .then((response) => {
-        console.log("myInfo : " + response.data);
         setMyInfo(response.data);
       })
       .catch((error) => console.error(error));
   }, []);
+
+  // useEffect(() => {
+  //   if (myInfo?.name === undefined) {
+  //     navigate("/signin"); // signin 페이지의 경로에 맞게 수정
+  //   }
+  // }, [myInfo, navigate]);
 
   useEffect(() => {
     axios
@@ -191,6 +195,7 @@ export default function MyPage() {
                     onClick={() => {
                       navigate("/MyBookReport");
                     }}
+
                   ></AddIcon>
                 </Typography>
 
@@ -257,7 +262,7 @@ export default function MyPage() {
                 <Link color="primary" href="#" onClick={preventDefault}></Link>
                 <Table
                   size="small"
-                  style={{ width: "360px", height: "200px", marginTop: '0px'}}
+                  style={{ width: "360px", height: "200px", marginTop: '0px' }}
                   sx={{ marginTop: "10px", backgroundColor: "#F9F5F6" }}
                 >
                   <TableHead>
@@ -341,7 +346,7 @@ export default function MyPage() {
                       marginLeft: "3px",
                     }}
                   ></ThumbUpAltIcon>
-                  좋아요 누른 독후감
+                  공감한 독후감
                   <AddIcon
                     style={{
                       marginLeft: "165px",
@@ -406,7 +411,7 @@ export default function MyPage() {
                       marginRight: "2px",
                     }}
                   ></MoodIcon>
-                  좋아요 누른 도서
+                  공감한 도서
                   <AddIcon
                     style={{
                       marginLeft: "178px",
@@ -472,7 +477,7 @@ export default function MyPage() {
                       marginRight: "2px",
                     }}
                   ></FavoriteIcon>
-                  좋아요 누른 구절
+                  공감한 구절
                   <AddIcon
                     style={{
                       marginLeft: "178px",

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import axios from "axios";
-import { Box, InputBase } from "@mui/material";
+import { Box, InputBase, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import Modal from "@mui/material/Modal";
@@ -23,6 +23,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
+import DeleteIcon from "@mui/icons-material/Delete";
+
 function createData(id, title, paragraph, writer, date, like) {
   return { id, title, paragraph, writer, date, like };
 }
@@ -96,6 +98,8 @@ function Community({ PROXY }) {
   const [paragraphList, setParagraphList] = useState([]);
   const [searchType, setSearchType] = useState("도서명");
   const [myInfo, setMyInfo] = useState();
+  const [likedParagraphList, setLikedParagraphList] = useState([]);
+  const [writtenParagraphList, setWrittenParagraphList] = useState([]);
 
   useEffect(() => {
     axios
@@ -142,8 +146,41 @@ function Community({ PROXY }) {
         console.log(response.data);
         setCommunityList(response.data.allPosts || []);
         const likedPostIds = response.data.userLikeReports;
-        console.log(likedPostIds)
         setLikeStatus(likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/community/paragraphReadLike", {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        const likeParagraphList = response.data.savedCommunityList;
+
+        const postNums = likeParagraphList.map(post => post.postNum);
+        setLikedParagraphList(postNums);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/community/paragraphReadMy", {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        const writtenParagraphList = response.data.userCommunityList;
+
+        const postNums = writtenParagraphList.map(post => post.postNum);
+        setWrittenParagraphList(postNums);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -168,7 +205,30 @@ function Community({ PROXY }) {
       });
   };
 
-
+  const sendDeleteParagraph = (postNum) => {
+    if (window.confirm("삭제하시겠습니까?")) {
+      axios
+        .delete("http://127.0.0.1:8000/community/paragraphDelete", {
+          params: {
+            postNum: postNum,
+          }
+        }, {
+          headers: {
+            'X-CSRFToken': csrftoken
+          },
+          withCredentials: true
+        })
+        .then((response) => {
+          console.log(response);
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      alert("취소합니다.");
+    }
+  };
 
   // Function to toggle the like status for a specific row
   const toggleLike = (id) => {
@@ -306,90 +366,103 @@ function Community({ PROXY }) {
                 <TableCell style={{ textAlign: 'center' }}>글쓴이</TableCell>
                 <TableCell style={{ textAlign: 'center' }}>작가명</TableCell>
                 <TableCell style={{ textAlign: 'center' }}>등록일</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>좋아요</TableCell>
+                <TableCell style={{ textAlign: 'left', marginLeft: '-10px' }}>공감</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
               {communityList && communityList.length > 0 ? (
-                getPageData()?.map((data, index) => (
-                  <TableRow
-                    key={data.title}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    onClick={() => handleOpen(data)}
-                  >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{
-                        width: "10px",
-                        borderRight: "1px solid #F8E8EE",
-                        textAlign: "center",
-                      }}
-                    >
-                      {(currentPage - 1) * itemsPerPage + index + 1}
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{
-                        width: "200px",
-                        borderRight: "1px solid #F8E8EE",
-                      }}
-                    >
-                      {truncate(data.title, 18)}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        width: "450px",
-                        borderRight: "1px solid #F8E8EE",
+                getPageData()?.map((data, index) => {
+                  const isUserLikeParagraph = Array.isArray(likedParagraphList) && likedParagraphList.some((post) => data.postNum === post);
+                  const isUserWriteParagraph = Array.isArray(writtenParagraphList) && writtenParagraphList.some((post) => data.postNum === post);
 
-                      }}
+                  return (
+                    <TableRow
+                      key={data.title}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      onClick={() => handleOpen(data)}
                     >
-                      {truncate(data.contents, 22)}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        width: "50px",
-                        borderRight: "1px solid #F8E8EE",
-                        textAlign: "center",
-                      }}
-                    >
-                      {truncate(data.username, 9)}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        width: "100px",
-                        borderRight: "1px solid #F8E8EE",
-                        textAlign: "center",
-                      }}
-                    >
-                      {truncate(data.author, 6)}
-                    </TableCell>
-                    <TableCell style={{ width: "90px", textAlign: "center" }}>
-                      {data.registDate_community.split('T')[0]}
-                    </TableCell>
-                    <TableCell style={{ width: "50px", textAlign: "center" }}>
-                      {likeStatus[data.postNum] ? (
-                        <FavoriteIcon
-                          style={{ color: "#EF9A9A" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleLike(data.postNum);
-                          }}
-                        />
-                      ) : (
-                        <FavoriteBorderIcon
-                          style={{ color: "#EF9A9A" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleLike(data.postNum);
-                          }}
-                        />
-                      )}
-                      <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
-                    </TableCell>
-                  </TableRow>
-                ))
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{
+                          width: "10px",
+                          borderRight: "1px solid #F8E8EE",
+                          textAlign: "center",
+                        }}
+                      >
+                        {index + 1}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{
+                          width: "200px",
+                          borderRight: "1px solid #F8E8EE",
+                        }}
+                      >
+                        {truncate(data.title, 16)}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          width: "450px",
+                          borderRight: "1px solid #F8E8EE",
+                        }}
+                      >
+                        {truncate(data.contents, 22)}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          width: "50px",
+                          borderRight: "1px solid #F8E8EE",
+                          textAlign: "center",
+                        }}
+                      >
+                        {truncate(data.username, 9)}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          width: "100px",
+                          borderRight: "1px solid #F8E8EE",
+                          textAlign: "center",
+                        }}
+                      >
+                        {truncate(data.author, 6)}
+                      </TableCell>
+                      <TableCell style={{ width: "90px", textAlign: "center" }}>
+                        {data.registDate_community.split('T')[0]}
+                      </TableCell>
+                      <TableCell style={{ display: 'flex', width: "50px", textAlign: "center" }}>
+                        <div>
+                          {isUserLikeParagraph ? (
+                            <FavoriteIcon
+                              style={{ color: "#EF9A9A" }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleLike(data.postNum);
+                              }}
+                            />
+                          ) : (
+                            <FavoriteBorderIcon
+                              style={{ color: "#EF9A9A" }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleLike(data.postNum);
+                              }}
+                            />
+                          )}
+                          <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
+                        </div>
+                        {isUserWriteParagraph ?
+                          (
+                            <DeleteIcon
+                              style={{ margin: '10px 0 0 10px', color: "#FF9999" }}
+                              onClick={() => sendDeleteParagraph(data.reportNum)}
+                            />
+                          ) : (<></>)}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={6}>No data available</TableCell>

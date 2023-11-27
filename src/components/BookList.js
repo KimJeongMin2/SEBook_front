@@ -94,6 +94,7 @@ function BookList() {
   const [expanded, setExpanded] = useState(false);
 
   const [bookList, setBookList] = useState(location.state?.bookList || []);
+  const [likeBookList, setLikeBookList] = useState([]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -116,6 +117,22 @@ function BookList() {
         if (location.state.bookList) {
           setBookList(location.state.bookList);
         }
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/book/likeBookListRead", {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        const likeBookList = response.data.likeBookList;
+        const isbn13List = likeBookList.map(book => book.isbn13);
+        setLikeBookList(isbn13List);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -215,6 +232,26 @@ function BookList() {
     setSearchTerm(event.target.value);
   };
 
+  const sendDeleteLikeBook = (isbn13) => {
+    axios.delete("http://127.0.0.1:8000/book/bookLike", {
+      params: {
+        isbn13: isbn13,
+      }
+    }, {
+      headers: {
+        'X-CSRFToken': csrftoken
+      },
+      withCredentials: true
+    })
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <>
       <MainAppBar />
@@ -281,83 +318,86 @@ function BookList() {
               position: "relative",
             }}
           >
-            {getPageData().map((data) => (
-              <Grid item xs={12} sm={3} md={0}>
-                <Card
-                  sx={{ maxWidth: 280, margin: 1 }}
-                  style={{ width: "230px", height: "220px" }}
-                >
-                  <CardHeader
-                    title={truncate(data.title, 10)}
-                    action={
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                        }}
-                      >
-                        <IconButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleLike(data.isbn13);
-                            sendLikeBook(data.isbn13);
+            {getPageData().map((data) => {
+              const isUserLikeBook = Array.isArray(likeBookList) && likeBookList.includes(data.isbn13);
+
+              const rowData = {
+                ...data,
+                isUserLikeBook,
+              };
+
+              return (
+                <Grid item xs={12} sm={3} md={0} key={data.isbn13}>
+                  <Card
+                    sx={{ maxWidth: 280, margin: 1 }}
+                    style={{ width: "230px", height: "220px" }}
+                  >
+                    <CardHeader
+                      title={truncate(data.title, 10)}
+                      action={
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
                           }}
                         >
-                          {
-                            likes[data.isbn13] ?
-                              <FavoriteIcon
-                                style={{
-                                  color: "#EF9A9A"
-                                }}
-                              /> :
-                              <FavoriteBorderIcon
-                                style={{
-                                  color: "#EF9A9A"
-                                }}
-                              />
-                          }
-                        </IconButton>
-                        <Typography variant="body2">
-                          {data.num_likes}
-                        </Typography>
-                      </Box>
-                    }
-                    subheader={truncate(data.author, 10)}
-                    titleTypographyProps={{ variant: "body1" }}
-                    subheaderTypographyProps={{ variant: "body2" }}
-                    onClick={() =>
-                      navigate(`/BookDetail/${data.isbn13}`, { state: data })
-                    }
-                  />
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={data.cover}
-                    alt="Paella dish"
-                    onClick={() =>
-                      navigate(`/BookDetail/${data.isbn13}`, { state: data })
-                    }
-                  />
-                  <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                      <FavoriteBorderIcon />
-                      {data.like}
-                    </IconButton>
-                    <IconButton aria-label="share">
-                      <ShareIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-expanded={expanded}
-                      aria-label="show more"
-                      onClick={handleExpandClick}
-                    >
-                      <ExpandMoreIcon />
-                    </IconButton>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
+                          <IconButton
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (likes[data.isbn13]) {
+                                sendDeleteLikeBook(data.reportNum);
+                              } else {
+                                toggleLike(data.isbn13);
+                                sendLikeBook(data.isbn13);
+                              }
+                            }}
+                          >
+                            {isUserLikeBook ? (
+                              <FavoriteIcon style={{ color: "#EF9A9A" }} />
+                            ) : (
+                              <FavoriteBorderIcon style={{ color: "#EF9A9A" }} />
+                            )}
+                          </IconButton>
+                          <Typography variant="body2">{data.num_likes}</Typography>
+                        </Box>
+                      }
+                      subheader={truncate(data.author, 10)}
+                      titleTypographyProps={{ variant: "body1" }}
+                      subheaderTypographyProps={{ variant: "body2" }}
+                      onClick={() =>
+                        navigate(`/BookDetail/${data.isbn13}`, { state: data })
+                      }
+                    />
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={data.cover}
+                      alt="Paella dish"
+                      onClick={() =>
+                        navigate(`/BookDetail/${data.isbn13}`, { state: data })
+                      }
+                    />
+                    <CardActions disableSpacing>
+                      <IconButton aria-label="add to favorites">
+                        <FavoriteBorderIcon />
+                        {data.like}
+                      </IconButton>
+                      <IconButton aria-label="share">
+                        <ShareIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-expanded={expanded}
+                        aria-label="show more"
+                        onClick={handleExpandClick}
+                      >
+                        <ExpandMoreIcon />
+                      </IconButton>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              );
+            })}
             <Pagination
               count={Math.ceil(bookList.length / itemsPerPage)}
               color="primary"
