@@ -670,6 +670,7 @@ function MainPage() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                fontWeight: "bold"
               }}
             >
               {"도서 정보"}
@@ -698,9 +699,11 @@ function MainPage() {
                       marginBottom: "5px",
                     }}
                   >
+                    <span style={{ fontWeight: "bold" }}>도서명 | </span>
                     {selectedBook.title}
                   </div>
                   <div style={{ marginBottom: "5px" }}>
+                  <span style={{ fontWeight: "bold" }}>작가 | </span>
                     {selectedBook.author}
                   </div>
                   <div style={{ fontSize: "15px" }}>
@@ -785,6 +788,7 @@ function MainPage() {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  fontWeight: "bold"
                 }}
               >
                 {"독후감 정보"}
@@ -814,12 +818,14 @@ function MainPage() {
                       marginBottom: "5px",
                     }}
                   >
+                    <span style={{ fontWeight: "bold" }}>도서명 | </span>
                     {selectedBookReport.title}
                   </div>
                   <div style={{ marginBottom: "5px" }}>
                     {selectedBookReport.writer}
                   </div>
-                  <div style={{ fontSize: "15px" }}>
+                  <div>
+                  <span style={{ fontWeight: "bold" }}>내용 | </span>
                     {selectedBookReport.reportContents}
                   </div>
                 </>

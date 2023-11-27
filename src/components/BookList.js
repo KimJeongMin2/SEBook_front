@@ -154,7 +154,7 @@ function BookList() {
         },
       })
       .then((response) => {
-        setBookList(response.data);
+        setBookList(response.data.bookList);
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -173,7 +173,7 @@ function BookList() {
         },
       })
       .then((response) => {
-        setBookList(response.data);
+        setBookList(response.data.bookList);
       })
       .catch((error) => {
         if (error.response.status === 404) {

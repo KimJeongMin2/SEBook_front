@@ -173,7 +173,7 @@ function BookReportRegist({ PROXY }) {
       }
     })
       .then(response => {
-        setSearchResult(response.data);
+        setSearchResult(response.data.bookList);
       })
       .catch(error => {
         if (error.response.status === 404) {
@@ -192,7 +192,7 @@ function BookReportRegist({ PROXY }) {
         },
       })
       .then((response) => {
-        setSearchResult(response.data);
+        setSearchResult(response.data.bookList);
       })
       .catch((error) => {
         if (error.response.status === 404) {

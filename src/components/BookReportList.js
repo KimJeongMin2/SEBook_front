@@ -304,7 +304,7 @@ function BookReportList() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {getPageData()?.map((data) => {
+              {getPageData()?.map((data, index) => {
                 const isUserLikeReportsLiked = Array.isArray(userLikeReports) && userLikeReports.some((report) => data.reportNum === report);
                 const isUserWriteReportsLiked = Array.isArray(userWriteReports) && userWriteReports.some((report) => data.reportNum === report);
 
@@ -321,7 +321,7 @@ function BookReportList() {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>
-                      {data.reportNum}
+                      {index+1}
                     </TableCell>
                     <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>
                       {truncate(data.reportTitle, 25)}
