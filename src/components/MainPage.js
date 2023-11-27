@@ -233,7 +233,6 @@ function MainPage() {
   };
 
   const sendLikeBook = (isbn13) => {
-    console.log("myInfo", myInfo);
     if (!myInfo) {
       toast.warning(
         () => (
@@ -270,7 +269,6 @@ function MainPage() {
         }
       );
     } else {
-      console.log("cccc", csrftoken);
       axios
         .post(
           "http://127.0.0.1:8000/book/bookLike",
@@ -285,12 +283,12 @@ function MainPage() {
           }
         )
         .then((response) => {
-          const updatedBookList = bookList.map((book) =>
-            book.isbn13 === isbn13
-              ? { ...book, num_likes: response.data.num_likes }
-              : book
-          );
-          setBookList(updatedBookList);
+          if (response.status === 200 || response.status === 201) {
+            setLikes((likes) => ({
+              ...likes,
+              [isbn13]: !likes[isbn13],
+            }));
+          }
           window.location.reload();
         })
         .catch((error) => {
@@ -350,7 +348,12 @@ function MainPage() {
           }
         )
         .then((response) => {
-          console.log(response);
+          if (response.status === 200 || response.status === 201) {
+            setLikes((likes) => ({
+              ...likes,
+              [bookReportNum]: !likes[bookReportNum],
+            }));
+          }
           window.location.reload();
         })
         .catch((error) => {
@@ -802,7 +805,7 @@ function MainPage() {
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleLike(selectedBookReport.reportNum);
-                      sendLikeBook(selectedBookReport.reportNum);
+                      sendLikeBookReport(selectedBookReport.reportNum);
                     }}
                   />
                 )}
