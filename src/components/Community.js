@@ -326,7 +326,7 @@ function Community({ PROXY }) {
                         textAlign: "center",
                       }}
                     >
-                      {index + 1}
+                      {(currentPage - 1) * itemsPerPage + index + 1}
                     </TableCell>
                     <TableCell
                       component="th"
