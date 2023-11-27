@@ -191,10 +191,10 @@ function MainPage() {
         },
       })
       .then((response) => {
-        setBookList(response.data);
+        setBookList(response.data.bookList);
         navigate(`/BookList`, {
           state: {
-            bookList: response.data,
+            bookList: response.data.bookList,
           },
         });
       })
@@ -215,11 +215,11 @@ function MainPage() {
         },
       })
       .then((response) => {
-        setBookList(response.data);
+        setBookList(response.data.bookList);
         console.log("검색결과 : " + response.data);
         navigate(`/BookList`, {
           state: {
-            bookList: response.data,
+            bookList: response.data.bookList,
           },
         });
       })
@@ -577,14 +577,15 @@ function MainPage() {
                 <>
                   <div
                     style={{
-                      fontSize: "18px",
                       fontFamily: "bold",
                       marginBottom: "5px",
                     }}
                   >
+                    <span style={{ fontWeight: "bold" }}>도서명 | </span>
                     {selectedRecommandBook.title}
                   </div>
                   <div style={{ marginBottom: "5px" }}>
+                  <span style={{ fontWeight: "bold" }}>작가명 | </span>
                     {selectedRecommandBook.author}
                   </div>
                   <div style={{ fontSize: "15px" }}>
@@ -694,7 +695,6 @@ function MainPage() {
                 <>
                   <div
                     style={{
-                      fontSize: "18px",
                       fontFamily: "bold",
                       marginBottom: "5px",
                     }}

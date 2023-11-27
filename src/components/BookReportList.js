@@ -23,7 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import "../bookReportList.css";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 function createData(
   id,
   title,
@@ -88,12 +88,14 @@ const StyledSelect = styled(Select, {
   },
 }));
 
-const csrftoken = Cookies.get('csrftoken');
+const csrftoken = Cookies.get("csrftoken");
 
 function BookReportList() {
   const navigate = new useNavigate();
   const location = useLocation();
-  const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
+  const [bookReportList, setBookReportList] = useState(
+    location.state?.bookReportList || []
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -115,7 +117,7 @@ function BookReportList() {
   const [likes, setLikes] = useState({});
   const [userLikeReports, setUserLikeReports] = useState({});
   const [userWriteReports, setUserWriteReports] = useState({});
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleChangePage = (event, value) => {
     setCurrentPage(value);
@@ -145,9 +147,9 @@ function BookReportList() {
     axios
       .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
         headers: {
-          'X-CSRFToken': csrftoken
+          "X-CSRFToken": csrftoken,
         },
-        withCredentials: true
+        withCredentials: true,
       })
       .then((response) => {
         setLikedBookReportList(response.data.likeBookReportList);
@@ -155,16 +157,20 @@ function BookReportList() {
       .catch((error) => console.error(error));
   }, []);
 
-
   const sendLikeBookReport = (bookReportNum) => {
-    axios.post("http://127.0.0.1:8000/bookReport/bookReportLike", {
-      reportNum: bookReportNum,
-    }, {
-      headers: {
-        'X-CSRFToken': csrftoken
-      },
-      withCredentials: true
-    })
+    axios
+      .post(
+        "http://127.0.0.1:8000/bookReport/bookReportLike",
+        {
+          reportNum: bookReportNum,
+        },
+        {
+          headers: {
+            "X-CSRFToken": csrftoken,
+          },
+          withCredentials: true,
+        }
+      )
       .then((response) => {
         console.log(response);
         window.location.reload();
@@ -172,19 +178,24 @@ function BookReportList() {
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   const sendDeleteLikeBookReport = (bookReportNum) => {
-    axios.delete("http://127.0.0.1:8000/bookReport/bookReportLike", {
-      params: {
-        reportNum: bookReportNum,
-      }
-    }, {
-      headers: {
-        'X-CSRFToken': csrftoken
-      },
-      withCredentials: true
-    })
+    axios
+      .delete(
+        "http://127.0.0.1:8000/bookReport/bookReportLike",
+        {
+          params: {
+            reportNum: bookReportNum,
+          },
+        },
+        {
+          headers: {
+            "X-CSRFToken": csrftoken,
+          },
+          withCredentials: true,
+        }
+      )
       .then((response) => {
         console.log(response);
         window.location.reload();
@@ -192,19 +203,19 @@ function BookReportList() {
       .catch((error) => {
         console.log(error);
       });
-  }
-
+  };
 
   const searchBookByTitle = () => {
-    axios.get(`http://127.0.0.1:8000/bookReport/bookReportSearch`, {
-      params: {
-        title: searchTerm
-      }
-    })
-      .then(response => {
+    axios
+      .get(`http://127.0.0.1:8000/bookReport/bookReportSearch`, {
+        params: {
+          title: searchTerm,
+        },
+      })
+      .then((response) => {
         setBookReportList(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 404) {
           alert("해당 검색어에 맞는 결과가 없습니다.");
         } else {
@@ -214,10 +225,10 @@ function BookReportList() {
   };
 
   const handleSearchKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      if (searchType === '작가명') {
+    if (event.key === "Enter") {
+      if (searchType === "작가명") {
         // searchBookByAuthor();
-      } else if (searchType === '도서명') {
+      } else if (searchType === "도서명") {
         searchBookByTitle();
       }
     }
@@ -296,17 +307,31 @@ function BookReportList() {
                 <TableCell style={{ width: "10px" }}>No</TableCell>
                 <TableCell style={{ width: "200px" }}>제목</TableCell>
                 <TableCell style={{ width: "150px" }}>도서명</TableCell>
-                <TableCell style={{ width: "50px", textAlign: ' center' }}>작가</TableCell>
-                <TableCell style={{ width: "50px", textAlign: ' center' }}>출판사</TableCell>
-                <TableCell style={{ width: "30px", textAlign: ' center' }}>글쓴이</TableCell>
-                <TableCell style={{ width: "50px", textAlign: ' center' }}>등록일</TableCell>
-                <TableCell style={{ width: "10px", textAlign: 'center' }}>좋아요</TableCell>
+                <TableCell style={{ width: "50px", textAlign: " center" }}>
+                  작가
+                </TableCell>
+                <TableCell style={{ width: "50px", textAlign: " center" }}>
+                  출판사
+                </TableCell>
+                <TableCell style={{ width: "30px", textAlign: " center" }}>
+                  글쓴이
+                </TableCell>
+                <TableCell style={{ width: "50px", textAlign: " center" }}>
+                  등록일
+                </TableCell>
+                <TableCell style={{ width: "10px", textAlign: "center" }}>
+                  좋아요
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
               {getPageData()?.map((data, index) => {
-                const isUserLikeReportsLiked = Array.isArray(userLikeReports) && userLikeReports.some((report) => data.reportNum === report);
-                const isUserWriteReportsLiked = Array.isArray(userWriteReports) && userWriteReports.some((report) => data.reportNum === report);
+                const isUserLikeReportsLiked =
+                  Array.isArray(userLikeReports) &&
+                  userLikeReports.some((report) => data.reportNum === report);
+                const isUserWriteReportsLiked =
+                  Array.isArray(userWriteReports) &&
+                  userWriteReports.some((report) => data.reportNum === report);
 
                 const rowData = {
                   ...data,
@@ -320,22 +345,75 @@ function BookReportList() {
                     key={data.title}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>
-                      {index+1}
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      onClick={() =>
+                        navigate(`/BookReportDetail/${data.reportNum}`, {
+                          state: rowData,
+                        })
+                      }
+                    >
+                      {(currentPage - 1) * itemsPerPage + index + 1}
                     </TableCell>
-                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      onClick={() =>
+                        navigate(`/BookReportDetail/${data.reportNum}`, {
+                          state: rowData,
+                        })
+                      }
+                    >
                       {truncate(data.reportTitle, 25)}
                     </TableCell>
-                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>{truncate(data.title, 20)} </TableCell>
                     <TableCell
-                      onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })} >{truncate(data.author, 5)}</TableCell>
-                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}>{truncate(data.publisher, 5)}</TableCell>
-                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}
-                      style={{ textAlign: 'center' }}
-                    >{data.username}</TableCell>
-                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: rowData })}
-                      style={{ textAlign: 'center' }}
-                    >{data.registDate_report.split('T')[0]}</TableCell>
+                      onClick={() =>
+                        navigate(`/BookReportDetail/${data.reportNum}`, {
+                          state: rowData,
+                        })
+                      }
+                    >
+                      {truncate(data.title, 20)}{" "}
+                    </TableCell>
+                    <TableCell
+                      onClick={() =>
+                        navigate(`/BookReportDetail/${data.reportNum}`, {
+                          state: rowData,
+                        })
+                      }
+                    >
+                      {truncate(data.author, 5)}
+                    </TableCell>
+                    <TableCell
+                      onClick={() =>
+                        navigate(`/BookReportDetail/${data.reportNum}`, {
+                          state: rowData,
+                        })
+                      }
+                    >
+                      {truncate(data.publisher, 5)}
+                    </TableCell>
+                    <TableCell
+                      onClick={() =>
+                        navigate(`/BookReportDetail/${data.reportNum}`, {
+                          state: rowData,
+                        })
+                      }
+                      style={{ textAlign: "center" }}
+                    >
+                      {data.username}
+                    </TableCell>
+                    <TableCell
+                      onClick={() =>
+                        navigate(`/BookReportDetail/${data.reportNum}`, {
+                          state: rowData,
+                        })
+                      }
+                      style={{ textAlign: "center" }}
+                    >
+                      {data.registDate_report.split("T")[0]}
+                    </TableCell>
                     <TableCell style={{ width: "50px", textAlign: "center" }}>
                       <IconButton
                         onClick={(e) => {
@@ -347,10 +425,11 @@ function BookReportList() {
                           }
                         }}
                       >
-                        {isUserLikeReportsLiked || likes[data.reportNum] ?
+                        {isUserLikeReportsLiked || likes[data.reportNum] ? (
                           <FavoriteIcon style={{ color: "#EF9A9A" }} />
-                          : <FavoriteBorderIcon style={{ color: "#EF9A9A" }} />
-                        }
+                        ) : (
+                          <FavoriteBorderIcon style={{ color: "#EF9A9A" }} />
+                        )}
                       </IconButton>
                       <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
                     </TableCell>
@@ -373,11 +452,11 @@ function BookReportList() {
               count={Math.ceil(bookReportList.length / itemsPerPage)}
               color="primary"
               style={{
-                margin: '-7px 0',
-                position: 'absolute',
+                margin: "-7px 0",
+                position: "absolute",
                 bottom: 0,
-                left: '50%',
-                transform: 'translateX(-50%)'
+                left: "50%",
+                transform: "translateX(-50%)",
               }}
               onChange={handleChangePage}
             />
@@ -390,8 +469,7 @@ function BookReportList() {
                 height: "30px",
                 backgroundColor: "#EF9A9A",
                 color: "#ffffff",
-                marginTop: '-10px',
-
+                marginTop: "-10px",
               }}
               onClick={() => {
                 navigate("/BookReportRegist");
@@ -401,7 +479,7 @@ function BookReportList() {
             </Button>
           </Stack>
         </div>
-      </Box >
+      </Box>
     </>
   );
 }
