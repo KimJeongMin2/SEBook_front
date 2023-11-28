@@ -260,16 +260,15 @@ function Community({ PROXY }) {
     }
   };
 
-  const sendDeleteParagraph = (postNum) => {
+  const sendDeleteParagraphMy = (postNum) => {
     if (window.confirm("삭제하시겠습니까?")) {
       axios
         .delete("http://127.0.0.1:8000/community/paragraphDelete", {
-          params: {
-            postNum: postNum,
-          }
-        }, {
           headers: {
             'X-CSRFToken': csrftoken
+          },
+          params: {
+            postNum: postNum,
           },
           withCredentials: true
         })
@@ -283,7 +282,8 @@ function Community({ PROXY }) {
     } else {
       alert("취소합니다.");
     }
-  };
+}
+
 
   // Function to toggle the like status for a specific row
   const toggleLike = (id) => {
@@ -511,7 +511,10 @@ function Community({ PROXY }) {
                           (
                             <DeleteIcon
                               style={{ margin: '10px 0 0 10px', color: "#FF9999" }}
-                              onClick={() => sendDeleteParagraph(data.reportNum)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                sendDeleteParagraphMy(data.postNum);
+                              }}
                             />
                           ) : (<></>)}
                       </TableCell>
