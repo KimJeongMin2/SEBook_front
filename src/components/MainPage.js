@@ -139,6 +139,11 @@ function MainPage() {
       .catch((error) => console.error(error));
   }, []);
 
+  useEffect(() => {
+    console.log("상태 myInfo", JSON.stringify(myInfo));
+  }, [myInfo]);
+  
+
   const settings = {
     arrows: true,
     infinite: true,
@@ -233,6 +238,7 @@ function MainPage() {
   };
 
   const sendLikeBook = (isbn13) => {
+    alert(myInfo);
     if (!myInfo) {
       toast.warning(
         () => (

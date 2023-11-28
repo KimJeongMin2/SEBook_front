@@ -13,7 +13,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
+import { ToastContainer, toast } from "react-toastify";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -24,6 +24,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import "../bookReportList.css";
 import Cookies from 'js-cookie';
+import { useQuery } from 'react-query';
 function createData(
   id,
   title,
@@ -87,7 +88,10 @@ const StyledSelect = styled(Select, {
     width: "20ch",
   },
 }));
-
+const fetchBookReports = async () => {
+  const res = await axios.get("http://127.0.0.1:8000/bookReport/bookReportReadAll");
+  return res.data;
+};
 const csrftoken = Cookies.get('csrftoken');
 
 function BookReportList() {
@@ -96,7 +100,32 @@ function BookReportList() {
   const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 5;
+  const [myInfo, setMyInfo] = useState();
+  const { data, isError, isLoading, error } = useQuery('bookReports', fetchBookReports);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+
+      })
+      .catch((error) => console.error(error));
+  }, []);
+  useEffect(() => {
+    if (data) {
+      console.log("bookReportList: " + data.allReports);
+      const bookReportData = data.allReports.reverse();
+      setBookReportList(bookReportData);
+    }
+  }, [data]);
 
   const getPageData = () => {
     if (bookReportList) {
@@ -127,16 +156,7 @@ function BookReportList() {
     });
   };
 
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/bookReport/bookReportReadAll")
-      .then((response) => {
-        console.log("bookReportList: " + response.data.allReports);
-        const bookReportData = response.data.allReports.reverse();
-        setBookReportList(bookReportData);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+  
 
   useEffect(() => {
     axios
@@ -176,22 +196,70 @@ function BookReportList() {
 
 
   const sendLikeBookReport = (bookReportNum) => {
-    axios.post("http://127.0.0.1:8000/bookReport/bookReportLike", {
-      reportNum: bookReportNum,
-    }, {
-      headers: {
-        'X-CSRFToken': csrftoken
-      },
-      withCredentials: true
-    })
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+    if (!myInfo) {
+      toast.warning(
+        () => (
+          <div>
+            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+            <br />
+            <br />
+            <br />
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+              style={{
+                position: "absolute",
+                right: "10px",
+                bottom: "15px",
+                backgroundColor: "#EF9A9A",
+                color: "white",
+                border: "1px solid #EF9A9A",
+              }}
+            >
+              네
+            </Button>
+          </div>
+        ),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    } else {
+      axios
+        .post(
+          "http://127.0.0.1:8000/bookReport/bookReportLike",
+          {
+            reportNum: bookReportNum,
+          },
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          if (response.status === 200 || response.status === 201) {
+            setLikes((likes) => ({
+              ...likes,
+              [bookReportNum]: !likes[bookReportNum],
+            }));
+          }
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
 
 
   const sendDeleteLikeBookReport = (bookReportNum) => {
@@ -380,8 +448,8 @@ function BookReportList() {
                       <IconButton
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleLike(data.reportNum);
                           sendLikeBookReport(data.reportNum);
+                          toggleLike(data.reportNum);
                           if (likes[data.reportNum]) {
                             sendDeleteLikeBookReport(data.reportNum);
                           }
@@ -413,7 +481,7 @@ function BookReportList() {
               count={Math.ceil(bookReportList.length / itemsPerPage)}
               color="primary"
               style={{
-                margin: '55px 0',
+                margin: '-7px 0',
                 position: 'absolute',
                 bottom: 0,
                 left: '50%',

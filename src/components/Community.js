@@ -24,7 +24,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { ToastContainer, toast } from "react-toastify";
 function createData(id, title, paragraph, writer, date, like) {
   return { id, title, paragraph, writer, date, like };
 }
@@ -111,7 +111,7 @@ function Community({ PROXY }) {
       })
       .then((response) => {
         console.log("myInfo : " + response.data);
-        //setMyInfo(response.data);
+        setMyInfo(response.data);
 
       })
       .catch((error) => console.error(error));
@@ -131,13 +131,15 @@ function Community({ PROXY }) {
   };
 
   const getPageData = () => {
-    if (!communityList) {
+    if (communityList) {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return communityList.slice(start, end);
+    } else {
       return [];
     }
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    return communityList.slice(start, end);
   };
+  
 
   useEffect(() => {
     axios
@@ -186,6 +188,42 @@ function Community({ PROXY }) {
   }, []);
 
   const sendLikeCommunity = (postNum) => {
+    if (!myInfo) {
+      toast.warning(
+        () => (
+          <div>
+            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+            <br />
+            <br />
+            <br />
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+              style={{
+                position: "absolute",
+                right: "10px",
+                bottom: "15px",
+                backgroundColor: "#EF9A9A",
+                color: "white",
+                border: "1px solid #EF9A9A",
+              }}
+            >
+              네
+            </Button>
+          </div>
+        ),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    } else {
     axios
       .post("http://127.0.0.1:8000/community/paragraphLike", {
         postNum: postNum,
@@ -203,7 +241,8 @@ function Community({ PROXY }) {
       .catch((error) => {
         console.log(error);
       });
-  };
+  }
+}
 
   const sendDeleteParagraph = (postNum) => {
     if (window.confirm("삭제하시겠습니까?")) {
@@ -390,7 +429,7 @@ function Community({ PROXY }) {
                           textAlign: "center",
                         }}
                       >
-                        {index + 1}
+                        {(currentPage - 1) * itemsPerPage + index + 1}
                       </TableCell>
                       <TableCell
                         component="th"

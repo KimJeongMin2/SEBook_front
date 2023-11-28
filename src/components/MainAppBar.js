@@ -44,13 +44,16 @@ function MainAppBar() {
         console.log("myInfo : " + response.data);
         setMyInfo(response.data);
         setIsLoggedIn(true);
-        console.log("로그인 상태",isLoggedIn)
       })
       .catch((error) => {
         console.error(error);
         setIsLoggedIn(false);
       });
   }, []);
+
+  useEffect(() => {
+    console.log("상태ddddMain", isLoggedIn);
+  }, [isLoggedIn]);
 
   const logout = () => {
     axios
@@ -94,7 +97,7 @@ function MainAppBar() {
             <>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="Remy Sharp" src="https://cdn-icons-png.flaticon.com/512/1361/1361876.png" />
                   <div style={{ marginLeft: "10px", fontSize: "15px" }}></div>
                 </IconButton>
               </Tooltip>

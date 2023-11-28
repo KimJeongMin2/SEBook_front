@@ -72,7 +72,6 @@ export default function SignIn() {
           console.log(response.data.userName);
           alert(`환영합니다!`);
           setIsLoggedIn(true);
-          console.log("상태", isLoggedIn)
           //setAuth({ userNum: response.data.userNum, userName: response.data.userName });
           navigate("/")
         }
@@ -82,6 +81,11 @@ export default function SignIn() {
         alert("로그인 실패. 회원계정을 다시 한번 확인하세요.");
       });
   };
+
+  useEffect(() => {
+    console.log("상태dddd", isLoggedIn);
+  }, [isLoggedIn]);
+  
 
   useEffect(() => {
     axios
