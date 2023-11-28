@@ -13,7 +13,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
+import { ToastContainer, toast } from "react-toastify";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -25,6 +25,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import "../bookReportList.css";
 import { ToastContainer, toast } from "react-toastify";
 import Cookies from 'js-cookie';
+import { useQuery } from 'react-query';
 function createData(
   id,
   title,
@@ -88,7 +89,10 @@ const StyledSelect = styled(Select, {
     width: "20ch",
   },
 }));
-
+const fetchBookReports = async () => {
+  const res = await axios.get("http://127.0.0.1:8000/bookReport/bookReportReadAll");
+  return res.data;
+};
 const csrftoken = Cookies.get('csrftoken');
 
 function BookReportList() {
@@ -97,7 +101,32 @@ function BookReportList() {
   const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
   const [myInfo, setMyInfo] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 5;
+  const [myInfo, setMyInfo] = useState();
+  const { data, isError, isLoading, error } = useQuery('bookReports', fetchBookReports);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+
+      })
+      .catch((error) => console.error(error));
+  }, []);
+  useEffect(() => {
+    if (data) {
+      console.log("bookReportList: " + data.allReports);
+      const bookReportData = data.allReports.reverse();
+      setBookReportList(bookReportData);
+    }
+  }, [data]);
 
   const getPageData = () => {
     if (bookReportList) {
@@ -436,6 +465,7 @@ function BookReportList() {
                         onClick={(e) => {
                           e.stopPropagation();
                           sendLikeBookReport(data.reportNum);
+                          toggleLike(data.reportNum);
                           if (likes[data.reportNum]) {
                             sendDeleteLikeBookReport(data.reportNum);
                           }
@@ -467,7 +497,7 @@ function BookReportList() {
               count={Math.ceil(bookReportList.length / itemsPerPage)}
               color="primary"
               style={{
-                margin: '55px 0',
+                margin: '-7px 0',
                 position: 'absolute',
                 bottom: 0,
                 left: '50%',

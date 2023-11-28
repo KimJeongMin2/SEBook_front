@@ -126,7 +126,7 @@ function Community({ PROXY }) {
       })
       .then((response) => {
         console.log("myInfo : " + response.data);
-        //setMyInfo(response.data);
+        setMyInfo(response.data);
 
       })
       .catch((error) => console.error(error));
@@ -146,13 +146,15 @@ function Community({ PROXY }) {
   };
 
   const getPageData = () => {
-    if (!communityList) {
+    if (communityList) {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return communityList.slice(start, end);
+    } else {
       return [];
     }
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    return communityList.slice(start, end);
   };
+  
 
   useEffect(() => {
     axios
@@ -443,7 +445,7 @@ function Community({ PROXY }) {
                           textAlign: "center",
                         }}
                       >
-                        {index + 1}
+                        {(currentPage - 1) * itemsPerPage + index + 1}
                       </TableCell>
                       <TableCell
                         component="th"

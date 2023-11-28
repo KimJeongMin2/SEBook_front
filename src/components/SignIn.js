@@ -83,11 +83,6 @@ export default function SignIn() {
   };
 
   useEffect(() => {
-    console.log("상태dddd", isLoggedIn);
-  }, [isLoggedIn]);
-
-
-  useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/user/memberSearch", {
         headers: {

@@ -139,11 +139,6 @@ function MainPage() {
       .catch((error) => console.error(error));
   }, []);
 
-  useEffect(() => {
-    console.log("상태 myInfo", myInfo);
-  }, [myInfo]);
-
-
   const settings = {
     arrows: true,
     infinite: true,
