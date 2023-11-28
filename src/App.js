@@ -20,34 +20,34 @@ import MyLikedParagraph from "./components/MyLikedParagraph";
 import BookReportUpdate from "./components/BookReportUpdate.js";
 import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
+
 function App() {
 
-  const PROXY = process.env.REACT_APP_PROXY;
 
   <link href="https://font.elice.io/css?family=Elice+DX+Neolli" rel="stylesheet"></link>
   return (
     <>
-      <ToastContainer />
+    <ToastContainer />
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage />} PROXY={PROXY} />
-        <Route path="/SignUp" element={<SignUp />} PROXY={PROXY} />
-        <Route path="/SignIn" element={<SignIn />} PROXY={PROXY} />
-        <Route path="/BookList" element={<BookList />} PROXY={PROXY} />
-        <Route path="/BookDetail/:id" element={<BookDetail />} PROXY={PROXY} />
-        <Route path="/BookReportList" element={<BookReportList />} PROXY={PROXY} />
-        <Route path="/BookReportDetail/:id" element={<BookReportDetail />} PROXY={PROXY} />
-        <Route path="/BookReportRegist" element={<BookReportRegist />} PROXY={PROXY} />
-        <Route path="/BookReportUpdate" element={<BookReportUpdate />} PROXY={PROXY} />
-        <Route path="/Community" element={<Community />} PROXY={PROXY} />
-        <Route path="/CommunityDetail/:id" element={<CommunityDetail />} PROXY={PROXY} />
-        <Route path="/CommunityRegist" element={<CommunityRegist />} PROXY={PROXY} />
-        <Route path="/MyPage" element={<MyPage />} PROXY={PROXY} />
-        <Route path="/MyLikedBookList" element={<MyLikedBookList />} PROXY={PROXY} />
-        <Route path="/MyBookReport" element={<MyBookReport />} PROXY={PROXY} />
-        <Route path="/MyLikedBookReport" element={<MyLikedBookReport />} PROXY={PROXY} />
-        <Route path="/MyParagraph" element={<MyParagraph />} PROXY={PROXY} />
-        <Route path="/MyLikedParagraph" element={<MyLikedParagraph />} PROXY={PROXY} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/SignIn" element={<SignIn />} />
+        <Route path="/BookList" element={<BookList />} />
+        <Route path="/BookDetail/:id" element={<BookDetail />} />
+        <Route path="/BookReportList" element={<BookReportList />} />
+        <Route path="/BookReportDetail/:id" element={<BookReportDetail />} />
+        <Route path="/BookReportRegist" element={<BookReportRegist />} />
+        <Route path="/BookReportUpdate" element={<BookReportUpdate />} />
+        <Route path="/Community" element={<Community />} />
+        <Route path="/CommunityDetail/:id" element={<CommunityDetail />} />
+        <Route path="/CommunityRegist" element={<CommunityRegist />} />
+        <Route path="/MyPage" element={<MyPage />} />
+        <Route path="/MyLikedBookList" element={<MyLikedBookList />} />
+        <Route path="/MyBookReport" element={<MyBookReport />} />
+        <Route path="/MyLikedBookReport" element={<MyLikedBookReport />} />
+        <Route path="/MyParagraph" element={<MyParagraph />} />
+        <Route path="/MyLikedParagraph" element={<MyLikedParagraph />} />
       </Routes>
     </BrowserRouter>
     </>

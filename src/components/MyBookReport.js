@@ -21,19 +21,6 @@ import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
-function createData(id, title, bookName, author, publisher, writer, date) {
-    return { id, title, bookName, author, publisher, writer, date };
-}
-
-const initialRows = [
-    createData(1, "Frozen yoghurt를 읽고1", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(2, "Frozen yoghurt를 읽고2", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(3, "Frozen yoghurt를 읽고3", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(4, "Frozen yoghurt를 읽고4", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(5, "Frozen yoghurt를 읽고5", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-    createData(6, "Frozen yoghurt를 읽고나서", "Frozen yoghurt", "김작가", "김나라출판", "정채연", "2023-03-21"),
-];
-
 const Search = styled("div", {
     shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
