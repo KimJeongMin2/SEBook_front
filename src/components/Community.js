@@ -105,6 +105,21 @@ function Community({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/user/memberSearch", {
         headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
           'X-CSRFToken': csrftoken
         },
         withCredentials: true
@@ -191,7 +206,7 @@ function Community({ PROXY }) {
     if (!myInfo) {
       toast.warning(
         () => (
-          <div>
+          <div style={{ margin: '25px 0 0 10px' }}>
             로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
             <br />
             <br />
@@ -223,26 +238,27 @@ function Community({ PROXY }) {
           progress: undefined,
         }
       );
+
     } else {
-    axios
-      .post("http://127.0.0.1:8000/community/paragraphLike", {
-        postNum: postNum,
-      },
-        {
-          headers: {
-            'X-CSRFToken': csrftoken
-          },
-          withCredentials: true
+      axios
+        .post("http://127.0.0.1:8000/community/paragraphLike", {
+          postNum: postNum,
+        },
+          {
+            headers: {
+              'X-CSRFToken': csrftoken
+            },
+            withCredentials: true
+          })
+        .then((response) => {
+          console.log(response);
+          window.location.reload();
         })
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-}
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
 
   const sendDeleteParagraph = (postNum) => {
     if (window.confirm("삭제하시겠습니까?")) {

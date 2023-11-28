@@ -49,10 +49,6 @@ function MainAppBar() {
         console.error(error);
         setIsLoggedIn(false);
       });
-  }, []);
-
-  useEffect(() => {
-    console.log("상태ddddMain", isLoggedIn);
   }, [isLoggedIn]);
 
   const logout = () => {
@@ -65,7 +61,7 @@ function MainAppBar() {
       });
   };
 
-  
+
 
   return (
     <AppBar position="fixed">

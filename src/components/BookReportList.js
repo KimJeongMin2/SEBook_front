@@ -23,6 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import "../bookReportList.css";
+import { ToastContainer, toast } from "react-toastify";
 import Cookies from 'js-cookie';
 import { useQuery } from 'react-query';
 function createData(
@@ -98,7 +99,7 @@ function BookReportList() {
   const navigate = new useNavigate();
   const location = useLocation();
   const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
-
+  const [myInfo, setMyInfo] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [myInfo, setMyInfo] = useState();
@@ -156,7 +157,32 @@ function BookReportList() {
     });
   };
 
-  
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadAll")
+      .then((response) => {
+        console.log("bookReportList: " + response.data.allReports);
+        const bookReportData = response.data.allReports.reverse();
+        setBookReportList(bookReportData);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   useEffect(() => {
     axios
@@ -199,7 +225,7 @@ function BookReportList() {
     if (!myInfo) {
       toast.warning(
         () => (
-          <div>
+          <div style={{ margin: '25px 0 0 10px' }}>
             로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
             <br />
             <br />
@@ -232,34 +258,24 @@ function BookReportList() {
         }
       );
     } else {
-      axios
-        .post(
-          "http://127.0.0.1:8000/bookReport/bookReportLike",
-          {
-            reportNum: bookReportNum,
-          },
-          {
-            headers: {
-              "X-CSRFToken": csrftoken,
-            },
-            withCredentials: true,
-          }
-        )
+      axios.post("http://127.0.0.1:8000/bookReport/bookReportLike", {
+        reportNum: bookReportNum,
+      }, {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
         .then((response) => {
-          if (response.status === 200 || response.status === 201) {
-            setLikes((likes) => ({
-              ...likes,
-              [bookReportNum]: !likes[bookReportNum],
-            }));
-          }
+          console.log(response);
+          toggleLike(bookReportNum);
           window.location.reload();
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  };
-
+  }
 
 
   const sendDeleteLikeBookReport = (bookReportNum) => {

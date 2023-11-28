@@ -157,7 +157,7 @@ function BookList() {
     if (!myInfo) {
       toast.warning(
         () => (
-          <div>
+          <div style={{ margin: '25px 0 0 10px' }}>
             로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
             <br />
             <br />

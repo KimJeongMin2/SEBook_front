@@ -73,7 +73,7 @@ export default function SignIn() {
           alert(`환영합니다!`);
           setIsLoggedIn(true);
           //setAuth({ userNum: response.data.userNum, userName: response.data.userName });
-          navigate("/")
+          navigate((-1))
         }
       })
       .catch((error) => {
@@ -81,11 +81,6 @@ export default function SignIn() {
         alert("로그인 실패. 회원계정을 다시 한번 확인하세요.");
       });
   };
-
-  useEffect(() => {
-    console.log("상태dddd", isLoggedIn);
-  }, [isLoggedIn]);
-  
 
   useEffect(() => {
     axios
