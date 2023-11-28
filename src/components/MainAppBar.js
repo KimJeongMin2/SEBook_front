@@ -44,13 +44,14 @@ function MainAppBar() {
         console.log("myInfo : " + response.data);
         setMyInfo(response.data);
         setIsLoggedIn(true);
-        console.log("로그인 상태",isLoggedIn)
+        console.log("로그인 상태", isLoggedIn)
       })
       .catch((error) => {
         console.error(error);
         setIsLoggedIn(false);
+        console.log("로그인 상태", isLoggedIn)
       });
-  }, []);
+  }, [isLoggedIn]);
 
   const logout = () => {
     axios
@@ -62,7 +63,7 @@ function MainAppBar() {
       });
   };
 
-  
+
 
   return (
     <AppBar position="fixed">

@@ -23,6 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import "../bookReportList.css";
+import { ToastContainer, toast } from "react-toastify";
 import Cookies from 'js-cookie';
 function createData(
   id,
@@ -94,7 +95,7 @@ function BookReportList() {
   const navigate = new useNavigate();
   const location = useLocation();
   const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
-
+  const [myInfo, setMyInfo] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
@@ -126,6 +127,22 @@ function BookReportList() {
       [id]: !likes[id],
     });
   };
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
 
   useEffect(() => {
     axios
@@ -176,21 +193,59 @@ function BookReportList() {
 
 
   const sendLikeBookReport = (bookReportNum) => {
-    axios.post("http://127.0.0.1:8000/bookReport/bookReportLike", {
-      reportNum: bookReportNum,
-    }, {
-      headers: {
-        'X-CSRFToken': csrftoken
-      },
-      withCredentials: true
-    })
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
+    if (!myInfo) {
+      toast.warning(
+        () => (
+          <div style={{ margin: '25px 0 0 10px' }}>
+            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+            <br />
+            <br />
+            <br />
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+              style={{
+                position: "absolute",
+                right: "10px",
+                bottom: "15px",
+                backgroundColor: "#EF9A9A",
+                color: "white",
+                border: "1px solid #EF9A9A",
+              }}
+            >
+              네
+            </Button>
+          </div>
+        ),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    } else {
+      axios.post("http://127.0.0.1:8000/bookReport/bookReportLike", {
+        reportNum: bookReportNum,
+      }, {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => {
+          console.log(response);
+          toggleLike(bookReportNum);
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
 
 
@@ -380,7 +435,6 @@ function BookReportList() {
                       <IconButton
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleLike(data.reportNum);
                           sendLikeBookReport(data.reportNum);
                           if (likes[data.reportNum]) {
                             sendDeleteLikeBookReport(data.reportNum);

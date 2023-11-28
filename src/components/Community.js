@@ -24,7 +24,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { ToastContainer, toast } from "react-toastify";
 function createData(id, title, paragraph, writer, date, like) {
   return { id, title, paragraph, writer, date, like };
 }
@@ -100,6 +100,21 @@ function Community({ PROXY }) {
   const [myInfo, setMyInfo] = useState();
   const [likedParagraphList, setLikedParagraphList] = useState([]);
   const [writtenParagraphList, setWrittenParagraphList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   useEffect(() => {
     axios
@@ -186,23 +201,61 @@ function Community({ PROXY }) {
   }, []);
 
   const sendLikeCommunity = (postNum) => {
-    axios
-      .post("http://127.0.0.1:8000/community/paragraphLike", {
-        postNum: postNum,
-      },
+    if (!myInfo) {
+      toast.warning(
+        () => (
+          <div style={{ margin: '25px 0 0 10px' }}>
+            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+            <br />
+            <br />
+            <br />
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+              style={{
+                position: "absolute",
+                right: "10px",
+                bottom: "15px",
+                backgroundColor: "#EF9A9A",
+                color: "white",
+                border: "1px solid #EF9A9A",
+              }}
+            >
+              네
+            </Button>
+          </div>
+        ),
         {
-          headers: {
-            'X-CSRFToken': csrftoken
-          },
-          withCredentials: true
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+
+    } else {
+      axios
+        .post("http://127.0.0.1:8000/community/paragraphLike", {
+          postNum: postNum,
+        },
+          {
+            headers: {
+              'X-CSRFToken': csrftoken
+            },
+            withCredentials: true
+          })
+        .then((response) => {
+          console.log(response);
+          window.location.reload();
         })
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const sendDeleteParagraph = (postNum) => {

@@ -117,7 +117,7 @@ function MainPage() {
   const [likedBookReportList, setLikedBookReportList] = useState([]);
   const [openRecommandBookDialog, setOpenRecommandBookDialog] = useState(false);
   const [openBookReportDialog, setOpenBookReportDialog] = useState(false);
-  
+
   const props = useSpring({
     from: { transform: 'translate3d(0px,0px,-800px)' },
     to: { transform: 'translate3d(0px,0px,0px)' },
@@ -138,6 +138,11 @@ function MainPage() {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  useEffect(() => {
+    console.log("상태 myInfo", myInfo);
+  }, [myInfo]);
+
 
   const settings = {
     arrows: true,
@@ -233,6 +238,7 @@ function MainPage() {
   };
 
   const sendLikeBook = (isbn13) => {
+    alert(myInfo);
     if (!myInfo) {
       toast.warning(
         () => (
@@ -588,7 +594,7 @@ function MainPage() {
                     {selectedRecommandBook.title}
                   </div>
                   <div style={{ marginBottom: "5px" }}>
-                  <span style={{ fontWeight: "bold" }}>작가명 | </span>
+                    <span style={{ fontWeight: "bold" }}>작가명 | </span>
                     {selectedRecommandBook.author}
                   </div>
                   <div style={{ fontSize: "15px" }}>
@@ -706,7 +712,7 @@ function MainPage() {
                     {selectedBook.title}
                   </div>
                   <div style={{ marginBottom: "5px" }}>
-                  <span style={{ fontWeight: "bold" }}>작가 | </span>
+                    <span style={{ fontWeight: "bold" }}>작가 | </span>
                     {selectedBook.author}
                   </div>
                   <div style={{ fontSize: "15px" }}>
@@ -828,7 +834,7 @@ function MainPage() {
                     {selectedBookReport.writer}
                   </div>
                   <div>
-                  <span style={{ fontWeight: "bold" }}>내용 | </span>
+                    <span style={{ fontWeight: "bold" }}>내용 | </span>
                     {selectedBookReport.reportContents}
                   </div>
                 </>
