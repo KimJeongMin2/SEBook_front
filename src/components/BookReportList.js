@@ -13,7 +13,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { ToastContainer, toast } from "react-toastify";
+
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -102,7 +102,6 @@ function BookReportList() {
   const [myInfo, setMyInfo] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  const [myInfo, setMyInfo] = useState();
   const { data, isError, isLoading, error } = useQuery('bookReports', fetchBookReports);
 
   useEffect(() => {
