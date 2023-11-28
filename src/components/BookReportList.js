@@ -96,7 +96,7 @@ function BookReportList() {
   const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
 
   const getPageData = () => {
     if (bookReportList) {
@@ -413,7 +413,7 @@ function BookReportList() {
               count={Math.ceil(bookReportList.length / itemsPerPage)}
               color="primary"
               style={{
-                margin: '-7px 0',
+                margin: '55px 0',
                 position: 'absolute',
                 bottom: 0,
                 left: '50%',

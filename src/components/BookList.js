@@ -268,6 +268,7 @@ function BookList() {
     setCurrentPage(value);
   };
 
+
   const getPageData = () => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;

@@ -476,7 +476,7 @@ function Community({ PROXY }) {
             count={Math.ceil(communityList.length / itemsPerPage)}
             color="primary"
             style={{
-              margin: "-7px 0",
+              margin: "33px 0",
               position: "absolute",
               bottom: 0,
               left: "50%",
@@ -492,6 +492,7 @@ function Community({ PROXY }) {
                 height: "30px",
                 backgroundColor: "#EF9A9A",
                 color: "#ffffff",
+
               }}
               onClick={() => {
                 navigate("/CommunityRegist");
