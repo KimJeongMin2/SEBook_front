@@ -428,6 +428,10 @@ function MainPage() {
   };
   const currentUser = myInfo?.userNum;
 
+  const truncate = (str, n) => {
+    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+  };
+
   return (
     <>
       <MainAppBar />
@@ -483,7 +487,7 @@ function MainPage() {
         <Typography
           sx={{
             fontWeight: "bold",
-            marginLeft: "160px",
+            marginLeft: "140px",
             fontSize: "20px",
             marginTop: "-28px",
           }}
@@ -542,6 +546,7 @@ function MainPage() {
                           sendLikeBook(data.isbn13);
                         }}
                       />
+                      <div style={{ marginLeft: '5px' }}>{data.like_num}</div>
                     </CardActions>
                   </Card>
                 </Grid>
@@ -608,7 +613,7 @@ function MainPage() {
         <Typography
           sx={{
             fontWeight: "bold",
-            marginLeft: "160px",
+            marginLeft: "140px",
             fontSize: "20px",
             marginTop: "10px",
           }}
@@ -663,6 +668,7 @@ function MainPage() {
                           sendLikeBook(data.isbn13);
                         }}
                       />
+                      <div style={{ marginLeft: '5px', fontSize: '15px' }}>{data.like_count}</div>
                     </IconButton>
                   </CardActions>
                 </Card>
@@ -726,7 +732,7 @@ function MainPage() {
         <Typography
           sx={{
             fontWeight: "bold",
-            marginLeft: "160px",
+            marginLeft: "140px",
             fontSize: "20px",
             marginTop: "50px",
           }}
@@ -751,8 +757,8 @@ function MainPage() {
                   style={{ width: "220px" }}
                 >
                   <CardHeader
-                    title={data.title}
-                    subheader={data.writer}
+                    title={data.reportTitle}
+                    subheader={data.title}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                   />
@@ -780,6 +786,10 @@ function MainPage() {
                         }}
                       />
                     </IconButton>
+                    <div style={{ display: 'flex' }}>
+                      <div style={{ marginLeft: '-5px', fontSize: '15px' }}>{data.like_count}</div>
+                      <div style={{ marginLeft: '80px' }}>by. {truncate(data.username, 3)}</div>
+                    </div>
                   </CardActions>
                 </Card>
               </Grid>
@@ -817,19 +827,33 @@ function MainPage() {
                 <>
                   <div
                     style={{
-                      fontSize: "18px",
-                      fontFamily: "bold",
                       marginBottom: "5px",
                     }}
                   >
-                    <span style={{ fontWeight: "bold" }}>도서명 | </span>
-                    {selectedBookReport.title}
+                    <span style={{ fontWeight: "bold", fontSize: '16px' }}>독후감 제목 | </span>
+                    <span style={{ fontSize: '16px' }}>{selectedBookReport.reportTitle}</span>
+                  </div>
+                  <div
+                    style={{
+                      marginBottom: "5px",
+                    }}
+                  >
+                    <span style={{ fontWeight: "bold", fontSize: '16px' }}>글쓴이 | </span>
+                    <span style={{ fontSize: '16px' }}>{selectedBookReport.username}</span>
+                  </div>
+                  <div
+                    style={{
+                      marginBottom: "5px",
+                    }}
+                  >
+                    <span style={{ fontWeight: "bold", fontSize: '16px' }}>도서명 | </span>
+                    <span style={{ fontSize: '16px' }}>{selectedBookReport.title}</span>
                   </div>
                   <div style={{ marginBottom: "5px" }}>
                     {selectedBookReport.writer}
                   </div>
                   <div>
-                    <span style={{ fontWeight: "bold" }}>내용 | </span>
+                    <span style={{ fontWeight: "bold", fontSize: '16px' }}>내용 | </span>
                     {selectedBookReport.reportContents}
                   </div>
                 </>

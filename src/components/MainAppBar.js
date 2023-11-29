@@ -92,7 +92,7 @@ function MainAppBar() {
           {isLoggedIn ? (
             <>
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} style={{ marginLeft: '40px' }}>
                   <Avatar alt="Remy Sharp" src="https://cdn-icons-png.flaticon.com/512/1361/1361876.png" />
                   <div style={{ marginLeft: "10px", fontSize: "15px" }}></div>
                 </IconButton>
