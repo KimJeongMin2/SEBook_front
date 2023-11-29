@@ -23,7 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import "../list.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 
 const Search = styled("div", {
@@ -94,6 +94,7 @@ function BookReportList() {
   const [writtenBookReportList, setWrittenBookReportList] = useState([]);
   const [likes, setLikes] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalPages, setTotalPages] = useState(0); // Add this line
 
   useEffect(() => {
     axios
@@ -111,17 +112,17 @@ function BookReportList() {
   }, []);
 
   useEffect(() => {
-    if (!bookReportList.length) {
-      axios
-        .get("http://127.0.0.1:8000/bookReport/bookReportReadAll")
-        .then((response) => {
-          console.log("bookReportList: " + response.data.allReports);
-          const bookReportData = response.data.allReports.reverse();
-          setBookReportList(bookReportData);
-        })
-        .catch((error) => console.error(error));
-    }
-  }, []); 
+    axios
+      .get(`http://127.0.0.1:8000/bookReport/bookReportReadAll?page=${currentPage}`)
+      .then((response) => {
+        console.log("resulttttt", response.data.results)
+        setBookReportList(response.data.results); 
+        console.log("dddd",response.data.total_pages)
+        setTotalPages(response.data.total_pages); 
+      })
+      .catch((error) => console.error(error));
+    },
+  []); 
   
 
   const getPageData = () => {
@@ -144,21 +145,6 @@ function BookReportList() {
       [id]: !likes[id],
     });
   };
-
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/user/memberSearch", {
-        headers: {
-          "X-CSRFToken": csrftoken,
-        },
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log("myInfo : " + response.data);
-        setMyInfo(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
 
   useEffect(() => {
     axios
@@ -419,7 +405,7 @@ function BookReportList() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {getPageData()?.map((data, index) => {
+              {bookReportList?.map((data, index) => {
                 const isUserLikeReportsLiked =
                   Array.isArray(likedBookReportList) &&
                   likedBookReportList.some(
@@ -606,17 +592,17 @@ function BookReportList() {
         >
           {bookReportList && (
             <Pagination
-              count={Math.ceil(bookReportList.length / itemsPerPage)}
-              color="primary"
-              style={{
-                margin: "45px 0",
-                position: "absolute",
-                bottom: 0,
-                left: "50%",
-                transform: "translateX(-50%)",
-              }}
-              onChange={handleChangePage}
-            />
+            count={totalPages}  // Use the total page number provided by the server
+            color="primary"
+            style={{
+              margin: "45px 0",
+              position: "absolute",
+              bottom: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+            onChange={handleChangePage}
+          />
           )}
           <Stack spacing={2} direction="row">
             <Button
