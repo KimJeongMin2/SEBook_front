@@ -8,7 +8,8 @@ import TableRow from "@mui/material/TableRow";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 import axios from "axios";
-
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
 import {
   Box,
   Card,
@@ -313,9 +314,9 @@ export default function MyPage() {
                     backgroundColor: "#F9F5F6",
                   }}
                 >
-                  <AssignmentIndIcon
-                    style={{ margin: "auto 10px", fontSize: "150px" }}
-                  ></AssignmentIndIcon>
+                  <IconButton style={{ margin: '0 0 0 10px' }}>
+                    <Avatar style={{ width: '100px', height: '100px' }} alt="Remy Sharp" src="https://cdn-icons-png.flaticon.com/512/1361/1361876.png" />
+                  </IconButton>
                   <div style={{ margin: "50px 0" }}>
                     <div style={{ margin: "10px" }}>이름 : {myInfo?.name}</div>
                     <div style={{ margin: "10px" }}>아이디 : {myInfo?.userId}</div>

@@ -1,0 +1,7 @@
+.list:hover {
+    background-color: #F8E8EE;
+}
+
+.like:hover {
+    cursor: pointer;
+}

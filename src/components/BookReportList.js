@@ -22,7 +22,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import "../bookReportList.css";
+import "../list.css";
 import { ToastContainer, toast } from "react-toastify";
 import Cookies from "js-cookie";
 
@@ -87,7 +87,7 @@ function BookReportList() {
   );
   const [myInfo, setMyInfo] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
   const [searchType, setSearchType] = useState("도서명");
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
   const [likedBookReportList, setLikedBookReportList] = useState([]);
@@ -347,7 +347,7 @@ function BookReportList() {
           }}
         >
           <div
-            style={{ marginTop: "35px", fontSize: "22px", fontWeight: "bold" }}
+            style={{ marginLeft: '50px', marginTop: "35px", fontSize: "22px", fontWeight: "bold" }}
           >
             독후감
           </div>
@@ -355,7 +355,7 @@ function BookReportList() {
             <StyledSelect
               sx={{
                 marginTop: "30px",
-                marginRight: "10px",
+                marginRight: "5px",
                 height: "35px",
                 fontSize: "13px",
               }}
@@ -371,7 +371,7 @@ function BookReportList() {
               </MenuItem>
             </StyledSelect>
             <Search
-              style={{ marginTop: "30px", height: "35px", marginLeft: "auto" }}
+              style={{ marginTop: "30px", height: "35px", marginLeft: "auto", marginRight: '35px' }}
             >
               <SearchIconWrapper>
                 <SearchIcon />
@@ -389,27 +389,27 @@ function BookReportList() {
         </div>
         <TableContainer
           component={Paper}
-          style={{ display: "flex", maxWidth: "70%", margin: "10px auto" }}
+          style={{ display: "flex", maxWidth: "72%", margin: "10px auto" }}
         >
           <Table sx={{ minWidth: 600 }} aria-label="simple table">
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
               <TableRow>
                 <TableCell style={{ width: "10px" }}>No</TableCell>
                 <TableCell style={{ width: "200px" }}>제목</TableCell>
-                <TableCell style={{ width: "150px" }}>도서명</TableCell>
-                <TableCell style={{ width: "50px", textAlign: " center" }}>
+                <TableCell style={{ width: "200px" }}>도서명</TableCell>
+                <TableCell style={{ width: "70px", textAlign: " center" }}>
                   작가
                 </TableCell>
-                <TableCell style={{ width: "50px", textAlign: " center" }}>
+                <TableCell style={{ width: "70px", textAlign: " center" }}>
                   출판사
                 </TableCell>
-                <TableCell style={{ width: "30px", textAlign: " center" }}>
+                <TableCell style={{ width: "50px", textAlign: " center" }}>
                   글쓴이
                 </TableCell>
-                <TableCell style={{ width: "40px", textAlign: " center" }}>
+                <TableCell style={{ width: "80px", textAlign: " center" }}>
                   등록일
                 </TableCell>
-                <TableCell style={{ textAlign: 'left', marginLeft: '-10px'  }}>
+                <TableCell style={{ width: '30px', textAlign: 'left', marginLeft: '-10px' }}>
                   공감
                 </TableCell>
               </TableRow>
@@ -435,7 +435,7 @@ function BookReportList() {
 
                 return (
                   <TableRow
-                    className="bookReportTable"
+                    className="list"
                     key={data.title}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
@@ -446,6 +446,7 @@ function BookReportList() {
                         width: "10px",
                         borderRight: "1px solid #F8E8EE",
                         textAlign: "center",
+
                       }}
                       onClick={() =>
                         navigate(`/BookReportDetail/${data.reportNum}`, {
@@ -453,7 +454,7 @@ function BookReportList() {
                         })
                       }
                     >
-                       {(currentPage - 1) * itemsPerPage + index + 1}
+                      {(currentPage - 1) * itemsPerPage + index + 1}
                     </TableCell>
                     <TableCell
                       component="th"
@@ -461,7 +462,7 @@ function BookReportList() {
                       style={{
                         width: "30px",
                         borderRight: "1px solid #F8E8EE",
-                        
+
                       }}
                       onClick={() =>
                         navigate(`/BookReportDetail/${data.reportNum}`, {
@@ -477,7 +478,7 @@ function BookReportList() {
                       style={{
                         width: "10px",
                         borderRight: "1px solid #F8E8EE",
-                      
+
                       }}
                       onClick={() =>
                         navigate(`/BookReportDetail/${data.reportNum}`, {
@@ -488,11 +489,11 @@ function BookReportList() {
                       {truncate(data.title, 20)}{" "}
                     </TableCell>
                     <TableCell
-                    style={{
-                      width: "10px",
-                      borderRight: "1px solid #F8E8EE",
-                      textAlign: "center",
-                    }}
+                      style={{
+                        width: "10px",
+                        borderRight: "1px solid #F8E8EE",
+                        textAlign: "center",
+                      }}
                       onClick={() =>
                         navigate(`/BookReportDetail/${data.reportNum}`, {
                           state: rowData,
@@ -502,11 +503,11 @@ function BookReportList() {
                       {truncate(data.author, 5)}
                     </TableCell>
                     <TableCell
-                    style={{
-                      width: "10px",
-                      borderRight: "1px solid #F8E8EE",
-                      textAlign: "center",
-                    }}
+                      style={{
+                        width: "10px",
+                        borderRight: "1px solid #F8E8EE",
+                        textAlign: "center",
+                      }}
                       onClick={() =>
                         navigate(`/BookReportDetail/${data.reportNum}`, {
                           state: rowData,
@@ -516,32 +517,32 @@ function BookReportList() {
                       {truncate(data.publisher, 5)}
                     </TableCell>
                     <TableCell
-                    style={{
-                      width: "3px",
-                      borderRight: "1px solid #F8E8EE",
-                      textAlign: "center",
-                    }}
+                      style={{
+                        width: "3px",
+                        borderRight: "1px solid #F8E8EE",
+                        textAlign: "center",
+                      }}
                       onClick={() =>
                         navigate(`/BookReportDetail/${data.reportNum}`, {
                           state: rowData,
                         })
                       }
-                    
+
                     >
-                      {data.username}
+                      {truncate(data.username, 3)}
                     </TableCell>
                     <TableCell
-                    style={{
-                      width: "10px",
-                      borderRight: "1px solid #F8E8EE",
-                      textAlign: "center",
-                    }}
+                      style={{
+                        width: "10px",
+                        borderRight: "1px solid #F8E8EE",
+                        textAlign: "center",
+                      }}
                       onClick={() =>
                         navigate(`/BookReportDetail/${data.reportNum}`, {
                           state: rowData,
                         })
                       }
-                      
+
                     >
                       {data.registDate_report.split("T")[0]}
                     </TableCell>
@@ -604,7 +605,7 @@ function BookReportList() {
               count={Math.ceil(bookReportList.length / itemsPerPage)}
               color="primary"
               style={{
-                margin: "-7px 0",
+                margin: "45px 0",
                 position: "absolute",
                 bottom: 0,
                 left: "50%",
@@ -621,7 +622,7 @@ function BookReportList() {
                 height: "30px",
                 backgroundColor: "#EF9A9A",
                 color: "#ffffff",
-                marginTop: "-10px",
+                marginLeft: "40px",
               }}
               onClick={() => {
                 navigate("/BookReportRegist");

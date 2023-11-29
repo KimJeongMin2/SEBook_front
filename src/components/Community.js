@@ -24,6 +24,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 import DeleteIcon from "@mui/icons-material/Delete";
+import "../list.css";
 import { ToastContainer, toast } from "react-toastify";
 function createData(id, title, paragraph, writer, date, like) {
   return { id, title, paragraph, writer, date, like };
@@ -154,7 +155,7 @@ function Community({ PROXY }) {
       return [];
     }
   };
-  
+
 
   useEffect(() => {
     axios
@@ -282,7 +283,7 @@ function Community({ PROXY }) {
     } else {
       alert("취소합니다.");
     }
-}
+  }
 
 
   // Function to toggle the like status for a specific row
@@ -376,7 +377,7 @@ function Community({ PROXY }) {
             <StyledSelect
               sx={{
                 marginTop: "30px",
-                marginRight: "10px",
+                marginRight: "5px",
                 height: "35px",
                 fontSize: "13px",
               }}
@@ -432,6 +433,7 @@ function Community({ PROXY }) {
 
                   return (
                     <TableRow
+                      className="list"
                       key={data.title}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                       onClick={() => handleOpen(data)}
@@ -486,10 +488,12 @@ function Community({ PROXY }) {
                       <TableCell style={{ width: "90px", textAlign: "center" }}>
                         {data.registDate_community.split('T')[0]}
                       </TableCell>
-                      <TableCell style={{ display: 'flex', width: "50px", textAlign: "center" }}>
+                      <TableCell
+                        style={{ display: 'flex', width: "50px", textAlign: "center" }}>
                         <div>
                           {isUserLikeParagraph ? (
                             <FavoriteIcon
+                              className="like"
                               style={{ color: "#EF9A9A" }}
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -498,6 +502,7 @@ function Community({ PROXY }) {
                             />
                           ) : (
                             <FavoriteBorderIcon
+                              className="like"
                               style={{ color: "#EF9A9A" }}
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -510,6 +515,7 @@ function Community({ PROXY }) {
                         {isUserWriteParagraph ?
                           (
                             <DeleteIcon
+                              className="like"
                               style={{ margin: '10px 0 0 10px', color: "#FF9999" }}
                               onClick={(e) => {
                                 e.stopPropagation();

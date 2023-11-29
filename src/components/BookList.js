@@ -331,7 +331,7 @@ function BookList() {
             <StyledSelect
               sx={{
                 marginTop: "30px",
-                marginRight: "10px",
+                marginRight: "5px",
                 height: "35px",
                 fontSize: "13px",
               }}
