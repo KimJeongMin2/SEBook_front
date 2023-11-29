@@ -90,7 +90,8 @@ function Community({ PROXY }) {
 
   const [communityList, setCommunityList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 5; 
+  const [totalPages, setTotalPages] = useState(0); 
 
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
@@ -147,32 +148,28 @@ function Community({ PROXY }) {
     setCurrentPage(value);
   };
 
-  const getPageData = () => {
-    if (communityList) {
-      const start = (currentPage - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      return communityList.slice(start, end);
-    } else {
-      return [];
-    }
-  };
 
   useEffect(() => {
+    setCommunityList([]);
     axios
-      .get("http://127.0.0.1:8000/community/paragraphReadAll")
+      .get(`http://127.0.0.1:8000/community/paragraphReadAll?page=${currentPage}`)
       .then((response) => {
         console.log(response.data);
-        const sortedData = response.data.allPosts.sort((a, b) => {
-          return new Date(b.date) - new Date(a.date);
-        });
-        setCommunityList(sortedData || []);
+        // const sortedData = response.data.results.sort((a, b) => { 
+        //   return new Date(b.date) - new Date(a.date);
+        // });
+        console.log("rrr", response.data.results);
+        setCommunityList(response.data.results);
+        console.log("rrrPage", response.data.total_pages);
+        setTotalPages(response.data.total_pages); 
         const likedPostIds = response.data.userLikeReports;
         setLikeStatus(
           likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {})
         );
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [currentPage]); 
+
   
 
   useEffect(() => {
@@ -437,7 +434,7 @@ function Community({ PROXY }) {
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
               {communityList && communityList.length > 0 ? (
-                getPageData()?.map((data, index) => {
+                communityList?.map((data, index) => {
                   const isUserLikeParagraph =
                     Array.isArray(likedParagraphList) &&
                     likedParagraphList.some((post) => data.postNum === post);
@@ -562,7 +559,7 @@ function Community({ PROXY }) {
         </TableContainer>
         <div style={{ display: "flex", maxWidth: "70%", margin: "0 auto" }}>
           <Pagination
-            count={Math.ceil(communityList.length / itemsPerPage)}
+            count={totalPages}
             color="primary"
             style={{
               margin: "33px 0",
