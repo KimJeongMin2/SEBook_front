@@ -56,6 +56,7 @@ export default function SignUp({ PROXY }) {
   const [id, setId] = useState();
   const [pw, setPw] = useState();
   const [pwCheck, setPwCheck] = useState()
+  const [agree, setAgree] = useState(false);
 
   const submit = async () => {
     const userInfo = {
@@ -64,7 +65,7 @@ export default function SignUp({ PROXY }) {
       password: pw,
     };
 
-    if (pw === pwCheck) {
+    if (pw === pwCheck && agree === true) {
       try {
         const res = await axios.post(
           "http://127.0.0.1:8000/user/memberReg",
@@ -88,6 +89,8 @@ export default function SignUp({ PROXY }) {
       alert("비밀번호 확인을 하세요.")
     } else if (pw !== pwCheck) {
       alert("비밀번호가 일치하지 않습니다.")
+    } else if (agree === false) {
+      alert("개인정보 이용에 동의해야 합니다.")
     } else {
       alert("등록에 실패했습니다. 다시 시도해주세요.")
     }
@@ -184,7 +187,11 @@ export default function SignUp({ PROXY }) {
                 <Grid item xs={12} style={{ margin: '-10px 0 -20px' }}>
                   <FormControlLabel
                     control={
-                      <Checkbox value="allowExtraEmails" color="primary" />
+                      <Checkbox
+                        value="allowExtraEmails"
+                        color="primary"
+                        checked={agree}
+                        onChange={(e) => setAgree(e.target.checked)} />
                     }
                     label="개인정보 이용에 동의 합니다."
                   />
