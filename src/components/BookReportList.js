@@ -112,28 +112,19 @@ function BookReportList() {
   }, []);
 
   useEffect(() => {
+    setBookReportList([]);
     axios
       .get(`http://127.0.0.1:8000/bookReport/bookReportReadAll?page=${currentPage}`)
       .then((response) => {
-        console.log("resulttttt", response.data.results)
-        setBookReportList(response.data.results); 
-        console.log("dddd",response.data.total_pages)
+        console.log("resulttttt", response.data.results);
+        setBookReportList(response.data.results);
+        console.log("dddd",response.data.total_pages);
         setTotalPages(response.data.total_pages); 
       })
       .catch((error) => console.error(error));
-    },
-  []); 
-  
+  }, [currentPage]);
 
-  // const getPageData = () => {
-  //   if (bookReportList) {
-  //     const start = (currentPage - 1) * itemsPerPage;
-  //     const end = start + itemsPerPage;
-  //     return bookReportList.slice(start, end);
-  //   } else {
-  //     return [];
-  //   }
-  // };
+
 
   const handleChangePage = (event, value) => {
     setCurrentPage(value);
@@ -592,7 +583,7 @@ function BookReportList() {
         >
           {bookReportList && (
             <Pagination
-            count={totalPages}  // Use the total page number provided by the server
+            count={totalPages} 
             color="primary"
             style={{
               margin: "45px 0",
