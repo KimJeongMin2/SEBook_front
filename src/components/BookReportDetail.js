@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppBar, Box, Card, CardActions, CardHeader, CardMedia, Grid, IconButton, InputBase, Pagination, Toolbar, Typography } from "@mui/material";
 import TabBar from "./TabBar";
 import MainAppBar from "./MainAppBar";
@@ -9,10 +9,9 @@ import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import Cookies from 'js-cookie';
 const Search = styled("div", {
     shouldForwardProp: (prop) => prop !== "theme",
@@ -58,13 +57,32 @@ const StyledInputBase = styled(InputBase, {
 const csrftoken = Cookies.get('csrftoken');
 function BookReportDetail({ PROXY }) {
     const location = useLocation();
+    const [likes, setLikes] = useState({});
     const navigate = useNavigate();
 
-    const [isSelectedLike, setIsSelectedLike] = useState(false);
+    const [isSelectedLike, setIsSelectedLike] = useState(location.state.isUserLikeReportsLiked);
+
+    const [likeCount, setLikeCount] = useState(location.state.like_count);
 
     const selectLike = () => {
         setIsSelectedLike(!isSelectedLike)
     }
+    const [myInfo, setMyInfo] = useState();
+
+    useEffect(() => {
+        axios
+          .get("http://127.0.0.1:8000/user/memberSearch", {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          })
+          .then((response) => {
+            console.log("myInfo : " + response.data);
+            setMyInfo(response.data);
+          })
+          .catch((error) => console.error(error));
+      }, []);
 
     const sendDeleteBook = (reportNum) => {
         if (window.confirm("삭제하시겠습니까?")) {
@@ -87,40 +105,92 @@ function BookReportDetail({ PROXY }) {
     }
 
     const sendDeleteLikeBookReport = (reportNum) => {
-        axios.delete("http://127.0.0.1:8000/bookReport/bookReportLike", {
+        if (window.confirm("삭제하시겠습니까?")) {
+        axios.delete("http://127.0.0.1:8000/bookReport/bookReportDelete", {
             params: {
                 reportNum: reportNum,
-                userNum: 1
-            }
-        })
-            .then((response) => {
-                console.log(response);
-                window.location.reload();
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    const sendLikeBookReport = (reportNum) => {
-        axios.post("http://127.0.0.1:8000/bookReport/bookReportLike", {
-            reportNum: reportNum,
-            // userNum: 1
-        },{
-            headers: {
-              'X-CSRFToken': csrftoken 
             },
-            withCredentials: true
-          })
+            headers: {
+                "X-CSRFToken": csrftoken,
+              },
+              withCredentials: true,
+            })
             .then((response) => {
                 console.log(response);
-                window.location.reload();
+                setIsSelectedLike(false);
+                setLikeCount(prevCount => prevCount - 1);
+                navigate("/BookReportList");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }}
+
+    const sendLikeBookReport = (bookReportNum) => {
+        if (!myInfo) {
+          toast.warning(
+            () => (
+              <div>
+                로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+                <br />
+                <br />
+                <br />
+                <Button
+                  color="inherit"
+                  size="small"
+                  onClick={() => navigate("/signin")}
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    bottom: "15px",
+                    backgroundColor: "#EF9A9A",
+                    color: "white",
+                    border: "1px solid #EF9A9A",
+                  }}
+                >
+                  네
+                </Button>
+              </div>
+            ),
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            }
+          );
+        } else {
+          axios
+            .post(
+              "http://127.0.0.1:8000/bookReport/bookReportLike",
+              {
+                reportNum: bookReportNum,
+              },
+              {
+                headers: {
+                  "X-CSRFToken": csrftoken,
+                },
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+                if (response.status === 200 || response.status === 201) {
+                    setLikes((likes) => ({
+                    ...likes,
+                    [bookReportNum]: !likes[bookReportNum],
+                    }));
+                    setIsSelectedLike(!isSelectedLike);
+                    setLikeCount(likeCount => isSelectedLike ? likeCount - 1 : likeCount + 1);
+                }
             })
             .catch((error) => {
                 console.log(error);
             });
     }
+};
 
     return (
         <>
@@ -167,32 +237,31 @@ function BookReportDetail({ PROXY }) {
                                     <Button
                                         variant="contained"
                                         style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
-                                        onClick={() => sendDeleteBook(location.state.reportNum)}
+                                        onClick={() => sendDeleteLikeBookReport(location.state.reportNum)}
                                     >
                                         삭제
                                     </Button>
                                 </>
                             }
                             <div>
-                                {isSelectedLike || location.state.isUserLikeReportsLiked ?
+                                {isSelectedLike?
                                     <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            selectLike();
-                                            sendDeleteLikeBookReport(location.state.reportNum);
+                                            
+                                            sendLikeBookReport(location.state.reportNum);
                                         }}
                                     ></FavoriteIcon>
                                     : <FavoriteBorderIcon
                                         style={{ fontSize: '30px', color: '#EF9A9A' }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            selectLike();
+                                            
                                             sendLikeBookReport(location.state.reportNum);
                                         }}>
                                     </FavoriteBorderIcon>}
-                                <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>{location.state.like_count}</div>
+                                <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>{likeCount}</div>
                             </div>
-                            <ShareIcon style={{ fontSize: '35px' }}></ShareIcon>
                         </div>
                     </div>
                 </div>
