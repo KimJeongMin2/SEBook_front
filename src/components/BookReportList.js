@@ -87,7 +87,7 @@ function BookReportList() {
   );
   const [myInfo, setMyInfo] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 5;
   const [searchType, setSearchType] = useState("도서명");
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
   const [likedBookReportList, setLikedBookReportList] = useState([]);
@@ -111,15 +111,18 @@ function BookReportList() {
   }, []);
 
   useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/bookReport/bookReportReadAll")
-      .then((response) => {
-        console.log("bookReportList: " + response.data.allReports);
-        const bookReportData = response.data.allReports.reverse();
-        setBookReportList(bookReportData);
-      })
-      .catch((error) => console.error(error));
-  }, [currentPage]);
+    if (!bookReportList.length) {
+      axios
+        .get("http://127.0.0.1:8000/bookReport/bookReportReadAll")
+        .then((response) => {
+          console.log("bookReportList: " + response.data.allReports);
+          const bookReportData = response.data.allReports.reverse();
+          setBookReportList(bookReportData);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, []); 
+  
 
   const getPageData = () => {
     if (bookReportList) {
@@ -257,6 +260,7 @@ function BookReportList() {
   };
 
   const sendDeleteLikeBookReport = (bookReportNum) => {
+    if (window.confirm("삭제하시겠습니까?")) {
     axios
       .delete("http://127.0.0.1:8000/bookReport/bookReportDelete", {
         params: {
@@ -274,7 +278,7 @@ function BookReportList() {
       .catch((error) => {
         console.log(error);
       });
-  };
+  };}
 
   const searchBookByTitle = () => {
     axios

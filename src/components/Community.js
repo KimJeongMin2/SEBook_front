@@ -22,7 +22,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "../list.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -83,7 +83,7 @@ const StyledSelect = styled(Select, {
   },
 }));
 
-const csrftoken = Cookies.get('csrftoken');
+const csrftoken = Cookies.get("csrftoken");
 
 function Community({ PROXY }) {
   const navigate = new useNavigate();
@@ -101,6 +101,7 @@ function Community({ PROXY }) {
   const [myInfo, setMyInfo] = useState();
   const [likedParagraphList, setLikedParagraphList] = useState([]);
   const [writtenParagraphList, setWrittenParagraphList] = useState([]);
+  const [isUserLikeModalContent, setIsUserLikeModalContent] = useState(false);
 
   useEffect(() => {
     axios
@@ -121,14 +122,13 @@ function Community({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/user/memberSearch", {
         headers: {
-          'X-CSRFToken': csrftoken
+          "X-CSRFToken": csrftoken,
         },
-        withCredentials: true
+        withCredentials: true,
       })
       .then((response) => {
         console.log("myInfo : " + response.data);
         setMyInfo(response.data);
-
       })
       .catch((error) => console.error(error));
   }, []);
@@ -136,6 +136,7 @@ function Community({ PROXY }) {
   const handleOpen = (content) => {
     setOpen(true);
     setModalContent(content);
+    setIsUserLikeModalContent(likedParagraphList?.includes(content.postNum));
   };
 
   const handleClose = () => {
@@ -156,31 +157,36 @@ function Community({ PROXY }) {
     }
   };
 
-
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/community/paragraphReadAll")
       .then((response) => {
         console.log(response.data);
-        setCommunityList(response.data.allPosts || []);
+        const sortedData = response.data.allPosts.sort((a, b) => {
+          return new Date(b.date) - new Date(a.date);
+        });
+        setCommunityList(sortedData || []);
         const likedPostIds = response.data.userLikeReports;
-        setLikeStatus(likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
+        setLikeStatus(
+          likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {})
+        );
       })
       .catch((error) => console.error(error));
   }, []);
+  
 
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/community/paragraphReadLike", {
         headers: {
-          'X-CSRFToken': csrftoken
+          "X-CSRFToken": csrftoken,
         },
-        withCredentials: true
+        withCredentials: true,
       })
       .then((response) => {
         const likeParagraphList = response.data.savedCommunityList;
 
-        const postNums = likeParagraphList.map(post => post.postNum);
+        const postNums = likeParagraphList.map((post) => post.postNum);
         setLikedParagraphList(postNums);
       })
       .catch((error) => console.error(error));
@@ -190,14 +196,14 @@ function Community({ PROXY }) {
     axios
       .get("http://127.0.0.1:8000/community/paragraphReadMy", {
         headers: {
-          'X-CSRFToken': csrftoken
+          "X-CSRFToken": csrftoken,
         },
-        withCredentials: true
+        withCredentials: true,
       })
       .then((response) => {
         const writtenParagraphList = response.data.userCommunityList;
 
-        const postNums = writtenParagraphList.map(post => post.postNum);
+        const postNums = writtenParagraphList.map((post) => post.postNum);
         setWrittenParagraphList(postNums);
       })
       .catch((error) => console.error(error));
@@ -207,7 +213,7 @@ function Community({ PROXY }) {
     if (!myInfo) {
       toast.warning(
         () => (
-          <div style={{ margin: '25px 0 0 10px' }}>
+          <div style={{ margin: "25px 0 0 10px" }}>
             로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
             <br />
             <br />
@@ -239,18 +245,20 @@ function Community({ PROXY }) {
           progress: undefined,
         }
       );
-
     } else {
       axios
-        .post("http://127.0.0.1:8000/community/paragraphLike", {
-          postNum: postNum,
-        },
+        .post(
+          "http://127.0.0.1:8000/community/paragraphLike",
+          {
+            postNum: postNum,
+          },
           {
             headers: {
-              'X-CSRFToken': csrftoken
+              "X-CSRFToken": csrftoken,
             },
-            withCredentials: true
-          })
+            withCredentials: true,
+          }
+        )
         .then((response) => {
           console.log(response);
           window.location.reload();
@@ -266,12 +274,12 @@ function Community({ PROXY }) {
       axios
         .delete("http://127.0.0.1:8000/community/paragraphDelete", {
           headers: {
-            'X-CSRFToken': csrftoken
+            "X-CSRFToken": csrftoken,
           },
           params: {
             postNum: postNum,
           },
-          withCredentials: true
+          withCredentials: true,
         })
         .then((response) => {
           console.log(response);
@@ -283,8 +291,7 @@ function Community({ PROXY }) {
     } else {
       alert("취소합니다.");
     }
-  }
-
+  };
 
   // Function to toggle the like status for a specific row
   const toggleLike = (id) => {
@@ -296,7 +303,6 @@ function Community({ PROXY }) {
       sendLikeCommunity(id);
     }
   };
-
 
   const searchParagraphByAuthor = () => {
     axios
@@ -319,7 +325,7 @@ function Community({ PROXY }) {
 
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
-  }
+  };
 
   const searchParagraphByTitle = () => {
     axios
@@ -417,19 +423,27 @@ function Community({ PROXY }) {
             <TableHead style={{ backgroundColor: "#F8E8EE" }}>
               <TableRow>
                 <TableCell>No</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>도서명</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>인상깊은 구절</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>글쓴이</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>작가명</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>등록일</TableCell>
-                <TableCell style={{ textAlign: 'left', marginLeft: '-10px' }}>공감</TableCell>
+                <TableCell style={{ textAlign: "center" }}>도서명</TableCell>
+                <TableCell style={{ textAlign: "center" }}>
+                  인상깊은 구절
+                </TableCell>
+                <TableCell style={{ textAlign: "center" }}>글쓴이</TableCell>
+                <TableCell style={{ textAlign: "center" }}>작가명</TableCell>
+                <TableCell style={{ textAlign: "center" }}>등록일</TableCell>
+                <TableCell style={{ textAlign: "left", marginLeft: "-10px" }}>
+                  공감
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
               {communityList && communityList.length > 0 ? (
                 getPageData()?.map((data, index) => {
-                  const isUserLikeParagraph = Array.isArray(likedParagraphList) && likedParagraphList.some((post) => data.postNum === post);
-                  const isUserWriteParagraph = Array.isArray(writtenParagraphList) && writtenParagraphList.some((post) => data.postNum === post);
+                  const isUserLikeParagraph =
+                    Array.isArray(likedParagraphList) &&
+                    likedParagraphList.some((post) => data.postNum === post);
+                  const isUserWriteParagraph =
+                    Array.isArray(writtenParagraphList) &&
+                    writtenParagraphList.some((post) => data.postNum === post);
 
                   return (
                     <TableRow
@@ -486,10 +500,15 @@ function Community({ PROXY }) {
                         {truncate(data.author, 6)}
                       </TableCell>
                       <TableCell style={{ width: "90px", textAlign: "center" }}>
-                        {data.registDate_community.split('T')[0]}
+                        {data.registDate_community.split("T")[0]}
                       </TableCell>
                       <TableCell
-                        style={{ display: 'flex', width: "50px", textAlign: "center" }}>
+                        style={{
+                          display: "flex",
+                          width: "50px",
+                          textAlign: "center",
+                        }}
+                      >
                         <div>
                           {isUserLikeParagraph ? (
                             <FavoriteIcon
@@ -510,19 +529,25 @@ function Community({ PROXY }) {
                               }}
                             />
                           )}
-                          <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
+                          <div style={{ marginTop: "-5px" }}>
+                            {data.like_count}
+                          </div>
                         </div>
-                        {isUserWriteParagraph ?
-                          (
-                            <DeleteIcon
-                              className="like"
-                              style={{ margin: '10px 0 0 10px', color: "#FF9999" }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                sendDeleteParagraphMy(data.postNum);
-                              }}
-                            />
-                          ) : (<></>)}
+                        {isUserWriteParagraph ? (
+                          <DeleteIcon
+                            className="like"
+                            style={{
+                              margin: "10px 0 0 10px",
+                              color: "#FF9999",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              sendDeleteParagraphMy(data.postNum);
+                            }}
+                          />
+                        ) : (
+                          <></>
+                        )}
                       </TableCell>
                     </TableRow>
                   );
@@ -556,7 +581,6 @@ function Community({ PROXY }) {
                 height: "30px",
                 backgroundColor: "#EF9A9A",
                 color: "#ffffff",
-
               }}
               onClick={() => {
                 navigate("/CommunityRegist");
@@ -598,7 +622,8 @@ function Community({ PROXY }) {
             }}
           >
             <div>구절 정보</div>
-            {likeStatus[modalContent.postNum] ? (
+
+            {isUserLikeModalContent ? (
               <FavoriteIcon
                 style={{ color: "#EF9A9A" }}
                 onClick={(e) => {

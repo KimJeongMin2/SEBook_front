@@ -233,7 +233,6 @@ function MainPage() {
   };
 
   const sendLikeBook = (isbn13) => {
-    alert(myInfo);
     if (!myInfo) {
       toast.warning(
         () => (

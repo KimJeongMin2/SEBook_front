@@ -20,13 +20,14 @@ import { styled, useTheme } from "@mui/material/styles";
 import { useLocation } from "react-router";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-
+import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import axios from "axios";
+import Cookies from "js-cookie";
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
 })(({ theme }) => ({
@@ -68,16 +69,102 @@ const StyledInputBase = styled(InputBase, {
   },
 }));
 
-function BookDetail({ PROXY }) {
+const csrftoken = Cookies.get("csrftoken");
+
+function BookDetail() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [myInfo, setMyInfo] = useState();
 
-  const [isSelectedLike, setIsSelectedLike] = useState(false);
+  const [isSelectedLike, setIsSelectedLike] = useState(
+    location.state.isUserLikeBook
+  );
 
+  const [likes, setLikes] = useState({});
   const selectLike = () => {
     setIsSelectedLike(!isSelectedLike);
   };
+  const [likeCount, setLikeCount] = useState(location.state.num_likes);
 
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const sendLikeBook = (isbn13) => {
+    if (!myInfo) {
+      toast.warning(
+        () => (
+          <div style={{ margin: "25px 0 0 10px" }}>
+            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+            <br />
+            <br />
+            <br />
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+              style={{
+                position: "absolute",
+                right: "10px",
+                bottom: "15px",
+                backgroundColor: "#EF9A9A",
+                color: "white",
+                border: "1px solid #EF9A9A",
+              }}
+            >
+              네
+            </Button>
+          </div>
+        ),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    } else {
+      axios
+        .post(
+          "http://127.0.0.1:8000/book/bookLike",
+          {
+            isbn13: isbn13,
+          },
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          if (response.status === 200 || response.status === 201) {
+            const newSelectedLike = !isSelectedLike;
+            setIsSelectedLike(newSelectedLike);
+            setLikeCount((prevCount) =>
+              newSelectedLike ? prevCount + 1 : prevCount - 1
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
   return (
     <>
       <MainAppBar />
@@ -123,7 +210,6 @@ function BookDetail({ PROXY }) {
           <div style={{ margin: "0 0px 0 20px", width: "620px" }}>
             <div
               style={{
-
                 margin: "5px",
                 justifyContent: "space-between",
               }}
@@ -148,7 +234,8 @@ function BookDetail({ PROXY }) {
               }}
             >
               <div>
-                {location.state.author} | {location.state.publisher} | {location.state.pubDate}
+                {location.state.author} | {location.state.publisher} |{" "}
+                {location.state.pubDate}
               </div>
               <div>{location.state.priceStandard} 원</div>
             </div>
@@ -243,16 +330,15 @@ function BookDetail({ PROXY }) {
               </Stack>
               <div style={{ display: "flex", margin: "5px 5px 0 0px" }}>
                 <div>
-                  {isSelectedLike || location.state.isUserLikeBook ? (
+                  {isSelectedLike ? (
                     <FavoriteIcon
                       style={{ fontSize: "30px", color: "#EF9A9A" }}
-                      onClick={selectLike}
+                      onClick={() => sendLikeBook(location.state.isbn13)}
                     ></FavoriteIcon>
                   ) : (
                     <FavoriteBorderIcon
                       style={{ fontSize: "30px", color: "#EF9A9A" }}
-                      onClick={selectLike}
-
+                      onClick={() => sendLikeBook(location.state.isbn13)}
                     ></FavoriteBorderIcon>
                   )}
                   <div
@@ -262,7 +348,7 @@ function BookDetail({ PROXY }) {
                       fontSize: "13px",
                     }}
                   >
-                    {location.state.num_likes}
+                    {likeCount}
                   </div>
                 </div>
               </div>
