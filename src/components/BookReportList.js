@@ -212,6 +212,7 @@ function BookReportList() {
         }
       );
     } else {
+      toggleLike(bookReportNum);
       axios
         .post(
           "http://127.0.0.1:8000/bookReport/bookReportLike",
@@ -536,7 +537,6 @@ function BookReportList() {
                               onClick={(e) => {
                                 e.stopPropagation();
                                 sendLikeBookReport(data.reportNum);
-                                toggleLike(data.reportNum);
                                 if (likes[data.reportNum]) {
                                   sendDeleteLikeBookReport(data.reportNum);
                                 }

@@ -269,6 +269,7 @@ function MainPage() {
         }
       );
     } else {
+      toggleLike(isbn13);
       axios
         .post(
           "http://127.0.0.1:8000/book/bookLike",
@@ -541,7 +542,6 @@ function MainPage() {
                         }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleLike(data.isbn13);
                           sendLikeBook(data.isbn13);
                         }}
                       />
@@ -614,7 +614,7 @@ function MainPage() {
             fontWeight: "bold",
             marginLeft: "140px",
             fontSize: "20px",
-            marginTop: "10px",
+            marginTop: "50px",
           }}
         >
           좋아요 많이 받은 도서 Top5!
