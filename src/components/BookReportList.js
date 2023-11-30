@@ -261,13 +261,16 @@ function BookReportList() {
 
   const searchBookByTitle = () => {
     axios
-      .get(`http://127.0.0.1:8000/bookReport/bookReportSearch`, {
+      .get(`http://127.0.0.1:8000/bookReport/bookReportSearch?page=${currentPage}`, {
         params: {
           title: searchTerm,
         },
       })
       .then((response) => {
-        setBookReportList(response.data.bookReportList);
+        console.log("rrr", response.data.results);
+        setBookReportList(response.data.results);
+        console.log("rrrPage", response.data.total_pages);
+        setTotalPages(response.data.total_pages); 
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -280,13 +283,16 @@ function BookReportList() {
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://127.0.0.1:8000/bookReport/bookReportSearchByAuthor`, {
+      .get(`http://127.0.0.1:8000/bookReport/bookReportSearchByAuthor?page=${currentPage}`, {
         params: {
           author: searchTerm,
         },
       })
       .then((response) => {
-        setBookReportList(response.data.bookReportList);
+        console.log("rrr", response.data.results);
+        setBookReportList(response.data.results);
+        console.log("rrrPage", response.data.total_pages);
+        setTotalPages(response.data.total_pages); 
       })
       .catch((error) => {
         if (error.response.status === 404) {

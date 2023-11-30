@@ -135,7 +135,7 @@ function MainAppBar() {
               </Menu>
             </>
           ) : (
-            <div style={{ display: "flex", marginRight: "100px" }}>
+            <div style={{ display: "flex", marginRight: "40px" }}>
               <Button
                 variant="contained"
                 style={{
