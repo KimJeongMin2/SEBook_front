@@ -18,6 +18,7 @@ import MainAppBar from "./MainAppBar";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, useTheme } from "@mui/material/styles";
 import { useLocation } from "react-router";
+import { Link } from 'react-router-dom';
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { ToastContainer, toast } from "react-toastify";
@@ -265,22 +266,21 @@ function BookDetail() {
                 도서 DB 제공 : 알라딘 인터넷 서점(www.aladin.co.kr)
               </div>
               <Stack spacing={0} direction="row">
-                <Button
-                  variant="contained"
-                  style={{
-                    marginTop: "10px",
-                    marginRight: "5px",
-                    width: "100px",
-                    height: "30px",
-                    backgroundColor: "#EF9A9A",
-                    color: "#ffffff",
-                  }}
-                  onClick={() => {
-                    navigate("/");
-                  }}
-                >
-                  구매하기
-                </Button>
+                <Link to={location.state.link}>
+                  <Button
+                    variant="contained"
+                    style={{
+                      marginTop: "10px",
+                      marginRight: "5px",
+                      width: "100px",
+                      height: "30px",
+                      backgroundColor: "#EF9A9A",
+                      color: "#ffffff",
+                    }}
+                  >
+                    구매하기
+                  </Button>
+                </Link>
                 <Button
                   variant="contained"
                   style={{
