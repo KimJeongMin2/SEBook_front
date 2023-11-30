@@ -119,20 +119,20 @@ function Community({ PROXY }) {
       .catch((error) => console.error(error));
   }, []);
 
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/user/memberSearch", {
-        headers: {
-          "X-CSRFToken": csrftoken,
-        },
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log("myInfo : " + response.data);
-        setMyInfo(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("http://127.0.0.1:8000/user/memberSearch", {
+  //       headers: {
+  //         "X-CSRFToken": csrftoken,
+  //       },
+  //       withCredentials: true,
+  //     })
+  //     .then((response) => {
+  //       console.log("myInfo : " + response.data);
+  //       setMyInfo(response.data);
+  //     })
+  //     .catch((error) => console.error(error));
+  // }, []);
 
   const handleOpen = (content) => {
     setOpen(true);
