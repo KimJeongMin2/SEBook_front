@@ -142,10 +142,10 @@ function BookReportList() {
     setCurrentPage(value);
   };
 
-  const toggleLike = (id) => {
+  const toggleLike = (reportNum) => {
     setLikes({
       ...likes,
-      [id]: !likes[id],
+      [reportNum]: !likes[reportNum],
     });
   };
 
@@ -195,9 +195,8 @@ function BookReportList() {
       .catch((error) => console.error(error));
   }, []);
 
-  const sendLikeBookReport = (index, data) => {
-    alert("dd : " + data.report);
-    const currentBookReportNum = data?.reportNum;  // Get the reportNum from data
+  const sendLikeBookReport = (index, reportNum) => {
+    const currentBookReportNum = reportNum;  // Get the reportNum from data
     setBookReportNum(currentBookReportNum);
     if (!myInfo) {
       toast.warning(
@@ -365,6 +364,10 @@ function BookReportList() {
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };
+  // useEffect(() => {
+  //   setCurrentPage(1);
+  // }, [searchTerm]);
+
 
   return (
     <>
@@ -588,10 +591,11 @@ function BookReportList() {
                               <IconButton
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  sendLikeBookReport(data);
+                                  console.log("bookReport", data.reportNum)
+                                  sendLikeBookReport(index, data.reportNum);
                                 }}
                               >
-                                {likes[data.reportNum] || isUserLikeReportsLiked ? (
+                                {likes[data.reportNum] ? (
                                   <FavoriteIcon style={{ color: "#EF9A9A" }} />
                                 ) : (
                                   <FavoriteBorderIcon
@@ -608,7 +612,7 @@ function BookReportList() {
                                 style={{ marginLeft: "10px" }}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  sendDeleteBookReport(data.reportNum);
+                                  sendDeleteBookReport(index, data.reportNum);
                                 }}
                               >
                                 <DeleteIcon style={{ color: "#FF9999" }} />

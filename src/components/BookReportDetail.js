@@ -197,20 +197,7 @@ function BookReportDetail() {
             <MainAppBar />
             <Box sx={{ paddingTop: "48px" }}>
                 <TabBar />
-                <div style={{ display: 'flex', marginTop: '70px' }}>
-
-                    <Search style={{ marginTop: '20px', marginRight: '320px' }}>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            style={{ fontSize: '13px' }}
-                            placeholder="도서명을 입력하세요."
-                            inputProps={{ "aria-label": "search" }}
-                        />
-                    </Search>
-                </div>
-                <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '55%', height: '380px', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', margin: '100px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '55%', height: '380px', borderRadius: '20px' }}>
                     <div style={{ marginLeft: '10px', width: '98%' }}>
                         <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between' }}>
                             <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{rowData?.reportTitle || ''}</div>
