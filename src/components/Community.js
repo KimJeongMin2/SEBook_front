@@ -137,9 +137,6 @@ function Community() {
       .get(`http://127.0.0.1:8000/community/paragraphReadAll?page=${currentPage}`)
       .then((response) => {
         console.log(response.data);
-        // const sortedData = response.data.results.sort((a, b) => { 
-        //   return new Date(b.date) - new Date(a.date);
-        // });
         console.log("rrr", response.data.results);
         setCommunityList(response.data.results);
         setTotalPages(response.data.total_pages);
@@ -524,7 +521,7 @@ function Community() {
                         <TableCell
                           style={{
                             display: "flex",
-                            width: "50px",
+                            width: "65px",
                             textAlign: "center",
                           }}
                         >
@@ -552,7 +549,7 @@ function Community() {
                             <DeleteIcon
                               className="like"
                               style={{
-                                margin: "10px 0 0 10px",
+                                margin: "10px 0 0 0px",
                                 color: "#FF9999",
                               }}
                               onClick={(e) => {
@@ -581,7 +578,7 @@ function Community() {
             count={totalPages}
             color="primary"
             style={{
-              margin: "30px 0",
+              margin: "50px 0",
               position: "absolute",
               bottom: 0,
               left: "50%",
@@ -597,7 +594,7 @@ function Community() {
                 height: "30px",
                 backgroundColor: "#EF9A9A",
                 color: "#ffffff",
-                marginTop: '-10px'
+                marginTop: '5px'
               }}
               onClick={() => {
                 navigate("/CommunityRegist");
