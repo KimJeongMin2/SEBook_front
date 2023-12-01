@@ -242,6 +242,7 @@ function BookList() {
           //     return newLikeCnt;
           //   });
           // }
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -447,7 +448,7 @@ function BookList() {
                               <FavoriteBorderIcon style={{ color: "#EF9A9A" }} />
                             )}
                           </IconButton>
-                          <Typography variant="body2">{likeCnt[index]}</Typography>
+                          <Typography variant="body2" style={{ marginTop: '-10px' }}>{data.num_likes}</Typography>
                         </Box>
                       }
                       subheader={truncate(data.author, 10)}

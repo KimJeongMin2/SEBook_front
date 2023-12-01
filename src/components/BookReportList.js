@@ -287,7 +287,13 @@ function BookReportList() {
     };
   }
 
+  const resetData = () => {
+    setBookReportList([]);
+    setSearchedBookReportList(null);
+  };
+
   const searchBookByTitle = () => {
+    resetData();
     axios
       .get(`http://127.0.0.1:8000/bookReport/bookReportSearch?page=${currentPage}`, {
         params: {
@@ -299,6 +305,7 @@ function BookReportList() {
         setBookReportList(response.data.results);
         console.log("rrrPage", response.data.total_pages);
         setTotalPages(response.data.total_pages);
+        setSearchedBookReportList(response.data.results);
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -311,6 +318,7 @@ function BookReportList() {
 
 
   const searchBookByAuthor = () => {
+    resetData();
     axios
       .get(`http://127.0.0.1:8000/bookReport/bookReportSearchByAuthor?page=${currentPageSearch}`, {
         params: {
@@ -322,6 +330,7 @@ function BookReportList() {
         setBookReportList(response.data.results);
         console.log("rrrPage", response.data.total_pages);
         setTotalPages(response.data.total_pages);
+        setSearchedBookReportList(response.data.results);
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -334,6 +343,7 @@ function BookReportList() {
 
   const handleSearchKeyPress = (event) => {
     if (event.key === "Enter") {
+      resetData();
       if (searchType === "작가명") {
         searchBookByAuthor();
       } else if (searchType === "도서명") {
@@ -434,7 +444,7 @@ function BookReportList() {
                 </TableRow>
               </TableHead>
               <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                {searchTerm ? searchedBookReportList : bookReportList?.map((data, index) => {
+                {bookReportList?.map((data, index) => {
                   const isUserLikeReportsLiked =
                     Array.isArray(likedBookReportList) &&
                     likedBookReportList.some(
