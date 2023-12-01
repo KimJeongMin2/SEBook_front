@@ -18,7 +18,7 @@ import MainAppBar from "./MainAppBar";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, useTheme } from "@mui/material/styles";
 import { useLocation } from "react-router";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { ToastContainer, toast } from "react-toastify";
@@ -249,12 +249,17 @@ function BookDetail() {
                 backgroundColor: "#F8E8EE",
               }}
             >
-              <div>
-                {location.state.description
-                  .replace(/&lt;/g, "<")
-                  .replace(/&gt;/g, ">")}
-              </div>
+              {location.state.description ? (
+                <div>
+                  {location.state.description
+                    .replace(/&lt;/g, "<")
+                    .replace(/&gt;/g, ">")}
+                </div>
+              ) : (
+                <div>No description!</div>
+              )}
             </div>
+
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <div
                 style={{
