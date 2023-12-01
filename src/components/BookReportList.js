@@ -406,7 +406,7 @@ function BookReportList() {
                 </TableRow>
               </TableHead>
               <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {searchTerm ? searchedBookReportList : bookReportList?.map((data, index) => {
+              {bookReportList?.map((data, index) => {
                   const isUserLikeReportsLiked =
                     Array.isArray(likedBookReportList) &&
                     likedBookReportList.some(
@@ -597,7 +597,7 @@ function BookReportList() {
               count={totalPages}
               color="primary"
               style={{
-                margin: "45px 0",
+                margin: "190px 0",
                 position: "absolute",
                 bottom: 0,
                 left: "50%",
