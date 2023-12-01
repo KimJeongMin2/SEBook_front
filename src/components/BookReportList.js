@@ -257,12 +257,46 @@ function BookReportList() {
               newLikeCnt[index]--;
               return newLikeCnt;
             });
+            toast(
+              () => (
+                <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
+                  해당 독후감 공감을 취소하였습니다.
+                  <br />
+                </div>
+              ),
+              {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              }
+            );
           } else {
             setLikeCnt((prevLikeCnt) => {
               const newLikeCnt = [...prevLikeCnt];
               newLikeCnt[index]++;
               return newLikeCnt;
             });
+            toast(
+              () => (
+                <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
+                  해당 독후감을 공감하였습니다.
+                  <br />
+                </div>
+              ),
+              {
+                position: "top-right",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              }
+            );
           }
           // window.location.reload();
         })
