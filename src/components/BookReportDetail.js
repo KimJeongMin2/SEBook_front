@@ -55,14 +55,13 @@ const StyledInputBase = styled(InputBase, {
 }));
 
 const csrftoken = Cookies.get('csrftoken');
-function BookReportDetail({ PROXY }) {
+function BookReportDetail() {
     const location = useLocation();
     const [likes, setLikes] = useState({});
     const navigate = useNavigate();
-
-    const [isSelectedLike, setIsSelectedLike] = useState(location.state.isUserLikeReportsLiked);
-
-    const [likeCount, setLikeCount] = useState(location.state.like_count);
+    const rowData = location.state.rowData;
+    const [isSelectedLike, setIsSelectedLike] = useState(rowData?.isUserLikeReportsLiked || false);
+const [likeCount, setLikeCount] = useState(rowData?.like_count || 0);
 
     const selectLike = () => {
         setIsSelectedLike(!isSelectedLike)
@@ -84,25 +83,25 @@ function BookReportDetail({ PROXY }) {
           .catch((error) => console.error(error));
       }, []);
 
-    const sendDeleteBook = (reportNum) => {
-        if (window.confirm("삭제하시겠습니까?")) {
+    // const sendDeleteBook = (reportNum) => {
+    //     if (window.confirm("삭제하시겠습니까?")) {
 
-            axios.delete("http://192.168.0.7:8000/bookReport/bookReportDelete", {
-                params: {
-                    reportNum: reportNum,
-                }
-            })
-                .then((response) => {
-                    console.log(response);
-                    alert("삭제되었습니다.");
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        } else {
-            alert("취소합니다.");
-        }
-    }
+    //         axios.delete("http://192.168.0.7:8000/bookReport/bookReportDelete", {
+    //             params: {
+    //                 reportNum: reportNum,
+    //             }
+    //         })
+    //             .then((response) => {
+    //                 console.log(response);
+    //                 alert("삭제되었습니다.");
+    //             })
+    //             .catch((error) => {
+    //                 console.log(error);
+    //             });
+    //     } else {
+    //         alert("취소합니다.");
+    //     }
+    // }
 
     const sendDeleteLikeBookReport = (reportNum) => {
         if (window.confirm("삭제하시겠습니까?")) {
@@ -213,23 +212,23 @@ function BookReportDetail({ PROXY }) {
                 <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '55%', height: '380px', borderRadius: '20px' }}>
                     <div style={{ marginLeft: '10px', width: '98%' }}>
                         <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between' }}>
-                            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{location.state.reportTitle}</div>
-                            <div>{location.state.username} | {`${location.state.registDate_report.split('T')[0]} ${location.state.registDate_report.split('T')[1]}`}</div>
+                            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{rowData.reportTitle}</div>
+                            <div>{rowData.username} | {`${rowData.registDate_report.split('T')[0]} ${rowData.registDate_report.split('T')[1]}`}</div>
                         </div>
                         <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between', borderBottom: '1px solid #FDCEDF' }}>
-                            <div style={{ fontSize: '14px' }}>{location.state.title}</div>
-                            <div style={{ fontSize: '14px' }}>{location.state.author} | {location.state.publisher}</div>
+                            <div style={{ fontSize: '14px' }}>{rowData.title}</div>
+                            <div style={{ fontSize: '14px' }}>{rowData.author} | {rowData.publisher}</div>
                         </div>
                         <div style={{ height: '340px', padding: '10px', fontSize: '15px' }}>
-                            {location.state.reportContents}
+                            {rowData.reportContents}
                         </div>
                         <div style={{ display: 'flex', margin: '10px 5px 0 640px' }}>
-                            {location.state && location.state.isUserWriteReportsLiked &&
+                            {rowData && rowData.isUserWriteReportsLiked &&
                                 <>
                                     <Button
                                         variant="contained"
                                         style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
-                                        onClick={() => navigate(`/BookReportUpdate`, { state: location.state })}
+                                        onClick={() => navigate(`/BookReportUpdate`, { state: rowData })}
                                     >
                                         수정
                                     </Button>
@@ -237,7 +236,7 @@ function BookReportDetail({ PROXY }) {
                                     <Button
                                         variant="contained"
                                         style={{ width: '100px', height: '30px', backgroundColor: '#EF9A9A', color: '#ffffff', marginRight: '5px' }}
-                                        onClick={() => sendDeleteLikeBookReport(location.state.reportNum)}
+                                        onClick={() => sendDeleteLikeBookReport(rowData.reportNum)}
                                     >
                                         삭제
                                     </Button>
@@ -249,7 +248,7 @@ function BookReportDetail({ PROXY }) {
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             
-                                            sendLikeBookReport(location.state.reportNum);
+                                            sendLikeBookReport(rowData.reportNum);
                                         }}
                                     ></FavoriteIcon>
                                     : <FavoriteBorderIcon
@@ -257,7 +256,7 @@ function BookReportDetail({ PROXY }) {
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             
-                                            sendLikeBookReport(location.state.reportNum);
+                                            sendLikeBookReport(rowData.reportNum);
                                         }}>
                                     </FavoriteBorderIcon>}
                                 <div style={{ textAlign: 'center', marginTop: '-10px', fontSize: '13px' }}>{likeCount}</div>

@@ -87,6 +87,7 @@ function BookReportList() {
   );
   const [myInfo, setMyInfo] = useState();
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageSearch, setCurrentPageSearch] = useState(1);
   const itemsPerPage = 4;
   const [searchType, setSearchType] = useState("도서명");
   const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
@@ -95,6 +96,7 @@ function BookReportList() {
   const [likes, setLikes] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPages, setTotalPages] = useState(0); // Add this line
+  const [searchedBookReportList, setSearchedBookReportList] = useState([]);
 
   useEffect(() => {
     axios
@@ -212,7 +214,6 @@ function BookReportList() {
         }
       );
     } else {
-      toggleLike(bookReportNum);
       axios
         .post(
           "http://127.0.0.1:8000/bookReport/bookReportLike",
@@ -268,8 +269,7 @@ function BookReportList() {
       })
       .then((response) => {
         console.log("rrr", response.data.results);
-        setBookReportList(response.data.results);
-        console.log("rrrPage", response.data.total_pages);
+        setSearchedBookReportList(response.data.results);
         setTotalPages(response.data.total_pages); 
       })
       .catch((error) => {
@@ -280,10 +280,11 @@ function BookReportList() {
         }
       });
   };
+  
 
   const searchBookByAuthor = () => {
     axios
-      .get(`http://127.0.0.1:8000/bookReport/bookReportSearchByAuthor?page=${currentPage}`, {
+      .get(`http://127.0.0.1:8000/bookReport/bookReportSearchByAuthor?page=${currentPageSearch}`, {
         params: {
           author: searchTerm,
         },
@@ -405,7 +406,7 @@ function BookReportList() {
                 </TableRow>
               </TableHead>
               <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                {bookReportList?.map((data, index) => {
+              {searchTerm ? searchedBookReportList : bookReportList?.map((data, index) => {
                   const isUserLikeReportsLiked =
                     Array.isArray(likedBookReportList) &&
                     likedBookReportList.some(
@@ -543,6 +544,7 @@ function BookReportList() {
                               onClick={(e) => {
                                 e.stopPropagation();
                                 sendLikeBookReport(data.reportNum);
+                                toggleLike(data.reportNum);
                                 if (likes[data.reportNum]) {
                                   sendDeleteLikeBookReport(data.reportNum);
                                 }

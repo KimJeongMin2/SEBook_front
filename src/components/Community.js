@@ -26,9 +26,6 @@ import Cookies from "js-cookie";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "../list.css";
 import { ToastContainer, toast } from "react-toastify";
-function createData(id, title, paragraph, writer, date, like) {
-  return { id, title, paragraph, writer, date, like };
-}
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -85,11 +82,12 @@ const StyledSelect = styled(Select, {
 
 const csrftoken = Cookies.get("csrftoken");
 
-function Community({ PROXY }) {
+function Community() {
   const navigate = new useNavigate();
 
   const [communityList, setCommunityList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageSearch, setCurrentPageSearch] = useState(1);
   const itemsPerPage = 5; 
   const [totalPages, setTotalPages] = useState(0); 
 
@@ -103,7 +101,7 @@ function Community({ PROXY }) {
   const [likedParagraphList, setLikedParagraphList] = useState([]);
   const [writtenParagraphList, setWrittenParagraphList] = useState([]);
   const [isUserLikeModalContent, setIsUserLikeModalContent] = useState(false);
-
+  const [searchResults, setSearchResults] = useState(null);
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/user/memberSearch", {
@@ -119,21 +117,6 @@ function Community({ PROXY }) {
       .catch((error) => console.error(error));
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://127.0.0.1:8000/user/memberSearch", {
-  //       headers: {
-  //         "X-CSRFToken": csrftoken,
-  //       },
-  //       withCredentials: true,
-  //     })
-  //     .then((response) => {
-  //       console.log("myInfo : " + response.data);
-  //       setMyInfo(response.data);
-  //     })
-  //     .catch((error) => console.error(error));
-  // }, []);
-
   const handleOpen = (content) => {
     setOpen(true);
     setModalContent(content);
@@ -144,8 +127,9 @@ function Community({ PROXY }) {
     setOpen(false);
   };
 
+  
   const handleChangePage = (event, value) => {
-    setCurrentPage(value);
+    setCurrentPage(value)
   };
 
 
@@ -155,9 +139,6 @@ function Community({ PROXY }) {
       .get(`http://127.0.0.1:8000/community/paragraphReadAll?page=${currentPage}`)
       .then((response) => {
         console.log(response.data);
-        // const sortedData = response.data.results.sort((a, b) => { 
-        //   return new Date(b.date) - new Date(a.date);
-        // });
         console.log("rrr", response.data.results);
         setCommunityList(response.data.results);
         console.log("rrrPage", response.data.total_pages);
@@ -168,9 +149,8 @@ function Community({ PROXY }) {
         );
       })
       .catch((error) => console.error(error));
-  }, [currentPage]); 
+}, [currentPage]);
 
-  
 
   useEffect(() => {
     axios
@@ -301,15 +281,24 @@ function Community({ PROXY }) {
     }
   };
 
+  const resetData = () => {
+    setCommunityList([]);
+    setSearchResults(null);
+  };
+
   const searchParagraphByAuthor = () => {
+    resetData();
     axios
-      .get(`http://127.0.0.1:8000/community/searchParagraphByAuthor`, {
+      .get(`http://127.0.0.1:8000/community/searchParagraphByAuthor?page=${currentPage}`, {
         params: {
           author: searchTerm,
         },
       })
       .then((response) => {
-        setCommunityList(response.data);
+        console.log("searchAuthorrrrr",response.data.results )
+        setSearchResults(response.data.results);
+        console.log("searchAuthorrrrr",response.data.total_pages )
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -325,15 +314,18 @@ function Community({ PROXY }) {
   };
 
   const searchParagraphByTitle = () => {
+    resetData();
     axios
-      .get(`http://127.0.0.1:8000/community/searchParagraphByTitle`, {
+      .get(`http://127.0.0.1:8000/community/searchParagraphByTitle?page=${currentPage}`, {
         params: {
           title: searchTerm,
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setCommunityList(response.data);
+        console.log("searchTitleeeee",response.data.results);
+        setSearchResults(response.data.results); // 검색 결과를 별도 상태에 저장
+        console.log("searchTotallll",response.data.total_pages );
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -345,6 +337,7 @@ function Community({ PROXY }) {
   };
   const handleSearchKeyPress = (event) => {
     if (event.key === "Enter") {
+      resetData();
       if (searchType === "작가명") {
         searchParagraphByAuthor();
       } else if (searchType === "도서명") {
@@ -352,6 +345,7 @@ function Community({ PROXY }) {
       }
     }
   };
+  
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -433,8 +427,8 @@ function Community({ PROXY }) {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {communityList && communityList.length > 0 ? (
-                communityList?.map((data, index) => {
+            {(searchResults || communityList) && (searchResults || communityList).length > 0 ? (
+    (searchResults || communityList).map((data, index) => {
                   const isUserLikeParagraph =
                     Array.isArray(likedParagraphList) &&
                     likedParagraphList.some((post) => data.postNum === post);
