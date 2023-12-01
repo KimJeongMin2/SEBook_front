@@ -288,11 +288,12 @@ function BookReportList() {
 
   const resetData = () => {
     setBookReportList([]);
-    setSearchResults(null);
+    setSearchResults([null]);
   };
 
   const searchBookByTitle = () => {
     resetData();
+    alert(currentPage)
     axios
       .get(`http://127.0.0.1:8000/bookReport/bookReportSearch?page=${currentPage}`, {
         params: {
