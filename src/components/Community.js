@@ -87,15 +87,14 @@ function Community() {
 
   const [communityList, setCommunityList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentPageSearch, setCurrentPageSearch] = useState(1);
-  const itemsPerPage = 5; 
-  const [totalPages, setTotalPages] = useState(0); 
+  const itemsPerPage = 5;
+  const [totalPages, setTotalPages] = useState(0);
 
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
   const [likeStatus, setLikeStatus] = useState({});
+  const [likeCnt, setLikeCnt] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [paragraphList, setParagraphList] = useState([]);
   const [searchType, setSearchType] = useState("도서명");
   const [myInfo, setMyInfo] = useState();
   const [likedParagraphList, setLikedParagraphList] = useState([]);
@@ -127,11 +126,10 @@ function Community() {
     setOpen(false);
   };
 
-  
+
   const handleChangePage = (event, value) => {
     setCurrentPage(value)
   };
-
 
   useEffect(() => {
     setCommunityList([]);
@@ -139,17 +137,27 @@ function Community() {
       .get(`http://127.0.0.1:8000/community/paragraphReadAll?page=${currentPage}`)
       .then((response) => {
         console.log(response.data);
+        // const sortedData = response.data.results.sort((a, b) => { 
+        //   return new Date(b.date) - new Date(a.date);
+        // });
         console.log("rrr", response.data.results);
         setCommunityList(response.data.results);
-        console.log("rrrPage", response.data.total_pages);
-        setTotalPages(response.data.total_pages); 
-        const likedPostIds = response.data.userLikeReports;
+        setTotalPages(response.data.total_pages);
+
+        const likedPostIds = response.data.userLikeReports || [];
         setLikeStatus(
           likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {})
         );
+
+        const likeCounts = response.data.results.reduce((acc, result) => {
+          acc[result.postNum] = result.like_count;
+          return acc;
+        }, {});
+        setLikeCnt(likeCounts);
       })
       .catch((error) => console.error(error));
-}, [currentPage]);
+  }, [currentPage]);
+
 
 
   useEffect(() => {
@@ -165,6 +173,7 @@ function Community() {
 
         const postNums = likeParagraphList.map((post) => post.postNum);
         setLikedParagraphList(postNums);
+        updateLikesState(likeParagraphList);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -186,7 +195,15 @@ function Community() {
       .catch((error) => console.error(error));
   }, []);
 
-  const sendLikeCommunity = (postNum) => {
+  const updateLikesState = (likeParagraphList) => {
+    const updatedLikes = {};
+    likeParagraphList.forEach((report) => {
+      updatedLikes[report.postNum] = true;
+    });
+    setLikeStatus(updatedLikes);
+  };
+
+  const sendLikeCommunity = (index, data) => {
     if (!myInfo) {
       toast.warning(
         () => (
@@ -227,7 +244,7 @@ function Community() {
         .post(
           "http://127.0.0.1:8000/community/paragraphLike",
           {
-            postNum: postNum,
+            postNum: data.postNum,
           },
           {
             headers: {
@@ -238,6 +255,19 @@ function Community() {
         )
         .then((response) => {
           console.log(response);
+          // if (likeStatus[data.postNum]) {
+          //   setLikeCnt((prevLikeCnt) => {
+          //     const newLikeCnt = Array.isArray(prevLikeCnt) ? [...prevLikeCnt] : [];
+          //     newLikeCnt[index]--;
+          //     return newLikeCnt;
+          //   });
+          // } else {
+          //   setLikeCnt((prevLikeCnt) => {
+          //     const newLikeCnt = Array.isArray(prevLikeCnt) ? [...prevLikeCnt] : [];
+          //     newLikeCnt[index]++;
+          //     return newLikeCnt;
+          //   });
+          // }
           window.location.reload();
         })
         .catch((error) => {
@@ -271,14 +301,12 @@ function Community() {
   };
 
   // Function to toggle the like status for a specific row
-  const toggleLike = (id) => {
+  const toggleLike = (index, data) => {
     setLikeStatus((prevStatus) => ({
       ...prevStatus,
-      [id]: !prevStatus[id],
+      [data.postNum]: !prevStatus[data.postNum],
     }));
-    if (!likeStatus[id]) {
-      sendLikeCommunity(id);
-    }
+    sendLikeCommunity(index, data);
   };
 
   const resetData = () => {
@@ -295,9 +323,9 @@ function Community() {
         },
       })
       .then((response) => {
-        console.log("searchAuthorrrrr",response.data.results )
+        console.log("searchAuthorrrrr", response.data.results)
         setSearchResults(response.data.results);
-        console.log("searchAuthorrrrr",response.data.total_pages )
+        console.log("searchAuthorrrrr", response.data.total_pages)
         setTotalPages(response.data.total_pages);
       })
       .catch((error) => {
@@ -322,9 +350,9 @@ function Community() {
         },
       })
       .then((response) => {
-        console.log("searchTitleeeee",response.data.results);
-        setSearchResults(response.data.results);
-        console.log("searchTotallll",response.data.total_pages );
+        console.log("searchTitleeeee", response.data.results);
+        setSearchResults(response.data.results); // 검색 결과를 별도 상태에 저장
+        console.log("searchTotallll", response.data.total_pages);
         setTotalPages(response.data.total_pages);
       })
       .catch((error) => {
@@ -345,7 +373,7 @@ function Community() {
       }
     }
   };
-  
+
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -407,156 +435,153 @@ function Community() {
           </div>
         </div>
         <TableContainer
-          component={Paper}
           style={{ display: "flex", maxWidth: "70%", margin: "10px auto" }}
         >
-          <Table sx={{ minWidth: 600 }} aria-label="simple table">
-            <TableHead style={{ backgroundColor: "#F8E8EE" }}>
-              <TableRow>
-                <TableCell>No</TableCell>
-                <TableCell style={{ textAlign: "center" }}>도서명</TableCell>
-                <TableCell style={{ textAlign: "center" }}>
-                  인상깊은 구절
-                </TableCell>
-                <TableCell style={{ textAlign: "center" }}>글쓴이</TableCell>
-                <TableCell style={{ textAlign: "center" }}>작가명</TableCell>
-                <TableCell style={{ textAlign: "center" }}>등록일</TableCell>
-                <TableCell style={{ textAlign: "left", marginLeft: "-10px" }}>
-                  공감
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-            {(searchResults || communityList) && (searchResults || communityList).length > 0 ? (
-    (searchResults || communityList).map((data, index) => {
-                  const isUserLikeParagraph =
-                    Array.isArray(likedParagraphList) &&
-                    likedParagraphList.some((post) => data.postNum === post);
-                  const isUserWriteParagraph =
-                    Array.isArray(writtenParagraphList) &&
-                    writtenParagraphList.some((post) => data.postNum === post);
+          <div style={{ height: '420px' }}>
+            <Table sx={{ minWidth: 600 }} aria-label="simple table">
+              <TableHead style={{ backgroundColor: "#F8E8EE" }}>
+                <TableRow>
+                  <TableCell>No</TableCell>
+                  <TableCell style={{ textAlign: "center" }}>도서명</TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    인상깊은 구절
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>글쓴이</TableCell>
+                  <TableCell style={{ textAlign: "center" }}>작가명</TableCell>
+                  <TableCell style={{ textAlign: "center" }}>등록일</TableCell>
+                  <TableCell style={{ textAlign: "left", marginLeft: "-10px" }}>
+                    공감
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody style={{ backgroundColor: "#F9F5F6" }}>
+                {(searchResults || communityList) && (searchResults || communityList).length > 0 ? (
+                  (searchResults || communityList).map((data, index) => {
+                    const isUserLikeParagraph =
+                      Array.isArray(likedParagraphList) &&
+                      likedParagraphList.some((post) => data.postNum === post);
+                    const isUserWriteParagraph =
+                      Array.isArray(writtenParagraphList) &&
+                      writtenParagraphList.some((post) => data.postNum === post);
 
-                  return (
-                    <TableRow
-                      className="list"
-                      key={data.title}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                      onClick={() => handleOpen(data)}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        style={{
-                          width: "10px",
-                          borderRight: "1px solid #F8E8EE",
-                          textAlign: "center",
-                        }}
+                    return (
+                      <TableRow
+                        className="list"
+                        key={data.title}
+                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                        onClick={() => handleOpen(data)}
                       >
-                        {(currentPage - 1) * itemsPerPage + index + 1}
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        style={{
-                          width: "200px",
-                          borderRight: "1px solid #F8E8EE",
-                        }}
-                      >
-                        {truncate(data.title, 16)}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          width: "450px",
-                          borderRight: "1px solid #F8E8EE",
-                        }}
-                      >
-                        {truncate(data.contents, 22)}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          width: "50px",
-                          borderRight: "1px solid #F8E8EE",
-                          textAlign: "center",
-                        }}
-                      >
-                        {truncate(data.username, 9)}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          width: "100px",
-                          borderRight: "1px solid #F8E8EE",
-                          textAlign: "center",
-                        }}
-                      >
-                        {truncate(data.author, 6)}
-                      </TableCell>
-                      <TableCell style={{ width: "90px", textAlign: "center" }}>
-                        {data.registDate_community.split("T")[0]}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          display: "flex",
-                          width: "50px",
-                          textAlign: "center",
-                        }}
-                      >
-                        <div>
-                          {isUserLikeParagraph ? (
-                            <FavoriteIcon
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          style={{
+                            width: "10px",
+                            borderRight: "1px solid #F8E8EE",
+                            textAlign: "center",
+                          }}
+                        >
+                          {(currentPage - 1) * itemsPerPage + index + 1}
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          style={{
+                            width: "200px",
+                            borderRight: "1px solid #F8E8EE",
+                          }}
+                        >
+                          {truncate(data.title, 16)}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            width: "450px",
+                            borderRight: "1px solid #F8E8EE",
+                          }}
+                        >
+                          {truncate(data.contents, 22)}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            width: "50px",
+                            borderRight: "1px solid #F8E8EE",
+                            textAlign: "center",
+                          }}
+                        >
+                          {truncate(data.username, 9)}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            width: "100px",
+                            borderRight: "1px solid #F8E8EE",
+                            textAlign: "center",
+                          }}
+                        >
+                          {truncate(data.author, 6)}
+                        </TableCell>
+                        <TableCell style={{ width: "90px", textAlign: "center" }}>
+                          {data.registDate_community.split("T")[0]}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            display: "flex",
+                            width: "50px",
+                            textAlign: "center",
+                          }}
+                        >
+                          <div>
+                            <IconButton
                               className="like"
                               style={{ color: "#EF9A9A" }}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                toggleLike(data.postNum);
+                                toggleLike(index, data);
+                              }}
+                            >
+                              {isUserLikeParagraph ? (
+                                <FavoriteIcon
+                                />
+                              ) : (
+                                <FavoriteBorderIcon
+                                />
+                              )}</IconButton>
+                            <div style={{ marginTop: "-5px" }}>
+                              {data.like_count}
+                            </div>
+                          </div>
+                          {isUserWriteParagraph ? (
+                            <DeleteIcon
+                              className="like"
+                              style={{
+                                margin: "10px 0 0 10px",
+                                color: "#FF9999",
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                sendDeleteParagraphMy(data.postNum);
                               }}
                             />
                           ) : (
-                            <FavoriteBorderIcon
-                              className="like"
-                              style={{ color: "#EF9A9A" }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleLike(data.postNum);
-                              }}
-                            />
+                            <></>
                           )}
-                          <div style={{ marginTop: "-5px" }}>
-                            {data.like_count}
-                          </div>
-                        </div>
-                        {isUserWriteParagraph ? (
-                          <DeleteIcon
-                            className="like"
-                            style={{
-                              margin: "10px 0 0 10px",
-                              color: "#FF9999",
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              sendDeleteParagraphMy(data.postNum);
-                            }}
-                          />
-                        ) : (
-                          <></>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6}>No data available</TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={6}>No data available</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </TableContainer>
         <div style={{ display: "flex", maxWidth: "70%", margin: "0 auto" }}>
           <Pagination
             count={totalPages}
             color="primary"
             style={{
-              margin: "33px 0",
+              margin: "60px 0",
               position: "absolute",
               bottom: 0,
               left: "50%",
@@ -572,6 +597,7 @@ function Community() {
                 height: "30px",
                 backgroundColor: "#EF9A9A",
                 color: "#ffffff",
+                marginTop: '-10px'
               }}
               onClick={() => {
                 navigate("/CommunityRegist");

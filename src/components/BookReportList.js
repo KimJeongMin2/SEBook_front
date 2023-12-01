@@ -90,10 +90,11 @@ function BookReportList() {
   const [currentPageSearch, setCurrentPageSearch] = useState(1);
   const itemsPerPage = 4;
   const [searchType, setSearchType] = useState("도서명");
-  const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
   const [likedBookReportList, setLikedBookReportList] = useState([]);
   const [writtenBookReportList, setWrittenBookReportList] = useState([]);
+  const [likeCnt, setLikeCnt] = useState([]);
   const [likes, setLikes] = useState({});
+  const [bookReportNum, setBookReportNum] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPages, setTotalPages] = useState(0); // Add this line
   const [searchedBookReportList, setSearchedBookReportList] = useState([]);
@@ -122,6 +123,8 @@ function BookReportList() {
         setBookReportList(response.data.results);
         console.log("dddd", response.data.total_pages);
         setTotalPages(response.data.total_pages);
+        const likeCounts = response.data.results.map(result => result.like_count);
+        setLikeCnt(likeCounts);
       })
       .catch((error) => console.error(error));
   }, [currentPage]);
@@ -139,6 +142,14 @@ function BookReportList() {
     });
   };
 
+  const updateLikesState = (likeBookReportList) => {
+    const updatedLikes = {};
+    likeBookReportList.forEach((report) => {
+      updatedLikes[report.reportNum] = true;
+    });
+    setLikes(updatedLikes);
+  };
+
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
@@ -149,10 +160,10 @@ function BookReportList() {
       })
       .then((response) => {
         const likeBookReportList = response.data.likeBookReportList;
-
         const reportNums = likeBookReportList.map((report) => report.reportNum);
         setLikedBookReportList(reportNums);
-        console.log(reportNums);
+        updateLikesState(likeBookReportList);
+
       })
       .catch((error) => console.error(error));
   }, []);
@@ -177,7 +188,9 @@ function BookReportList() {
       .catch((error) => console.error(error));
   }, []);
 
-  const sendLikeBookReport = (bookReportNum) => {
+  const sendLikeBookReport = (index, data) => {
+    const currentBookReportNum = data.reportNum;  // Get the reportNum from data
+    setBookReportNum(currentBookReportNum);
     if (!myInfo) {
       toast.warning(
         () => (
@@ -214,11 +227,12 @@ function BookReportList() {
         }
       );
     } else {
+      toggleLike(currentBookReportNum);
       axios
         .post(
           "http://127.0.0.1:8000/bookReport/bookReportLike",
           {
-            reportNum: bookReportNum,
+            reportNum: currentBookReportNum,
           },
           {
             headers: {
@@ -229,8 +243,21 @@ function BookReportList() {
         )
         .then((response) => {
           console.log(response);
-          toggleLike(bookReportNum);
-          window.location.reload();
+          toggleLike(currentBookReportNum);  // Use currentBookReportNum here
+          if (likes[currentBookReportNum]) {
+            setLikeCnt((prevLikeCnt) => {
+              const newLikeCnt = [...prevLikeCnt];
+              newLikeCnt[index]--;
+              return newLikeCnt;
+            });
+          } else {
+            setLikeCnt((prevLikeCnt) => {
+              const newLikeCnt = [...prevLikeCnt];
+              newLikeCnt[index]++;
+              return newLikeCnt;
+            });
+          }
+          // window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -238,7 +265,7 @@ function BookReportList() {
     }
   };
 
-  const sendDeleteLikeBookReport = (bookReportNum) => {
+  const sendDeleteBookReport = (bookReportNum) => {
     if (window.confirm("삭제하시겠습니까?")) {
       axios
         .delete("http://127.0.0.1:8000/bookReport/bookReportDelete", {
@@ -260,7 +287,13 @@ function BookReportList() {
     };
   }
 
+  const resetData = () => {
+    setBookReportList([]);
+    setSearchedBookReportList(null);
+  };
+
   const searchBookByTitle = () => {
+    resetData();
     axios
       .get(`http://127.0.0.1:8000/bookReport/bookReportSearch?page=${currentPage}`, {
         params: {
@@ -269,8 +302,10 @@ function BookReportList() {
       })
       .then((response) => {
         console.log("rrr", response.data.results);
+        setBookReportList(response.data.results);
+        console.log("rrrPage", response.data.total_pages);
+        setTotalPages(response.data.total_pages);
         setSearchedBookReportList(response.data.results);
-        setTotalPages(response.data.total_pages); 
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -280,9 +315,10 @@ function BookReportList() {
         }
       });
   };
-  
+
 
   const searchBookByAuthor = () => {
+    resetData();
     axios
       .get(`http://127.0.0.1:8000/bookReport/bookReportSearchByAuthor?page=${currentPageSearch}`, {
         params: {
@@ -293,7 +329,8 @@ function BookReportList() {
         console.log("rrr", response.data.results);
         setBookReportList(response.data.results);
         console.log("rrrPage", response.data.total_pages);
-        setTotalPages(response.data.total_pages); 
+        setTotalPages(response.data.total_pages);
+        setSearchedBookReportList(response.data.results);
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -306,6 +343,7 @@ function BookReportList() {
 
   const handleSearchKeyPress = (event) => {
     if (event.key === "Enter") {
+      resetData();
       if (searchType === "작가명") {
         searchBookByAuthor();
       } else if (searchType === "도서명") {
@@ -406,7 +444,7 @@ function BookReportList() {
                 </TableRow>
               </TableHead>
               <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {bookReportList?.map((data, index) => {
+                {bookReportList?.map((data, index) => {
                   const isUserLikeReportsLiked =
                     Array.isArray(likedBookReportList) &&
                     likedBookReportList.some(
@@ -544,13 +582,9 @@ function BookReportList() {
                               onClick={(e) => {
                                 e.stopPropagation();
                                 sendLikeBookReport(data.reportNum);
-                                toggleLike(data.reportNum);
-                                if (likes[data.reportNum]) {
-                                  sendDeleteLikeBookReport(data.reportNum);
-                                }
                               }}
                             >
-                              {isUserLikeReportsLiked || likes[data.reportNum] ? (
+                              {likes[data.reportNum] || isUserLikeReportsLiked ? (
                                 <FavoriteIcon style={{ color: "#EF9A9A" }} />
                               ) : (
                                 <FavoriteBorderIcon
@@ -559,7 +593,7 @@ function BookReportList() {
                               )}
                             </IconButton>
                             <div style={{ textAlign: "center" }}>
-                              {data.like_count}
+                              {likeCnt[index]}
                             </div>
                           </div>
                           {isUserWriteReportsLiked ? (
@@ -567,7 +601,7 @@ function BookReportList() {
                               style={{ marginLeft: "10px" }}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                sendDeleteLikeBookReport(data.reportNum);
+                                sendDeleteBookReport(data.reportNum);
                               }}
                             >
                               <DeleteIcon style={{ color: "#FF9999" }} />
