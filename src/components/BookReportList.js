@@ -115,24 +115,24 @@ function BookReportList() {
 
   useEffect(() => {
     setBookReportList([]);
-    if(searchTerm){
+    if (searchTerm) {
       if (searchType === "작가명") {
         searchBookByAuthor();
       } else if (searchType === "도서명") {
         searchBookByTitle();
       }
-    }else {
-    axios
-      .get(`http://127.0.0.1:8000/bookReport/bookReportReadAll?page=${currentPage}`)
-      .then((response) => {
-        console.log("resulttttt", response.data.results);
-        setBookReportList(response.data.results);
-        console.log("dddd", response.data.total_pages);
-        setTotalPages(response.data.total_pages);
-        const likeCounts = response.data.results.map(result => result.like_count);
-        setLikeCnt(likeCounts);
-      })
-      .catch((error) => console.error(error));
+    } else {
+      axios
+        .get(`http://127.0.0.1:8000/bookReport/bookReportReadAll?page=${currentPage}`)
+        .then((response) => {
+          console.log("resulttttt", response.data.results);
+          setBookReportList(response.data.results);
+          console.log("dddd", response.data.total_pages);
+          setTotalPages(response.data.total_pages);
+          const likeCounts = response.data.results.map(result => result.like_count);
+          setLikeCnt(likeCounts);
+        })
+        .catch((error) => console.error(error));
     }
   }, [currentPage]);
 
@@ -196,7 +196,7 @@ function BookReportList() {
   }, []);
 
   const sendLikeBookReport = (index, data) => {
-    const currentBookReportNum = data?.reportNum;  // Get the reportNum from data
+    const currentBookReportNum = data.reportNum;  // Get the reportNum from data
     setBookReportNum(currentBookReportNum);
     if (!myInfo) {
       toast.warning(
@@ -296,12 +296,11 @@ function BookReportList() {
 
   const resetData = () => {
     setBookReportList([]);
-    setSearchResults([null]);
+    setSearchResults(null);
   };
 
   const searchBookByTitle = () => {
     resetData();
-    alert(currentPage)
     axios
       .get(`http://127.0.0.1:8000/bookReport/bookReportSearch?page=${currentPage}`, {
         params: {
@@ -506,7 +505,7 @@ function BookReportList() {
                             })
                           }
                         >
-                          {truncate(data.reportTitle, 25)}
+                          {truncate(data.reportTitle, 20)}
                         </TableCell>
                         <TableCell
                           component="th"

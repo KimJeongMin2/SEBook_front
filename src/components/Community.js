@@ -124,7 +124,7 @@ function Community() {
   useEffect(() => {
     console.log("mmooddalle", modalContent);
   }, [modalContent]);
-  
+
 
   const handleClose = () => {
     setOpen(false);
@@ -137,33 +137,33 @@ function Community() {
 
   useEffect(() => {
     setCommunityList([]);
-    if(searchTerm){
+    if (searchTerm) {
       if (searchType === "작가명") {
         searchParagraphByAuthor();
       } else if (searchType === "도서명") {
         searchParagraphByTitle();
       }
-    }else {
-    axios
-      .get(`http://127.0.0.1:8000/community/paragraphReadAll?page=${currentPage}`)
-      .then((response) => {
-        console.log(response.data);
-        console.log("rrr", response.data.results);
-        setCommunityList(response.data.results);
-        setTotalPages(response.data.total_pages);
+    } else {
+      axios
+        .get(`http://127.0.0.1:8000/community/paragraphReadAll?page=${currentPage}`)
+        .then((response) => {
+          console.log(response.data);
+          console.log("rrr", response.data.results);
+          setCommunityList(response.data.results);
+          setTotalPages(response.data.total_pages);
 
-        const likedPostIds = response.data.userLikeReports || [];
-        setLikeStatus(
-          likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {})
-        );
+          const likedPostIds = response.data.userLikeReports || [];
+          setLikeStatus(
+            likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {})
+          );
 
-        const likeCounts = response.data.results.reduce((acc, result) => {
-          acc[result.postNum] = result.like_count;
-          return acc;
-        }, {});
-        setLikeCnt(likeCounts);
-      })
-      .catch((error) => console.error(error));
+          const likeCounts = response.data.results.reduce((acc, result) => {
+            acc[result.postNum] = result.like_count;
+            return acc;
+          }, {});
+          setLikeCnt(likeCounts);
+        })
+        .catch((error) => console.error(error));
     }
   }, [currentPage]);
 
@@ -298,7 +298,7 @@ function Community() {
 
   // Function to toggle the like status for a specific row
   const toggleLike = (postNum) => {
-    console.log("postNum",postNum);
+    console.log("postNum", postNum);
     setLikeStatus((prevStatus) => ({
       ...prevStatus,
       [postNum.postNum]: !prevStatus[postNum.postNum],
@@ -360,7 +360,7 @@ function Community() {
         }
       });
   };
-  
+
   const handleSearchKeyPress = (event) => {
     if (event.key === "Enter") {
       resetData();
@@ -467,11 +467,10 @@ function Community() {
                         className="list"
                         key={data.title}
                         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                        onClick={() => 
-                          {
-                            console.log("ddddddddaaaaaaaattttttaaaaaa",data);  // 여기서 data가 제대로 출력되는지 확인
-                            handleOpen(data);
-                          }}
+                        onClick={() => {
+                          console.log("ddddddddaaaaaaaattttttaaaaaa", data);  // 여기서 data가 제대로 출력되는지 확인
+                          handleOpen(data);
+                        }}
                       >
                         <TableCell
                           component="th"
