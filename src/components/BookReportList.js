@@ -196,7 +196,8 @@ function BookReportList() {
   }, []);
 
   const sendLikeBookReport = (index, data) => {
-    const currentBookReportNum = data.reportNum;  // Get the reportNum from data
+    alert("dd : " + data.report);
+    const currentBookReportNum = data?.reportNum;  // Get the reportNum from data
     setBookReportNum(currentBookReportNum);
     if (!myInfo) {
       toast.warning(
@@ -587,7 +588,7 @@ function BookReportList() {
                               <IconButton
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  sendLikeBookReport(data.reportNum);
+                                  sendLikeBookReport(data);
                                 }}
                               >
                                 {likes[data.reportNum] || isUserLikeReportsLiked ? (
