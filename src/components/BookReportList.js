@@ -89,9 +89,9 @@ function BookReportList() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   const [searchType, setSearchType] = useState("도서명");
-  const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
   const [likedBookReportList, setLikedBookReportList] = useState([]);
   const [writtenBookReportList, setWrittenBookReportList] = useState([]);
+  const [likeCnt, setLikeCnt] = useState([]);
   const [likes, setLikes] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPages, setTotalPages] = useState(0); // Add this line
@@ -120,6 +120,8 @@ function BookReportList() {
         setBookReportList(response.data.results);
         console.log("dddd", response.data.total_pages);
         setTotalPages(response.data.total_pages);
+        const likeCounts = response.data.results.map(result => result.like_count);
+        setLikeCnt(likeCounts);
       })
       .catch((error) => console.error(error));
   }, [currentPage]);
@@ -137,6 +139,14 @@ function BookReportList() {
     });
   };
 
+  const updateLikesState = (likeBookReportList) => {
+    const updatedLikes = {};
+    likeBookReportList.forEach((report) => {
+      updatedLikes[report.reportNum] = true;
+    });
+    setLikes(updatedLikes);
+  };
+
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
@@ -147,10 +157,10 @@ function BookReportList() {
       })
       .then((response) => {
         const likeBookReportList = response.data.likeBookReportList;
-
         const reportNums = likeBookReportList.map((report) => report.reportNum);
         setLikedBookReportList(reportNums);
-        console.log(reportNums);
+        updateLikesState(likeBookReportList);
+
       })
       .catch((error) => console.error(error));
   }, []);
@@ -175,7 +185,7 @@ function BookReportList() {
       .catch((error) => console.error(error));
   }, []);
 
-  const sendLikeBookReport = (bookReportNum) => {
+  const sendLikeBookReport = (index, data) => {
     if (!myInfo) {
       toast.warning(
         () => (
@@ -212,12 +222,12 @@ function BookReportList() {
         }
       );
     } else {
-      toggleLike(bookReportNum);
+      toggleLike(data.reportNum);
       axios
         .post(
           "http://127.0.0.1:8000/bookReport/bookReportLike",
           {
-            reportNum: bookReportNum,
+            reportNum: data.reportNum,
           },
           {
             headers: {
@@ -228,8 +238,21 @@ function BookReportList() {
         )
         .then((response) => {
           console.log(response);
-          toggleLike(bookReportNum);
-          window.location.reload();
+          toggleLike(data.reportNum);
+          if (likes[data.reportNum]) {
+            setLikeCnt((prevLikeCnt) => {
+              const newLikeCnt = [...prevLikeCnt];
+              newLikeCnt[index]--;
+              return newLikeCnt;
+            });
+          } else {
+            setLikeCnt((prevLikeCnt) => {
+              const newLikeCnt = [...prevLikeCnt];
+              newLikeCnt[index]++;
+              return newLikeCnt;
+            });
+          }
+          // window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -237,7 +260,7 @@ function BookReportList() {
     }
   };
 
-  const sendDeleteLikeBookReport = (bookReportNum) => {
+  const sendDeleteBookReport = (bookReportNum) => {
     if (window.confirm("삭제하시겠습니까?")) {
       axios
         .delete("http://127.0.0.1:8000/bookReport/bookReportDelete", {
@@ -270,7 +293,7 @@ function BookReportList() {
         console.log("rrr", response.data.results);
         setBookReportList(response.data.results);
         console.log("rrrPage", response.data.total_pages);
-        setTotalPages(response.data.total_pages); 
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -292,7 +315,7 @@ function BookReportList() {
         console.log("rrr", response.data.results);
         setBookReportList(response.data.results);
         console.log("rrrPage", response.data.total_pages);
-        setTotalPages(response.data.total_pages); 
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -542,13 +565,10 @@ function BookReportList() {
                             <IconButton
                               onClick={(e) => {
                                 e.stopPropagation();
-                                sendLikeBookReport(data.reportNum);
-                                if (likes[data.reportNum]) {
-                                  sendDeleteLikeBookReport(data.reportNum);
-                                }
+                                sendLikeBookReport(index, data);
                               }}
                             >
-                              {isUserLikeReportsLiked || likes[data.reportNum] ? (
+                              {likes[data.reportNum] || isUserLikeReportsLiked ? (
                                 <FavoriteIcon style={{ color: "#EF9A9A" }} />
                               ) : (
                                 <FavoriteBorderIcon
@@ -557,7 +577,7 @@ function BookReportList() {
                               )}
                             </IconButton>
                             <div style={{ textAlign: "center" }}>
-                              {data.like_count}
+                              {likeCnt[index]}
                             </div>
                           </div>
                           {isUserWriteReportsLiked ? (
@@ -565,7 +585,7 @@ function BookReportList() {
                               style={{ marginLeft: "10px" }}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                sendDeleteLikeBookReport(data.reportNum);
+                                sendDeleteBookReport(data.reportNum);
                               }}
                             >
                               <DeleteIcon style={{ color: "#FF9999" }} />

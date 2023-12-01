@@ -103,6 +103,7 @@ function BookList() {
   };
   const [searchType, setSearchType] = useState("도서명");
 
+  const [likeCnt, setLikeCnt] = useState([]);
   const [likes, setLikes] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -130,12 +131,29 @@ function BookList() {
       .then((response) => {
         console.log(response.data.bookList);
         setBookList(response.data.bookList);
-        if (location.state.bookList) {
+
+        // Check if location.state and location.state.bookList are defined
+        if (location.state && location.state.bookList) {
           setBookList(location.state.bookList);
         }
+
+        const likeCounts = response.data.reduce((acc, result) => {
+          acc[result.postNum] = result.num_likes;
+          alert(result.postNum + " " + result.num_likes)
+          return acc;
+        }, {});
+        setLikeCnt(likeCounts);
       })
       .catch((error) => console.error(error));
   }, []);
+
+  const updateLikesState = (likeBookReportList) => {
+    const updatedLikes = {};
+    likeBookReportList.forEach((report) => {
+      updatedLikes[report.reportNum] = true;
+    });
+    setLikes(updatedLikes);
+  };
 
   useEffect(() => {
     axios
@@ -149,11 +167,12 @@ function BookList() {
         const likeBookList = response.data.likeBookList;
         const isbn13List = likeBookList.map(book => book.isbn13);
         setLikeBookList(isbn13List);
+        updateLikesState(likeBookList);
       })
       .catch((error) => console.error(error));
   }, []);
 
-  const sendLikeBook = (isbn13) => {
+  const sendLikeBook = (data) => {
     if (!myInfo) {
       toast.warning(
         () => (
@@ -194,7 +213,7 @@ function BookList() {
         .post(
           "http://127.0.0.1:8000/book/bookLike",
           {
-            isbn13: isbn13,
+            isbn13: data.isbn13,
           },
           {
             headers: {
@@ -207,10 +226,22 @@ function BookList() {
           if (response.status === 200 || response.status === 201) {
             setLikes((likes) => ({
               ...likes,
-              [isbn13]: !likes[isbn13],
+              [data.isbn13]: !likes[data.isbn13],
             }));
           }
-          window.location.reload();
+          // if (likes[data.isbn13]) {
+          //   setLikeCnt((prevLikeCnt) => {
+          //     const newLikeCnt = [...prevLikeCnt];
+          //     newLikeCnt[data.isbn13]--;
+          //     return newLikeCnt;
+          //   });
+          // } else {
+          //   setLikeCnt((prevLikeCnt) => {
+          //     const newLikeCnt = [...prevLikeCnt];
+          //     newLikeCnt[data.isbn13]++;
+          //     return newLikeCnt;
+          //   });
+          // }
         })
         .catch((error) => {
           console.log(error);
@@ -375,7 +406,7 @@ function BookList() {
               position: "relative",
             }}
           >
-            {getPageData().map((data) => {
+            {getPageData().map((data, index) => {
               const isUserLikeBook = Array.isArray(likeBookList) && likeBookList.includes(data.isbn13);
 
               const rowData = {
@@ -404,7 +435,7 @@ function BookList() {
                               e.stopPropagation();
                               if (!likes[data.isbn13]) {
                                 toggleLike(data.isbn13);
-                                sendLikeBook(data.isbn13);
+                                sendLikeBook(data);
                               } else {
                                 sendDeleteLikeBook(data.isbn13);
                               }
@@ -416,7 +447,7 @@ function BookList() {
                               <FavoriteBorderIcon style={{ color: "#EF9A9A" }} />
                             )}
                           </IconButton>
-                          <Typography variant="body2">{data.num_likes}</Typography>
+                          <Typography variant="body2">{likeCnt[index]}</Typography>
                         </Box>
                       }
                       subheader={truncate(data.author, 10)}
@@ -438,7 +469,7 @@ function BookList() {
                     <CardActions disableSpacing>
                       <IconButton aria-label="add to favorites">
                         <FavoriteBorderIcon />
-                        {data.like}
+                        {likeCnt}
                       </IconButton>
                       <IconButton aria-label="share">
                         <ShareIcon />

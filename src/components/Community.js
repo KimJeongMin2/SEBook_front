@@ -90,14 +90,14 @@ function Community({ PROXY }) {
 
   const [communityList, setCommunityList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; 
-  const [totalPages, setTotalPages] = useState(0); 
+  const itemsPerPage = 5;
+  const [totalPages, setTotalPages] = useState(0);
 
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
   const [likeStatus, setLikeStatus] = useState({});
+  const [likeCnt, setLikeCnt] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [paragraphList, setParagraphList] = useState([]);
   const [searchType, setSearchType] = useState("도서명");
   const [myInfo, setMyInfo] = useState();
   const [likedParagraphList, setLikedParagraphList] = useState([]);
@@ -148,7 +148,6 @@ function Community({ PROXY }) {
     setCurrentPage(value);
   };
 
-
   useEffect(() => {
     setCommunityList([]);
     axios
@@ -158,19 +157,31 @@ function Community({ PROXY }) {
         // const sortedData = response.data.results.sort((a, b) => { 
         //   return new Date(b.date) - new Date(a.date);
         // });
-        console.log("rrr", response.data.results);
         setCommunityList(response.data.results);
-        console.log("rrrPage", response.data.total_pages);
-        setTotalPages(response.data.total_pages); 
-        const likedPostIds = response.data.userLikeReports;
+        setTotalPages(response.data.total_pages);
+
+        const likedPostIds = response.data.userLikeReports || [];
         setLikeStatus(
           likedPostIds.reduce((acc, id) => ({ ...acc, [id]: true }), {})
         );
+
+        const likeCounts = response.data.results.reduce((acc, result) => {
+          acc[result.postNum] = result.like_count;
+          return acc;
+        }, {});
+        setLikeCnt(likeCounts);
       })
       .catch((error) => console.error(error));
-  }, [currentPage]); 
+  }, [currentPage]);
 
-  
+
+  const updateLikesState = (likeParagraphList) => {
+    const updatedLikes = {};
+    likeParagraphList.forEach((report) => {
+      updatedLikes[report.postNum] = true;
+    });
+    setLikeStatus(updatedLikes);
+  };
 
   useEffect(() => {
     axios
@@ -185,6 +196,7 @@ function Community({ PROXY }) {
 
         const postNums = likeParagraphList.map((post) => post.postNum);
         setLikedParagraphList(postNums);
+        updateLikesState(likeParagraphList);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -206,7 +218,7 @@ function Community({ PROXY }) {
       .catch((error) => console.error(error));
   }, []);
 
-  const sendLikeCommunity = (postNum) => {
+  const sendLikeCommunity = (index, data) => {
     if (!myInfo) {
       toast.warning(
         () => (
@@ -247,7 +259,7 @@ function Community({ PROXY }) {
         .post(
           "http://127.0.0.1:8000/community/paragraphLike",
           {
-            postNum: postNum,
+            postNum: data.postNum,
           },
           {
             headers: {
@@ -258,7 +270,19 @@ function Community({ PROXY }) {
         )
         .then((response) => {
           console.log(response);
-          window.location.reload();
+          if (likeStatus[data.postNum]) {
+            setLikeCnt((prevLikeCnt) => {
+              const newLikeCnt = Array.isArray(prevLikeCnt) ? [...prevLikeCnt] : [];
+              newLikeCnt[index]--;
+              return newLikeCnt;
+            });
+          } else {
+            setLikeCnt((prevLikeCnt) => {
+              const newLikeCnt = Array.isArray(prevLikeCnt) ? [...prevLikeCnt] : [];
+              newLikeCnt[index]++;
+              return newLikeCnt;
+            });
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -291,14 +315,12 @@ function Community({ PROXY }) {
   };
 
   // Function to toggle the like status for a specific row
-  const toggleLike = (id) => {
+  const toggleLike = (index, data) => {
     setLikeStatus((prevStatus) => ({
       ...prevStatus,
-      [id]: !prevStatus[id],
+      [data.postNum]: !prevStatus[data.postNum],
     }));
-    if (!likeStatus[id]) {
-      sendLikeCommunity(id);
-    }
+    sendLikeCommunity(index, data);
   };
 
   const searchParagraphByAuthor = () => {
@@ -507,27 +529,23 @@ function Community({ PROXY }) {
                         }}
                       >
                         <div>
-                          {isUserLikeParagraph ? (
-                            <FavoriteIcon
-                              className="like"
-                              style={{ color: "#EF9A9A" }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleLike(data.postNum);
-                              }}
-                            />
-                          ) : (
-                            <FavoriteBorderIcon
-                              className="like"
-                              style={{ color: "#EF9A9A" }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleLike(data.postNum);
-                              }}
-                            />
-                          )}
+                          <IconButton
+                            className="like"
+                            style={{ color: "#EF9A9A" }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleLike(index, data);
+                            }}
+                          >
+                            {isUserLikeParagraph ? (
+                              <FavoriteIcon
+                              />
+                            ) : (
+                              <FavoriteBorderIcon
+                              />
+                            )}</IconButton>
                           <div style={{ marginTop: "-5px" }}>
-                            {data.like_count}
+                            {likeCnt[index]}
                           </div>
                         </div>
                         {isUserWriteParagraph ? (
