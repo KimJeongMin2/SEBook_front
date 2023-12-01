@@ -323,7 +323,7 @@ function Community() {
       })
       .then((response) => {
         console.log("searchTitleeeee",response.data.results);
-        setSearchResults(response.data.results); // 검색 결과를 별도 상태에 저장
+        setSearchResults(response.data.results);
         console.log("searchTotallll",response.data.total_pages );
         setTotalPages(response.data.total_pages);
       })
