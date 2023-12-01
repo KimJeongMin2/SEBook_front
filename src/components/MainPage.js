@@ -496,12 +496,6 @@ function MainPage() {
             ? `${myInfo?.name}님, 맞춤 도서 추천`
             : "맞춤도서를 추천 받아 보고 싶으시다면 로그인 하세요!"}
         </Typography>
-        {/* <>{isExploding && <ConfettiExplosion />} </>
-        <Confetti
-          width={width}
-          height={height}
-        /> */}
-        {/* 빵빠레.. 구리긴한데 일단은 냅둠 */}
         <Grid container spacing={2} justifyContent="center">
           <Box
             sx={{

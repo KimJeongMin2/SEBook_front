@@ -87,14 +87,17 @@ function BookReportList() {
   );
   const [myInfo, setMyInfo] = useState();
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageSearch, setCurrentPageSearch] = useState(1);
   const itemsPerPage = 4;
   const [searchType, setSearchType] = useState("도서명");
   const [likedBookReportList, setLikedBookReportList] = useState([]);
   const [writtenBookReportList, setWrittenBookReportList] = useState([]);
   const [likeCnt, setLikeCnt] = useState([]);
   const [likes, setLikes] = useState({});
+  const [bookReportNum, setBookReportNum] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPages, setTotalPages] = useState(0); // Add this line
+  const [searchedBookReportList, setSearchedBookReportList] = useState([]);
 
   useEffect(() => {
     axios
@@ -186,6 +189,8 @@ function BookReportList() {
   }, []);
 
   const sendLikeBookReport = (index, data) => {
+    const currentBookReportNum = data.reportNum;  // Get the reportNum from data
+    setBookReportNum(currentBookReportNum);
     if (!myInfo) {
       toast.warning(
         () => (
@@ -222,12 +227,12 @@ function BookReportList() {
         }
       );
     } else {
-      toggleLike(data.reportNum);
+      toggleLike(currentBookReportNum);
       axios
         .post(
           "http://127.0.0.1:8000/bookReport/bookReportLike",
           {
-            reportNum: data.reportNum,
+            reportNum: currentBookReportNum,
           },
           {
             headers: {
@@ -238,8 +243,8 @@ function BookReportList() {
         )
         .then((response) => {
           console.log(response);
-          toggleLike(data.reportNum);
-          if (likes[data.reportNum]) {
+          toggleLike(currentBookReportNum);  // Use currentBookReportNum here
+          if (likes[currentBookReportNum]) {
             setLikeCnt((prevLikeCnt) => {
               const newLikeCnt = [...prevLikeCnt];
               newLikeCnt[index]--;
@@ -304,9 +309,10 @@ function BookReportList() {
       });
   };
 
+
   const searchBookByAuthor = () => {
     axios
-      .get(`http://127.0.0.1:8000/bookReport/bookReportSearchByAuthor?page=${currentPage}`, {
+      .get(`http://127.0.0.1:8000/bookReport/bookReportSearchByAuthor?page=${currentPageSearch}`, {
         params: {
           author: searchTerm,
         },
@@ -428,7 +434,7 @@ function BookReportList() {
                 </TableRow>
               </TableHead>
               <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                {bookReportList?.map((data, index) => {
+                {searchTerm ? searchedBookReportList : bookReportList?.map((data, index) => {
                   const isUserLikeReportsLiked =
                     Array.isArray(likedBookReportList) &&
                     likedBookReportList.some(
@@ -565,7 +571,7 @@ function BookReportList() {
                             <IconButton
                               onClick={(e) => {
                                 e.stopPropagation();
-                                sendLikeBookReport(index, data);
+                                sendLikeBookReport(data.reportNum);
                               }}
                             >
                               {likes[data.reportNum] || isUserLikeReportsLiked ? (
