@@ -59,9 +59,9 @@ function BookReportDetail() {
     const location = useLocation();
     const [likes, setLikes] = useState({});
     const navigate = useNavigate();
-    const rowData = location.state.rowData;
+    const rowData = location.state;
     const [isSelectedLike, setIsSelectedLike] = useState(rowData?.isUserLikeReportsLiked || false);
-const [likeCount, setLikeCount] = useState(rowData?.like_count || 0);
+    const [likeCount, setLikeCount] = useState(rowData?.like_count || 0);
 
     const selectLike = () => {
         setIsSelectedLike(!isSelectedLike)
@@ -70,18 +70,18 @@ const [likeCount, setLikeCount] = useState(rowData?.like_count || 0);
 
     useEffect(() => {
         axios
-          .get("http://127.0.0.1:8000/user/memberSearch", {
-            headers: {
-              "X-CSRFToken": csrftoken,
-            },
-            withCredentials: true,
-          })
-          .then((response) => {
-            console.log("myInfo : " + response.data);
-            setMyInfo(response.data);
-          })
-          .catch((error) => console.error(error));
-      }, []);
+            .get("http://127.0.0.1:8000/user/memberSearch", {
+                headers: {
+                    "X-CSRFToken": csrftoken,
+                },
+                withCredentials: true,
+            })
+            .then((response) => {
+                console.log("myInfo : " + response.data);
+                setMyInfo(response.data);
+            })
+            .catch((error) => console.error(error));
+    }, []);
 
     // const sendDeleteBook = (reportNum) => {
     //     if (window.confirm("삭제하시겠습니까?")) {
@@ -105,91 +105,92 @@ const [likeCount, setLikeCount] = useState(rowData?.like_count || 0);
 
     const sendDeleteLikeBookReport = (reportNum) => {
         if (window.confirm("삭제하시겠습니까?")) {
-        axios.delete("http://127.0.0.1:8000/bookReport/bookReportDelete", {
-            params: {
-                reportNum: reportNum,
-            },
-            headers: {
-                "X-CSRFToken": csrftoken,
-              },
-              withCredentials: true,
+            axios.delete("http://127.0.0.1:8000/bookReport/bookReportDelete", {
+                params: {
+                    reportNum: reportNum,
+                },
+                headers: {
+                    "X-CSRFToken": csrftoken,
+                },
+                withCredentials: true,
             })
-            .then((response) => {
-                console.log(response);
-                setIsSelectedLike(false);
-                setLikeCount(prevCount => prevCount - 1);
-                navigate("/BookReportList");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }}
+                .then((response) => {
+                    console.log(response);
+                    setIsSelectedLike(false);
+                    setLikeCount(prevCount => prevCount - 1);
+                    navigate("/BookReportList");
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    }
 
     const sendLikeBookReport = (bookReportNum) => {
         if (!myInfo) {
-          toast.warning(
-            () => (
-              <div>
-                로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
-                <br />
-                <br />
-                <br />
-                <Button
-                  color="inherit"
-                  size="small"
-                  onClick={() => navigate("/signin")}
-                  style={{
-                    position: "absolute",
-                    right: "10px",
-                    bottom: "15px",
-                    backgroundColor: "#EF9A9A",
-                    color: "white",
-                    border: "1px solid #EF9A9A",
-                  }}
-                >
-                  네
-                </Button>
-              </div>
-            ),
-            {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            }
-          );
-        } else {
-          axios
-            .post(
-              "http://127.0.0.1:8000/bookReport/bookReportLike",
-              {
-                reportNum: bookReportNum,
-              },
-              {
-                headers: {
-                  "X-CSRFToken": csrftoken,
-                },
-                withCredentials: true,
-              }
-            )
-            .then((response) => {
-                if (response.status === 200 || response.status === 201) {
-                    setLikes((likes) => ({
-                    ...likes,
-                    [bookReportNum]: !likes[bookReportNum],
-                    }));
-                    setIsSelectedLike(!isSelectedLike);
-                    setLikeCount(likeCount => isSelectedLike ? likeCount - 1 : likeCount + 1);
+            toast.warning(
+                () => (
+                    <div>
+                        로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+                        <br />
+                        <br />
+                        <br />
+                        <Button
+                            color="inherit"
+                            size="small"
+                            onClick={() => navigate("/signin")}
+                            style={{
+                                position: "absolute",
+                                right: "10px",
+                                bottom: "15px",
+                                backgroundColor: "#EF9A9A",
+                                color: "white",
+                                border: "1px solid #EF9A9A",
+                            }}
+                        >
+                            네
+                        </Button>
+                    </div>
+                ),
+                {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
                 }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-};
+            );
+        } else {
+            axios
+                .post(
+                    "http://127.0.0.1:8000/bookReport/bookReportLike",
+                    {
+                        reportNum: bookReportNum,
+                    },
+                    {
+                        headers: {
+                            "X-CSRFToken": csrftoken,
+                        },
+                        withCredentials: true,
+                    }
+                )
+                .then((response) => {
+                    if (response.status === 200 || response.status === 201) {
+                        setLikes((likes) => ({
+                            ...likes,
+                            [bookReportNum]: !likes[bookReportNum],
+                        }));
+                        setIsSelectedLike(!isSelectedLike);
+                        setLikeCount(likeCount => isSelectedLike ? likeCount - 1 : likeCount + 1);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
 
     return (
         <>
@@ -212,17 +213,17 @@ const [likeCount, setLikeCount] = useState(rowData?.like_count || 0);
                 <div style={{ display: 'flex', margin: '10px auto', padding: '20px', backgroundColor: '#F9F5F6', width: '55%', height: '380px', borderRadius: '20px' }}>
                     <div style={{ marginLeft: '10px', width: '98%' }}>
                         <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between' }}>
-                            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{rowData.reportTitle}</div>
-                            <div>{rowData.username} | {`${rowData.registDate_report.split('T')[0]} ${rowData.registDate_report.split('T')[1]}`}</div>
+                            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{rowData?.reportTitle || ''}</div>
+                            <div>{rowData?.username || ''} | {`${rowData?.registDate_report.split('T')[0]} ${rowData?.registDate_report.split('T')[1]}`}</div>
                         </div>
                         <div style={{ display: 'flex', margin: '2px', padding: '0px 10px 10px', justifyContent: 'space-between', borderBottom: '1px solid #FDCEDF' }}>
-                            <div style={{ fontSize: '14px' }}>{rowData.title}</div>
-                            <div style={{ fontSize: '14px' }}>{rowData.author} | {rowData.publisher}</div>
+                            <div style={{ fontSize: '14px' }}>{rowData?.title || ''}</div>
+                            <div style={{ fontSize: '14px' }}>{rowData?.author || ''} | {rowData?.publisher || ''}</div>
                         </div>
                         <div style={{ height: '340px', padding: '10px', fontSize: '15px' }}>
-                            {rowData.reportContents}
+                            {rowData?.reportContents || ''}
                         </div>
-                        <div style={{ display: 'flex', margin: '10px 5px 0 640px' }}>
+                        <div style={{ display: 'flex', margin: '-20px 5px 0 640px' }}>
                             {rowData && rowData.isUserWriteReportsLiked &&
                                 <>
                                     <Button
@@ -243,11 +244,11 @@ const [likeCount, setLikeCount] = useState(rowData?.like_count || 0);
                                 </>
                             }
                             <div>
-                                {isSelectedLike?
+                                {isSelectedLike ?
                                     <FavoriteIcon style={{ fontSize: '30px', color: '#EF9A9A' }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            
+
                                             sendLikeBookReport(rowData.reportNum);
                                         }}
                                     ></FavoriteIcon>
@@ -255,7 +256,7 @@ const [likeCount, setLikeCount] = useState(rowData?.like_count || 0);
                                         style={{ fontSize: '30px', color: '#EF9A9A' }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            
+
                                             sendLikeBookReport(rowData.reportNum);
                                         }}>
                                     </FavoriteBorderIcon>}

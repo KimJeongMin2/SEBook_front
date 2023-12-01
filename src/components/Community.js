@@ -581,7 +581,7 @@ function Community() {
             count={totalPages}
             color="primary"
             style={{
-              margin: "60px 0",
+              margin: "30px 0",
               position: "absolute",
               bottom: 0,
               left: "50%",
