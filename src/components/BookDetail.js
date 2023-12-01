@@ -171,22 +171,10 @@ function BookDetail() {
       <MainAppBar />
       <Box sx={{ paddingTop: "48px" }}>
         <TabBar />
-        <div style={{ display: "flex", marginTop: "70px" }}>
-          <Search style={{ marginTop: "20px", marginRight: "255px" }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              style={{ fontSize: "13px" }}
-              placeholder="도서명 또는 작가명을 입력하세요."
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-        </div>
         <div
           style={{
             display: "flex",
-            margin: "10px auto",
+            margin: "100px auto",
             padding: "20px",
             backgroundColor: "#F9F5F6",
             width: "62%",
