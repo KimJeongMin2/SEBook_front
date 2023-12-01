@@ -115,6 +115,13 @@ function BookReportList() {
 
   useEffect(() => {
     setBookReportList([]);
+    if(searchTerm){
+      if (searchType === "작가명") {
+        searchBookByAuthor();
+      } else if (searchType === "도서명") {
+        searchBookByTitle();
+      }
+    }else {
     axios
       .get(`http://127.0.0.1:8000/bookReport/bookReportReadAll?page=${currentPage}`)
       .then((response) => {
@@ -126,6 +133,7 @@ function BookReportList() {
         setLikeCnt(likeCounts);
       })
       .catch((error) => console.error(error));
+    }
   }, [currentPage]);
 
 
@@ -301,8 +309,8 @@ function BookReportList() {
         },
       })
       .then((response) => {
-        console.log("rrr", response.data.results);
-        console.log("rrrPage", response.data.total_pages);
+        console.log("rrrTitleeeee", response.data.results);
+        console.log("rrrPageTTTT", response.data.total_pages);
         setTotalPages(response.data.total_pages);
         setSearchResults(response.data.results);
       })
