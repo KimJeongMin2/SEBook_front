@@ -631,7 +631,7 @@ function BookReportList() {
               count={totalPages}
               color="primary"
               style={{
-                margin: "190px 0",
+                margin: "45px 0",
                 position: "absolute",
                 bottom: 0,
                 left: "50%",

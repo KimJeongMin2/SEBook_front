@@ -121,6 +121,10 @@ function Community() {
     setModalContent(content);
     setIsUserLikeModalContent(likedParagraphList?.includes(content.postNum));
   };
+  useEffect(() => {
+    console.log("mmooddalle", modalContent);
+  }, [modalContent]);
+  
 
   const handleClose = () => {
     setOpen(false);
@@ -203,7 +207,7 @@ function Community() {
     setLikeStatus(updatedLikes);
   };
 
-  const sendLikeCommunity = (index, data) => {
+  const sendLikeCommunity = (postNum) => {
     if (!myInfo) {
       toast.warning(
         () => (
@@ -244,7 +248,7 @@ function Community() {
         .post(
           "http://127.0.0.1:8000/community/paragraphLike",
           {
-            postNum: data.postNum,
+            postNum: postNum,
           },
           {
             headers: {
@@ -255,19 +259,6 @@ function Community() {
         )
         .then((response) => {
           console.log(response);
-          // if (likeStatus[data.postNum]) {
-          //   setLikeCnt((prevLikeCnt) => {
-          //     const newLikeCnt = Array.isArray(prevLikeCnt) ? [...prevLikeCnt] : [];
-          //     newLikeCnt[index]--;
-          //     return newLikeCnt;
-          //   });
-          // } else {
-          //   setLikeCnt((prevLikeCnt) => {
-          //     const newLikeCnt = Array.isArray(prevLikeCnt) ? [...prevLikeCnt] : [];
-          //     newLikeCnt[index]++;
-          //     return newLikeCnt;
-          //   });
-          // }
           window.location.reload();
         })
         .catch((error) => {
@@ -301,12 +292,13 @@ function Community() {
   };
 
   // Function to toggle the like status for a specific row
-  const toggleLike = (index, data) => {
+  const toggleLike = (postNum) => {
+    console.log("postNum",postNum);
     setLikeStatus((prevStatus) => ({
       ...prevStatus,
-      [data.postNum]: !prevStatus[data.postNum],
+      [postNum.postNum]: !prevStatus[postNum.postNum],
     }));
-    sendLikeCommunity(index, data);
+    sendLikeCommunity(postNum);
   };
 
   const resetData = () => {
@@ -469,7 +461,11 @@ function Community() {
                         className="list"
                         key={data.title}
                         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                        onClick={() => handleOpen(data)}
+                        onClick={() => 
+                          {
+                            console.log("ddddddddaaaaaaaattttttaaaaaa",data);  // 여기서 data가 제대로 출력되는지 확인
+                            handleOpen(data);
+                          }}
                       >
                         <TableCell
                           component="th"
@@ -534,7 +530,7 @@ function Community() {
                               style={{ color: "#EF9A9A" }}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                toggleLike(index, data);
+                                toggleLike(data.postNum);
                               }}
                             >
                               {isUserLikeParagraph ? (
@@ -645,6 +641,7 @@ function Community() {
                 style={{ color: "#EF9A9A" }}
                 onClick={(e) => {
                   e.stopPropagation();
+                  console.log("mmmoooppp", modalContent.postNum);
                   toggleLike(modalContent.postNum);
                 }}
               />
@@ -653,6 +650,7 @@ function Community() {
                 style={{ color: "#EF9A9A" }}
                 onClick={(e) => {
                   e.stopPropagation();
+                  console.log("mmmoooppp", modalContent.postNum);
                   toggleLike(modalContent.postNum);
                 }}
               />
