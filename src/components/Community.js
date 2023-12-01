@@ -377,6 +377,10 @@ function Community() {
     setSearchTerm(event.target.value);
   };
 
+  // useEffect(() => {
+  //   setCurrentPage(1);
+  // }, [searchTerm]);
+
   return (
     <>
       <MainAppBar />
