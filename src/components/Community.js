@@ -87,7 +87,7 @@ function Community() {
 
   const [communityList, setCommunityList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
   const [totalPages, setTotalPages] = useState(0);
 
   const [open, setOpen] = useState(false);
@@ -137,6 +137,13 @@ function Community() {
 
   useEffect(() => {
     setCommunityList([]);
+    if(searchTerm){
+      if (searchType === "작가명") {
+        searchParagraphByAuthor();
+      } else if (searchType === "도서명") {
+        searchParagraphByTitle();
+      }
+    }else {
     axios
       .get(`http://127.0.0.1:8000/community/paragraphReadAll?page=${currentPage}`)
       .then((response) => {
@@ -157,6 +164,7 @@ function Community() {
         setLikeCnt(likeCounts);
       })
       .catch((error) => console.error(error));
+    }
   }, [currentPage]);
 
 
@@ -352,6 +360,7 @@ function Community() {
         }
       });
   };
+  
   const handleSearchKeyPress = (event) => {
     if (event.key === "Enter") {
       resetData();
