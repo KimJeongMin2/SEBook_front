@@ -500,6 +500,8 @@ function Community() {
                         (post) => data.postNum === post
                       );
 
+                      const isCurrentUserWriteParagraph = data.userNum_community === currentUser;
+
                     return (
                       <TableRow
                         className="list"
@@ -596,7 +598,7 @@ function Community() {
                               {data.like_count}
                             </div>
                           </div>
-                          {isUserWriteParagraph ? (
+                          {isCurrentUserWriteParagraph ? (
                             <DeleteIcon
                               className="like"
                               style={{
@@ -608,6 +610,7 @@ function Community() {
                                 sendDeleteParagraphMy(data.postNum);
                               }}
                             />
+                            
                           ) : (
                             <></>
                           )}
