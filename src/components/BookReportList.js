@@ -166,11 +166,10 @@ function BookReportList() {
         withCredentials: true,
       })
       .then((response) => {
-        const likeBookReportList = response.data.likeBookReportList;
+        const likeBookReportList = response.data?.results || [];
         const reportNums = likeBookReportList.map((report) => report.reportNum);
         setLikedBookReportList(reportNums);
         updateLikesState(likeBookReportList);
-
       })
       .catch((error) => console.error(error));
   }, []);

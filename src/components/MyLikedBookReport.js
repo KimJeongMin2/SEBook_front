@@ -89,7 +89,7 @@ function MyLikedBookReport({ PROXY }) {
   };
 
   const handleChangePage = (event, value) => {
-    setCurrentPage(value);
+    setPage(value);
   };
 
   useEffect(() => {
@@ -120,31 +120,31 @@ function MyLikedBookReport({ PROXY }) {
 
   const sendDeleteBookReport = (bookReportNum) => {
     axios
-        .post(
-          "http://127.0.0.1:8000/bookReport/bookReportLike",
-          {
-            reportNum: bookReportNum,
+      .post(
+        "http://127.0.0.1:8000/bookReport/bookReportLike",
+        {
+          reportNum: bookReportNum,
+        },
+        {
+          headers: {
+            "X-CSRFToken": csrftoken,
           },
-          {
-            headers: {
-              "X-CSRFToken": csrftoken,
-            },
-            withCredentials: true,
-          }
-        )
-        .then((response) => {
-          if (response.status === 200 || response.status === 201) {
-            setLikes({
-              ...likes,
-              [bookReportNum]: !likes[bookReportNum],
-            });
-          }
-          window.location.reload();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        if (response.status === 200 || response.status === 201) {
+          setLikes({
+            ...likes,
+            [bookReportNum]: !likes[bookReportNum],
+          });
+        }
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
   };
 
   const truncate = (str, n) => {
@@ -187,7 +187,7 @@ function MyLikedBookReport({ PROXY }) {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {getPageData()?.map((data) => (
+              {getPageData()?.map((data, index) => (
                 <TableRow
                   key={data.book}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -196,7 +196,7 @@ function MyLikedBookReport({ PROXY }) {
                   }
                 >
                   <TableCell component="th" scope="row">
-                    {data.reportNum}
+                    {(page - 1) * itemsPerPage + index + 1}
                   </TableCell>
                   <TableCell component="th" scope="row">
                     {truncate(data.reportTitle, 20)}

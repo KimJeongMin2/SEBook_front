@@ -99,7 +99,7 @@ export default function MyPage() {
       .catch((error) => console.error(error));
   }, [page]);
 
-  
+
   useEffect(() => {
     axios
       .get(`http://127.0.0.1:8000/bookReport/bookReportReadLike?page=${page}`, {
