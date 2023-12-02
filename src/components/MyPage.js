@@ -45,7 +45,8 @@ export default function MyPage() {
   const [readMyParagraph, setReadMyParagraph] = useState([]);
   const [likeParagraph, setLikeParagraph] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     axios
@@ -84,63 +85,68 @@ export default function MyPage() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/bookReport/bookReportReadMy", {
+      .get(`http://127.0.0.1:8000/bookReport/bookReportReadMy?page=${page}`, {
         headers: {
           'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
       .then((response) => {
-        console.log(response.data.userBookReportList);
-        setMyBookReport(response.data.userBookReportList);
+        console.log(response.data.results);
+        setMyBookReport(response.data.results);
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [page]);
+
+  
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/bookReport/bookReportReadLike?page=${page}`, {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log("공감한 도서 : " + response.data.results[0]);
+        setMyLikedBookReport(response.data.results);
+        setTotalPages(response.data.total_pages);
+      })
+      .catch((error) => console.error(error));
+  }, [page]);
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
+      .get(`http://127.0.0.1:8000/bookReport/bookReportReadMy?page=${page}`, {
         headers: {
           'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
       .then((response) => {
-        console.log("공감한 도서 : " + response.data.likeBookReportList[0]);
-        setMyLikedBookReport(response.data.likeBookReportList);
+        console.log(response.data.results);
+        setMyBookReport(response.data.results);
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/community/paragraphReadMy", {
+      .get(`http://127.0.0.1:8000/community/paragraphReadLike?page=${page}`, {
         headers: {
           'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
       .then((response) => {
-
-        setReadMyParagraph(response.data.userCommunityList);
+        console.log(response.data.results);
+        setLikeParagraph(response.data.results);
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error(error));
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/community/paragraphReadLike", {
-        headers: {
-          'X-CSRFToken': csrftoken
-        },
-        withCredentials: true
-      })
-      .then((response) => {
-        console.log(response.data.savedCommunityList);
-        setLikeParagraph(response.data.savedCommunityList);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+  }, [page]);
 
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
