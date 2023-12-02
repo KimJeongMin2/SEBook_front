@@ -100,7 +100,6 @@ function MyBookReport() {
                 withCredentials: true
             })
             .then((response) => {
-                console.log("공감한 독후감 : " + response.data.results);
                 setBookReportList(response.data.results);
                 setTotalPages(response.data.total_pages);
             })
@@ -172,25 +171,25 @@ function MyBookReport() {
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                            {getPageData()?.map((data, index) => (
+                            {getPageData()?.map((rowData, index) => (
                                 <TableRow
-                                    key={data.title}
+                                    key={rowData.title}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
+                                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${rowData.isbn13}`, { state: rowData })}>
                                         {(page - 1) * itemsPerPage + index + 1}
                                     </TableCell>
-                                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
-                                        {truncate(data.reportTitle, 20)}
+                                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${rowData.isbn13}`, { state: rowData })}>
+                                        {truncate(rowData.reportTitle, 20)}
                                     </TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{truncate(data.title, 18)}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{truncate(data.author, 6)}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{truncate(data.publisher, 6)}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${data.reportNum}`, { state: data })}>{data.registDate_report.split('T')[0]}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${rowData.reportNum}`, { state: rowData })}>{truncate(rowData.title, 18)}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${rowData.reportNum}`, { state: rowData })}>{truncate(rowData.author, 6)}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${rowData.reportNum}`, { state: rowData })}>{truncate(rowData.publisher, 6)}</TableCell>
+                                    <TableCell onClick={() => navigate(`/BookReportDetail/${rowData.reportNum}`, { state: rowData })}>{rowData.registDate_report.split('T')[0]}</TableCell>
                                     <TableCell>
                                         <DeleteIcon
                                             style={{ color: "#FF9999" }}
-                                            onClick={() => sendDeleteBook(data.reportNum)}
+                                            onClick={() => sendDeleteBook(rowData.reportNum)}
                                         />
                                     </TableCell>
                                 </TableRow>
