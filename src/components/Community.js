@@ -89,7 +89,7 @@ function Community() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   const [totalPages, setTotalPages] = useState(0);
-
+  const [likes, setLikes] = useState({});
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
   const [likeStatus, setLikeStatus] = useState({});
@@ -101,6 +101,8 @@ function Community() {
   const [writtenParagraphList, setWrittenParagraphList] = useState([]);
   const [isUserLikeModalContent, setIsUserLikeModalContent] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
+  const [modalLikeStatus, setModalLikeStatus] = useState(false);
+
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/user/memberSearch", {
@@ -116,23 +118,22 @@ function Community() {
       .catch((error) => console.error(error));
   }, []);
 
-  const handleOpen = (content) => {
+  const handleOpen = (data) => {
     setOpen(true);
-    setModalContent(content);
-    setIsUserLikeModalContent(likedParagraphList?.includes(content.postNum));
+    setModalContent(data);
+    setModalLikeStatus(data.user_liked.includes(currentUser));
   };
+  
   useEffect(() => {
     console.log("mmooddalle", modalContent);
   }, [modalContent]);
-
 
   const handleClose = () => {
     setOpen(false);
   };
 
-
   const handleChangePage = (event, value) => {
-    setCurrentPage(value)
+    setCurrentPage(value);
   };
 
   useEffect(() => {
@@ -145,7 +146,9 @@ function Community() {
       }
     } else {
       axios
-        .get(`http://127.0.0.1:8000/community/paragraphReadAll?page=${currentPage}`)
+        .get(
+          `http://127.0.0.1:8000/community/paragraphReadAll?page=${currentPage}`
+        )
         .then((response) => {
           console.log(response.data);
           console.log("rrr", response.data.results);
@@ -166,8 +169,6 @@ function Community() {
         .catch((error) => console.error(error));
     }
   }, [currentPage]);
-
-
 
   useEffect(() => {
     axios
@@ -249,6 +250,7 @@ function Community() {
         }
       );
     } else {
+      toggleLike(postNum);
       axios
         .post(
           "http://127.0.0.1:8000/community/paragraphLike",
@@ -263,7 +265,12 @@ function Community() {
           }
         )
         .then((response) => {
-          console.log(response);
+          if (response.status === 200 || response.status === 201) {
+            setLikeStatus((likes) => ({
+              ...likes,
+              [postNum]: !likes[postNum],
+            }));
+          }
           window.location.reload();
         })
         .catch((error) => {
@@ -296,15 +303,34 @@ function Community() {
     }
   };
 
-  // Function to toggle the like status for a specific row
-  const toggleLike = (postNum) => {
-    console.log("postNum", postNum);
-    setLikeStatus((prevStatus) => ({
-      ...prevStatus,
-      [postNum.postNum]: !prevStatus[postNum.postNum],
-    }));
-    sendLikeCommunity(postNum);
+  const toggleLike = (id) => {
+    setLikeStatus({
+      ...likes,
+      [id]: !likes[id],
+    });
   };
+
+  // const toggleLike = (postNum) => {
+  //   console.log("postNum", postNum);
+
+  //   // 좋아요 상태 업데이트
+  //   setLikeStatus((prevStatus) => ({
+  //     ...prevStatus,
+  //     [postNum]: !prevStatus[postNum],
+  //   }));
+
+  //   // 좋아요 상태에 따른 작업 수행 (서버에 좋아요 상태 전송 등)
+  //   sendLikeCommunity(postNum);
+
+  //   // 좋아요 누른 리스트 업데이트
+  //   if (likedParagraphList.includes(postNum)) {
+  //     setLikedParagraphList(
+  //       likedParagraphList.filter((item) => item !== postNum)
+  //     );
+  //   } else {
+  //     setLikedParagraphList([...likedParagraphList, postNum]);
+  //   }
+  // };
 
   const resetData = () => {
     setCommunityList([]);
@@ -314,15 +340,18 @@ function Community() {
   const searchParagraphByAuthor = () => {
     resetData();
     axios
-      .get(`http://127.0.0.1:8000/community/searchParagraphByAuthor?page=${currentPage}`, {
-        params: {
-          author: searchTerm,
-        },
-      })
+      .get(
+        `http://127.0.0.1:8000/community/searchParagraphByAuthor?page=${currentPage}`,
+        {
+          params: {
+            author: searchTerm,
+          },
+        }
+      )
       .then((response) => {
-        console.log("searchAuthorrrrr", response.data.results)
+        console.log("searchAuthorrrrr", response.data.results);
         setSearchResults(response.data.results);
-        console.log("searchAuthorrrrr", response.data.total_pages)
+        console.log("searchAuthorrrrr", response.data.total_pages);
         setTotalPages(response.data.total_pages);
       })
       .catch((error) => {
@@ -341,11 +370,14 @@ function Community() {
   const searchParagraphByTitle = () => {
     resetData();
     axios
-      .get(`http://127.0.0.1:8000/community/searchParagraphByTitle?page=${currentPage}`, {
-        params: {
-          title: searchTerm,
-        },
-      })
+      .get(
+        `http://127.0.0.1:8000/community/searchParagraphByTitle?page=${currentPage}`,
+        {
+          params: {
+            title: searchTerm,
+          },
+        }
+      )
       .then((response) => {
         console.log("searchTitleeeee", response.data.results);
         setSearchResults(response.data.results); // 검색 결과를 별도 상태에 저장
@@ -372,7 +404,6 @@ function Community() {
     }
   };
 
-
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -380,7 +411,7 @@ function Community() {
   // useEffect(() => {
   //   setCurrentPage(1);
   // }, [searchTerm]);
-
+  const currentUser = myInfo?.userNum;
   return (
     <>
       <MainAppBar />
@@ -439,7 +470,7 @@ function Community() {
         <TableContainer
           style={{ display: "flex", maxWidth: "70%", margin: "10px auto" }}
         >
-          <div style={{ height: '420px' }}>
+          <div style={{ height: "420px" }}>
             <Table sx={{ minWidth: 600 }} aria-label="simple table">
               <TableHead style={{ backgroundColor: "#F8E8EE" }}>
                 <TableRow>
@@ -457,22 +488,27 @@ function Community() {
                 </TableRow>
               </TableHead>
               <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                {(searchResults || communityList) && (searchResults || communityList).length > 0 ? (
+                {(searchResults || communityList) &&
+                (searchResults || communityList).length > 0 ? (
                   (searchResults || communityList).map((data, index) => {
                     const isUserLikeParagraph =
                       Array.isArray(likedParagraphList) &&
                       likedParagraphList.some((post) => data.postNum === post);
                     const isUserWriteParagraph =
                       Array.isArray(writtenParagraphList) &&
-                      writtenParagraphList.some((post) => data.postNum === post);
+                      writtenParagraphList.some(
+                        (post) => data.postNum === post
+                      );
 
                     return (
                       <TableRow
                         className="list"
                         key={data.title}
-                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
                         onClick={() => {
-                          console.log("ddddddddaaaaaaaattttttaaaaaa", data);  // 여기서 data가 제대로 출력되는지 확인
+                          console.log("ddddddddaaaaaaaattttttaaaaaa", data); // 여기서 data가 제대로 출력되는지 확인
                           handleOpen(data);
                         }}
                       >
@@ -523,7 +559,9 @@ function Community() {
                         >
                           {truncate(data.author, 6)}
                         </TableCell>
-                        <TableCell style={{ width: "90px", textAlign: "center" }}>
+                        <TableCell
+                          style={{ width: "90px", textAlign: "center" }}
+                        >
                           {data.registDate_community.split("T")[0]}
                         </TableCell>
                         <TableCell
@@ -534,21 +572,26 @@ function Community() {
                           }}
                         >
                           <div>
-                            <IconButton
+                            <FavoriteIcon
                               className="like"
-                              style={{ color: "#EF9A9A" }}
+                              style={{
+                                color: data.user_liked.includes(currentUser)
+                                  ? "#EF9A9A"
+                                  : "gray",
+                              }}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 toggleLike(data.postNum);
+                                sendLikeCommunity(data.postNum);
                               }}
-                            >
-                              {isUserLikeParagraph ? (
-                                <FavoriteIcon
-                                />
+                            />
+                            {/* {isUserLikeParagraph ? (
+                                <FavoriteIcon />
                               ) : (
-                                <FavoriteBorderIcon
-                                />
-                              )}</IconButton>
+                                <FavoriteBorderIcon />
+                              )}
+                            </IconButton> */}
+
                             <div style={{ marginTop: "-5px" }}>
                               {data.like_count}
                             </div>
@@ -602,7 +645,7 @@ function Community() {
                 height: "30px",
                 backgroundColor: "#EF9A9A",
                 color: "#ffffff",
-                marginTop: '5px'
+                marginTop: "5px",
               }}
               onClick={() => {
                 navigate("/CommunityRegist");
@@ -645,22 +688,16 @@ function Community() {
           >
             <div>구절 정보</div>
 
-            {isUserLikeModalContent ? (
+            {modalContent && (
               <FavoriteIcon
-                style={{ color: "#EF9A9A" }}
+              style={{
+                color: modalLikeStatus ? "#EF9A9A" : "gray",
+              }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log("mmmoooppp", modalContent.postNum);
                   toggleLike(modalContent.postNum);
-                }}
-              />
-            ) : (
-              <FavoriteBorderIcon
-                style={{ color: "#EF9A9A" }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  console.log("mmmoooppp", modalContent.postNum);
-                  toggleLike(modalContent.postNum);
+                  sendLikeCommunity(modalContent.postNum);
+                  setModalLikeStatus(!modalLikeStatus);
                 }}
               />
             )}
