@@ -75,7 +75,10 @@ function MyLikedBookReport({ PROXY }) {
   );
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   const getPageData = () => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -91,18 +94,20 @@ function MyLikedBookReport({ PROXY }) {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
+      .get(`http://127.0.0.1:8000/bookReport/bookReportReadLike?page=${page}`, {
         headers: {
-          "X-CSRFToken": csrftoken,
+          'X-CSRFToken': csrftoken
         },
-        withCredentials: true,
+        withCredentials: true
       })
       .then((response) => {
-        console.log("공감한 도서 : " + response.data.likeBookReportList[0]);
-        setBookReportList(response.data.likeBookReportList);
+        console.log("공감한 독후감 : " + response.data.results);
+        setBookReportList(response.data.results);
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [page]);
+
 
   const [likes, setLikes] = useState({});
 
@@ -225,7 +230,7 @@ function MyLikedBookReport({ PROXY }) {
         <div style={{ display: "flex" }}>
           {bookReportList && (
             <Pagination
-              count={Math.ceil(bookReportList.length / itemsPerPage)}
+              count={totalPages}
               color="primary"
               style={{
                 margin: "40px 0",
