@@ -88,6 +88,9 @@ function MyLikedBookReport() {
       : [];
   };
 
+  const [likedBookReportList, setLikedBookReportList] = useState([]);
+  const [writtenBookReportList, setWrittenBookReportList] = useState([]);
+
   const handleChangePage = (event, value) => {
     setPage(value);
   };
@@ -147,6 +150,52 @@ function MyLikedBookReport() {
 
   };
 
+
+  const updateLikesState = (likeBookReportList) => {
+    const updatedLikes = {};
+    likeBookReportList.forEach((report) => {
+      updatedLikes[report.reportNum] = true;
+    });
+    setLikes(updatedLikes);
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        const likeBookReportList = response.data?.results || [];
+        const reportNums = likeBookReportList.map((report) => report.reportNum);
+        setLikedBookReportList(reportNums);
+        updateLikesState(likeBookReportList);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/bookReport/bookReportReadMy", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        const writtenBookReportList = response.data.userBookReportList;
+
+        const reportNums = writtenBookReportList.map(
+          (report) => report.reportNum
+        );
+        setWrittenBookReportList(reportNums);
+        console.log(reportNums);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };
@@ -187,43 +236,58 @@ function MyLikedBookReport() {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {getPageData()?.map((data, index) => (
-                <TableRow
-                  key={data.book}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  onClick={() =>
-                    navigate(`/BookReportDetail/${data.id}`, { state: data })
-                  }
-                >
-                  <TableCell component="th" scope="row">
-                    {(page - 1) * itemsPerPage + index + 1}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {truncate(data.reportTitle, 20)}
-                  </TableCell>
-                  <TableCell>{truncate(data.title, 20)}</TableCell>
-                  <TableCell>{truncate(data.author, 6)}</TableCell>
-                  <TableCell>{truncate(data.publisher, 6)}</TableCell>
-                  <TableCell>{truncate(data.username, 6)}</TableCell>
-                  <TableCell>{data.registDate_report.split("T")[0]}</TableCell>
-                  <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    <IconButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleLike(data.reportNum);
-                        sendDeleteBookReport(data.reportNum);
-                      }}
-                    >
-                      <FavoriteIcon
-                        style={{
-                          color: likes[data.reportNum] ? "gray" : "#EF9A9A",
+              {getPageData()?.map((data, index) => {
+                const isUserLikeReportsLiked =
+                  Array.isArray(likedBookReportList) &&
+                  likedBookReportList.some((report) => data.reportNum === report);
+                const isUserWriteReportsLiked =
+                  Array.isArray(writtenBookReportList) &&
+                  writtenBookReportList.some((report) => data.reportNum === report);
+
+                const rowData = {
+                  ...data,
+                  isUserLikeReportsLiked,
+                  isUserWriteReportsLiked,
+                };
+
+                return (
+                  <TableRow
+                    key={data.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    onClick={() =>
+                      navigate(`/BookReportDetail/${data.id}`, { state: rowData })
+                    }
+                  >
+                    <TableCell component="th" scope="row">
+                      {(page - 1) * itemsPerPage + index + 1}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {truncate(data.reportTitle, 20)}
+                    </TableCell>
+                    <TableCell>{truncate(data.title, 20)}</TableCell>
+                    <TableCell>{truncate(data.author, 6)}</TableCell>
+                    <TableCell>{truncate(data.publisher, 6)}</TableCell>
+                    <TableCell>{truncate(data.username, 6)}</TableCell>
+                    <TableCell>{data.registDate_report.split("T")[0]}</TableCell>
+                    <TableCell style={{ width: "50px", textAlign: "center" }}>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(data.reportNum);
+                          sendDeleteBookReport(data.reportNum);
                         }}
-                      />
-                    </IconButton>
-                    <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                      >
+                        <FavoriteIcon
+                          style={{
+                            color: likes[data.reportNum] ? "gray" : "#EF9A9A",
+                          }}
+                        />
+                      </IconButton>
+                      <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>

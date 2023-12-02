@@ -66,6 +66,9 @@ const csrftoken = Cookies.get('csrftoken');
 
 function MyBookReport() {
 
+
+    const [likedBookReportList, setLikedBookReportList] = useState([]);
+    const [writtenBookReportList, setWrittenBookReportList] = useState([]);
     const location = useLocation();
     const navigate = new useNavigate();
 
@@ -100,12 +103,58 @@ function MyBookReport() {
                 withCredentials: true
             })
             .then((response) => {
+                console.log("공감한 독후감 : " + response.data.results);
                 setBookReportList(response.data.results);
                 setTotalPages(response.data.total_pages);
             })
             .catch((error) => console.error(error));
     }, [page]);
 
+
+    const updateLikesState = (likeBookReportList) => {
+        const updatedLikes = {};
+        likeBookReportList.forEach((report) => {
+            updatedLikes[report.reportNum] = true;
+        });
+        setLikes(updatedLikes);
+    };
+
+    useEffect(() => {
+        axios
+            .get("http://127.0.0.1:8000/bookReport/bookReportReadLike", {
+                headers: {
+                    "X-CSRFToken": csrftoken,
+                },
+                withCredentials: true,
+            })
+            .then((response) => {
+                const likeBookReportList = response.data?.results || [];
+                const reportNums = likeBookReportList.map((report) => report.reportNum);
+                setLikedBookReportList(reportNums);
+                updateLikesState(likeBookReportList);
+            })
+            .catch((error) => console.error(error));
+    }, []);
+
+    useEffect(() => {
+        axios
+            .get("http://127.0.0.1:8000/bookReport/bookReportReadMy", {
+                headers: {
+                    "X-CSRFToken": csrftoken,
+                },
+                withCredentials: true,
+            })
+            .then((response) => {
+                const writtenBookReportList = response.data.userBookReportList;
+
+                const reportNums = writtenBookReportList.map(
+                    (report) => report.reportNum
+                );
+                setWrittenBookReportList(reportNums);
+                console.log(reportNums);
+            })
+            .catch((error) => console.error(error));
+    }, []);
 
     const [likes, setLikes] = useState({});
 
@@ -171,29 +220,53 @@ function MyBookReport() {
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                            {getPageData()?.map((rowData, index) => (
-                                <TableRow
-                                    key={rowData.title}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${rowData.isbn13}`, { state: rowData })}>
-                                        {(page - 1) * itemsPerPage + index + 1}
-                                    </TableCell>
-                                    <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${rowData.isbn13}`, { state: rowData })}>
-                                        {truncate(rowData.reportTitle, 20)}
-                                    </TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${rowData.reportNum}`, { state: rowData })}>{truncate(rowData.title, 18)}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${rowData.reportNum}`, { state: rowData })}>{truncate(rowData.author, 6)}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${rowData.reportNum}`, { state: rowData })}>{truncate(rowData.publisher, 6)}</TableCell>
-                                    <TableCell onClick={() => navigate(`/BookReportDetail/${rowData.reportNum}`, { state: rowData })}>{rowData.registDate_report.split('T')[0]}</TableCell>
-                                    <TableCell>
-                                        <DeleteIcon
-                                            style={{ color: "#FF9999" }}
-                                            onClick={() => sendDeleteBook(rowData.reportNum)}
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {getPageData()?.map((data, index) => {
+                                const isUserLikeReportsLiked =
+                                    Array.isArray(likedBookReportList) &&
+                                    likedBookReportList.some((report) => data.reportNum === report);
+                                const isUserWriteReportsLiked =
+                                    Array.isArray(writtenBookReportList) &&
+                                    writtenBookReportList.some((report) => data.reportNum === report);
+
+                                const rowData = {
+                                    ...data,
+                                    isUserLikeReportsLiked,
+                                    isUserWriteReportsLiked,
+                                };
+
+                                return (
+                                    <TableRow
+                                        key={data.title}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: rowData })}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {(page - 1) * itemsPerPage + index + 1}
+                                        </TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {truncate(data.reportTitle, 20)}
+                                        </TableCell>
+                                        <TableCell>
+                                            {truncate(data.title, 18)}
+                                        </TableCell>
+                                        <TableCell>
+                                            {truncate(data.author, 6)}
+                                        </TableCell>
+                                        <TableCell>
+                                            {truncate(data.publisher, 6)}
+                                        </TableCell>
+                                        <TableCell>
+                                            {data.registDate_report.split('T')[0]}
+                                        </TableCell>
+                                        <TableCell>
+                                            <DeleteIcon
+                                                style={{ color: "#FF9999" }}
+                                                onClick={() => sendDeleteBook(data.reportNum)}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                         </TableBody>
                     </Table>
                 </TableContainer>
