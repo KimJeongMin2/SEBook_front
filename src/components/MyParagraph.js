@@ -22,7 +22,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from 'js-cookie';
 function createData(id, title, paragraph, writer, date, like) {
   return { id, title, paragraph, writer, date, like };
@@ -89,64 +89,56 @@ const StyledInputBase = styled(InputBase, {
 const csrftoken = Cookies.get('csrftoken');
 
 function MyParagraph({ PROXY }) {
+  const location = useLocation();
   const navigate = new useNavigate();
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const [paragraphReadMy, setParagraphReadMy] = useState([]);
-  // const [rows, setRows] = useState(paragraphReadMy);
-  const [page, setPage] = useState(0); // Current page
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setPage(0); // Reset to the first page when changing rows per page
-    setRowsPerPage(parseInt(event.target.value, 10));
-  };
-
-  const displayRows = initialRows.slice(
-    page * rowsPerPage,
-    (page + 1) * rowsPerPage
+  const [paragraphList, setParagraphList] = useState(
+    []
   );
 
-  const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
 
-  // Function to toggle the like status for a specific row
-  const toggleLike = (id) => {
-    setLikeStatus((prevStatus) => ({
-      ...prevStatus,
-      [id]: !prevStatus[id],
-    }));
-  };
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   const getPageData = () => {
-    if (paragraphReadMy) {
-      const start = (currentPage - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      return paragraphReadMy.slice(start, end);
-    } else {
-      return [];
-    }
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return Array.isArray(paragraphList)
+      ? paragraphList.slice(start, end)
+      : [];
+  };
+
+  const handleChangePage = (event, value) => {
+    setPage(value);
   };
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/community/paragraphReadMy", {
+      .get(`http://127.0.0.1:8000/community/paragraphReadMy?page=${page}`, {
         headers: {
           'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
       .then((response) => {
-        console.log(response.data.userCommunityList);
-        setParagraphReadMy(response.data.userCommunityList);
+        console.log("공감한 독후감 : " + response.data.results);
+        setParagraphList(response.data.results);
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [page]);
+
+
+  const [likes, setLikes] = useState({});
+
+  const toggleLike = (id) => {
+    setLikes({
+      ...likes,
+      [id]: !likes[id],
+    });
+  };
 
   const sendDeleteParagraphMy = (postNum) => {
     if (window.confirm("삭제하시겠습니까?")) {
@@ -227,7 +219,7 @@ function MyParagraph({ PROXY }) {
                       textAlign: "center",
                     }}
                   >
-                    {index + 1}
+                    {(page - 1) * itemsPerPage + index + 1}
                   </TableCell>
                   <TableCell
                     component="th"
@@ -273,11 +265,9 @@ function MyParagraph({ PROXY }) {
         <div style={{ display: "flex" }}>
           <Pagination
             component="div"
-            count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
+            count={totalPages} // Calculate the number of pages based on rows
             page={page}
             onChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
             style={{ margin: "10px auto 20px" }}
             color="primary"
           />

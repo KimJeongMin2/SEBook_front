@@ -64,44 +64,58 @@ const StyledInputBase = styled(InputBase, {
 
 const csrftoken = Cookies.get('csrftoken');
 
-function MyBookReport({ PROXY }) {
+function MyBookReport() {
 
     const location = useLocation();
     const navigate = new useNavigate();
 
-    const [bookReportList, setBookReportList] = useState(location.state?.bookReportList || []);
-
+    const [bookReportList, setBookReportList] = useState(
+        location.state?.bookReportList || []
+    );
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
+    const itemsPerPage = 4;
+
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
 
     const getPageData = () => {
-        if (bookReportList) {
-            const start = (currentPage - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            return bookReportList.slice(start, end);
-        } else {
-            return [];
-        }
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        return Array.isArray(bookReportList)
+            ? bookReportList.slice(start, end)
+            : [];
     };
+
     const handleChangePage = (event, value) => {
-        setCurrentPage(value);
+        setPage(value);
     };
 
     useEffect(() => {
-        axios.get("http://127.0.0.1:8000/bookReport/bookReportReadMy", {
-            headers: {
-              'X-CSRFToken': csrftoken 
-            },
-            withCredentials: true})
+        axios
+            .get(`http://127.0.0.1:8000/bookReport/bookReportReadMy?page=${page}`, {
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                withCredentials: true
+            })
             .then((response) => {
-                console.log("data : " + response.data.userBookReportList);
-                const data = response.data.userBookReportList;
-                const reversedData = data.reverse();
-                setBookReportList(reversedData);
+                console.log("공감한 독후감 : " + response.data.results);
+                setBookReportList(response.data.results);
+                setTotalPages(response.data.total_pages);
             })
             .catch((error) => console.error(error));
-    }, []);
+    }, [page]);
+
+
+    const [likes, setLikes] = useState({});
+
+    const toggleLike = (id) => {
+        setLikes({
+            ...likes,
+            [id]: !likes[id],
+        });
+    };
 
     const sendDeleteBook = (reportNum) => {
         if (window.confirm("삭제하시겠습니까?")) {
@@ -164,7 +178,7 @@ function MyBookReport({ PROXY }) {
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
-                                        {data.reportNum}
+                                        {(page - 1) * itemsPerPage + index + 1}
                                     </TableCell>
                                     <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: data })}>
                                         {truncate(data.reportTitle, 20)}
@@ -187,7 +201,7 @@ function MyBookReport({ PROXY }) {
                 <div style={{ display: "flex" }}>
                     {bookReportList && (
                         <Pagination
-                            count={Math.ceil(bookReportList.length / itemsPerPage)}
+                            count={totalPages}
                             color="primary"
                             style={{
                                 margin: '40px 0',

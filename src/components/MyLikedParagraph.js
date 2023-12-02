@@ -90,58 +90,50 @@ const StyledInputBase = styled(InputBase, {
 const csrftoken = Cookies.get('csrftoken');
 
 function MyLikedParagraph({ PROXY }) {
+
   const navigate = new useNavigate();
 
-  // const [rows, setRows] = useState(initialRows);
-  const [page, setPage] = useState(0); // Current page
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const [likeParagraph, setLikeParagraph] = useState([]);
-
-  const [likes, setLikes] = useState({});
+  const [paragraphList, setParagraphList] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const getPageData = () => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return Array.isArray(paragraphList)
+      ? paragraphList.slice(start, end)
+      : [];
+  };
+
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/community/paragraphReadLike?page=${page}", {
+      .get(`http://127.0.0.1:8000/community/paragraphReadLike?page=${page}`, {
         headers: {
           'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
       .then((response) => {
-        console.log(response.data.savedCommunityList);
-        setLikeParagraph(response.data.savedCommunityList);
+        console.log("공감한 독후감 : " + response.data.results);
+        setParagraphList(response.data.results);
+        setTotalPages(response.data.total_pages);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [page]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setPage(0); // Reset to the first page when changing rows per page
-    setRowsPerPage(parseInt(event.target.value, 10));
-  };
-
-  const getPageData = () => {
-    if (likeParagraph) {
-      const start = (currentPage - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      return likeParagraph.slice(start, end);
-    } else {
-      return [];
-    }
-  };
-
-  const [likeStatus, setLikeStatus] = useState({}); // Initialize like status for each row
+  const [likes, setLikes] = useState({}); // Initialize like status for each row
 
   // Function to toggle the like status for a specific row
   const toggleLike = (id) => {
-    setLikeStatus((prevStatus) => ({
+    setLikes((prevStatus) => ({
       ...prevStatus,
       [id]: !prevStatus[id],
     }));
@@ -191,87 +183,93 @@ function MyLikedParagraph({ PROXY }) {
           component={Paper}
           style={{ display: "flex", maxWidth: "65%", margin: "20px auto" }}
         >
-          <Table sx={{ minWidth: 700 }} aria-label="simple table">
-            <TableHead style={{ backgroundColor: "#F8E8EE" }}>
-              <TableRow>
-                <TableCell>No</TableCell>
-                <TableCell>도서명</TableCell>
-                <TableCell>인상깊은 구절</TableCell>
-                <TableCell>작가</TableCell>
-                <TableCell>등록일</TableCell>
-                <TableCell>좋아요</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {getPageData()?.map((row, index) => (
-                <TableRow
-                  key={row.title}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
-                >
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    style={{
-                      width: "10px",
-                      borderRight: "1px solid #F8E8EE",
-                      textAlign: "center",
-                    }}
+          <div style={{ height: '388px' }}>
+            <Table sx={{ minWidth: 700 }} aria-label="simple table">
+              <TableHead style={{ backgroundColor: "#F8E8EE" }}>
+                <TableRow>
+                  <TableCell>No</TableCell>
+                  <TableCell>도서명</TableCell>
+                  <TableCell>인상깊은 구절</TableCell>
+                  <TableCell>작가</TableCell>
+                  <TableCell>등록일</TableCell>
+                  <TableCell>좋아요</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody style={{ backgroundColor: "#F9F5F6" }}>
+                {getPageData()?.map((row, index) => (
+                  <TableRow
+                    key={row.title}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
                   >
-                    {index + 1}
-                  </TableCell>
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    style={{ width: "180px", borderRight: "1px solid #F8E8EE" }}
-                  >
-                    {truncate(row.title, 12)}
-                  </TableCell>
-                  <TableCell
-                    style={{ width: "600px", borderRight: "1px solid #F8E8EE" }}
-                  >
-                    {truncate(row.contents, 22)}
-                  </TableCell>
-                  <TableCell
-                    style={{ width: "100px", borderRight: "1px solid #F8E8EE" }}
-                  >
-                    {truncate(row.author, 5)}
-                  </TableCell>
-                  <TableCell
-                    style={{ width: "90px", borderRight: "1px solid #F8E8EE" }}
-                  >
-                    {row.registDate_community.split("T")[0]}
-                  </TableCell>
-                  <TableCell
-                    style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
-                  >
-                    <IconButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleLike(row.isbn13);
-                        sendDeleteParagraph(row.postNum);
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{
+                        width: "10px",
+                        borderRight: "1px solid #F8E8EE",
+                        textAlign: "center",
                       }}
                     >
-                      <FavoriteIcon style={{ color: likes[row.isbn13] ? "gray" : "#EF9A9A" }} />
-                    </IconButton>
-                    <div style={{ marginTop: '-10px' }}>{row.like_count}</div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                      {(page - 1) * itemsPerPage + index + 1}
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{ width: "180px", borderRight: "1px solid #F8E8EE" }}
+                    >
+                      {truncate(row.title, 12)}
+                    </TableCell>
+                    <TableCell
+                      style={{ width: "600px", borderRight: "1px solid #F8E8EE" }}
+                    >
+                      {truncate(row.contents, 22)}
+                    </TableCell>
+                    <TableCell
+                      style={{ width: "100px", borderRight: "1px solid #F8E8EE" }}
+                    >
+                      {truncate(row.author, 5)}
+                    </TableCell>
+                    <TableCell
+                      style={{ width: "90px", borderRight: "1px solid #F8E8EE" }}
+                    >
+                      {row.registDate_community?.split("T")[0]}
+                    </TableCell>
+                    <TableCell
+                      style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
+                    >
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(row.isbn13);
+                          sendDeleteParagraph(row.postNum);
+                        }}
+                      >
+                        <FavoriteIcon style={{ color: likes[row.isbn13] ? "gray" : "#EF9A9A" }} />
+                      </IconButton>
+                      <div style={{ marginTop: '-10px' }}>{row.like_count}</div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </TableContainer>
         <div style={{ display: "flex" }}>
-          <Pagination
-            component="div"
-            count={Math.ceil(initialRows.length / rowsPerPage)} // Calculate the number of pages based on rows
-            page={page}
-            onChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            style={{ margin: "10px auto 20px" }}
-            color="primary"
-          />
+          {paragraphList && (
+            <Pagination
+              count={totalPages}
+              color="primary"
+              style={{
+                margin: '40px 0',
+                position: 'absolute',
+                bottom: 0,
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }}
+              onChange={handleChangePage}
+            />
+          )}
         </div>
       </Box>
     </>

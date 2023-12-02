@@ -66,7 +66,7 @@ const StyledInputBase = styled(InputBase, {
 
 const csrftoken = Cookies.get("csrftoken");
 
-function MyLikedBookReport({ PROXY }) {
+function MyLikedBookReport() {
   const location = useLocation();
   const navigate = new useNavigate();
 
