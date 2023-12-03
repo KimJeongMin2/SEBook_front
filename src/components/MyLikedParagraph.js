@@ -13,7 +13,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
+import Modal from "@mui/material/Modal";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -21,9 +21,9 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-
+import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import Typography from "@mui/material/Typography";
 import Cookies from 'js-cookie';
 
 const Search = styled("div", {
@@ -75,19 +75,29 @@ function MyLikedParagraph() {
 
   const [paragraphList, setParagraphList] = useState([]);
 
-  // const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
-
+  const [myInfo, setMyInfo] = useState();
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-
-  // const getPageData = () => {
-  //   const start = (currentPage - 1) * itemsPerPage;
-  //   const end = start + itemsPerPage;
-  //   return Array.isArray(paragraphList)
-  //     ? paragraphList.slice(start, end)
-  //     : [];
-  // };
+  const [open, setOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({});
+  const [likeStatus, setLikeStatus] = useState({});
+  const [modalLikeStatus, setModalLikeStatus] = useState(false);
+  
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const handleChangePage = (event, value) => {
     setPage(value);
@@ -120,6 +130,72 @@ function MyLikedParagraph() {
     }));
   };
 
+  const sendLikeCommunity = (postNum) => {
+    if (!myInfo) {
+      toast.warning(
+        () => (
+          <div style={{ margin: "25px 0 0 10px" }}>
+            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+            <br />
+            <br />
+            <br />
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+              style={{
+                position: "absolute",
+                right: "10px",
+                bottom: "15px",
+                backgroundColor: "#EF9A9A",
+                color: "white",
+                border: "1px solid #EF9A9A",
+              }}
+            >
+              네
+            </Button>
+          </div>
+        ),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    } else {
+      toggleLike(postNum);
+      axios
+        .post(
+          "http://127.0.0.1:8000/community/paragraphLike",
+          {
+            postNum: postNum,
+          },
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          if (response.status === 200 || response.status === 201) {
+            setLikeStatus((likes) => ({
+              ...likes,
+              [postNum]: !likes[postNum],
+            }));
+          }
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   const sendDeleteParagraph = (postNum) => {
     axios.delete("http://127.0.0.1:8000/community/paragraphLike", {
       params: {
@@ -143,6 +219,17 @@ function MyLikedParagraph() {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };
 
+  const handleOpen = (data) => {
+    setOpen(true);
+    setModalContent(data);
+    setModalLikeStatus(data.user_liked.includes(currentUser));
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+  const currentUser = myInfo?.userNum;
   return (
     <>
       <MainAppBar />
@@ -181,7 +268,9 @@ function MyLikedParagraph() {
                   <TableRow
                     key={row.title}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                    onClick={() => {
+                      handleOpen(row);
+                    }}
                   >
                     <TableCell
                       component="th"
@@ -253,6 +342,72 @@ function MyLikedParagraph() {
           )}
         </div>
       </Box>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            // border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="div"
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "22px",
+              fontWeight: "bold",
+            }}
+          >
+            <div>구절 정보</div>
+
+            {modalContent && (
+              <FavoriteIcon
+              style={{
+                color: modalLikeStatus ? "#EF9A9A" : "gray",
+              }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleLike(modalContent.postNum);
+                  sendLikeCommunity(modalContent.postNum);
+                  setModalLikeStatus(!modalLikeStatus);
+                }}
+              />
+            )}
+          </Typography>
+
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <span style={{ fontWeight: "bold" }}>도서명 | </span>
+            {modalContent.title}
+            <div>{modalContent.date}</div>
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <span style={{ fontWeight: "bold" }}>작가 | </span>
+            {modalContent.author}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <span style={{ fontWeight: "bold" }}>내용 | </span>
+            {modalContent.contents}
+          </Typography>
+
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+            <Button onClick={handleClose}>닫기</Button>
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 }
