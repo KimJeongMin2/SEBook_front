@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import { Box, InputBase, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import Modal from "@mui/material/Modal";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,7 +12,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
+import Modal from "@mui/material/Modal";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -23,7 +22,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
 import Cookies from 'js-cookie';
 
 const Search = styled("div", {
@@ -83,7 +81,6 @@ function MyLikedParagraph() {
   const [modalContent, setModalContent] = useState({});
   const [modalLikeStatus, setModalLikeStatus] = useState(false);
   const [likeStatus, setLikeStatus] = useState({});
-  const currentUser = myInfo?.userNum;
 
   const handleChangePage = (event, value) => {
     setPage(value);
@@ -130,25 +127,6 @@ function MyLikedParagraph() {
       [id]: !prevStatus[id],
     }));
   };
-
-  const sendDeleteParagraph = (postNum) => {
-    axios.delete("http://127.0.0.1:8000/community/paragraphLike", {
-      params: {
-        postNum: postNum,
-      },
-      headers: {
-        'X-CSRFToken': csrftoken
-      },
-      withCredentials: true
-    })
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
   const sendLikeCommunity = (postNum) => {
     if (!myInfo) {
@@ -216,10 +194,96 @@ function MyLikedParagraph() {
     }
   };
 
+  const sendDeleteParagraph = (postNum) => {
+    axios.delete("http://127.0.0.1:8000/community/paragraphLike", {
+      params: {
+        postNum: postNum,
+      },
+      headers: {
+        'X-CSRFToken': csrftoken
+      },
+      withCredentials: true
+    })
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  // const sendLikeCommunity = (postNum) => {
+  //   if (!myInfo) {
+  //     toast.warning(
+  //       () => (
+  //         <div style={{ margin: "25px 0 0 10px" }}>
+  //           로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+  //           <br />
+  //           <br />
+  //           <br />
+  //           <Button
+  //             color="inherit"
+  //             size="small"
+  //             onClick={() => navigate("/signin")}
+  //             style={{
+  //               position: "absolute",
+  //               right: "10px",
+  //               bottom: "15px",
+  //               backgroundColor: "#EF9A9A",
+  //               color: "white",
+  //               border: "1px solid #EF9A9A",
+  //             }}
+  //           >
+  //             네
+  //           </Button>
+  //         </div>
+  //       ),
+  //       {
+  //         position: "top-right",
+  //         autoClose: 5000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //       }
+  //     );
+  //   } else {
+  //     toggleLike(postNum);
+  //     axios
+  //       .post(
+  //         "http://127.0.0.1:8000/community/paragraphLike",
+  //         {
+  //           postNum: postNum,
+  //         },
+  //         {
+  //           headers: {
+  //             "X-CSRFToken": csrftoken,
+  //           },
+  //           withCredentials: true,
+  //         }
+  //       )
+  //       .then((response) => {
+  //         if (response.status === 200 || response.status === 201) {
+  //           setLikeStatus((likes) => ({
+  //             ...likes,
+  //             [postNum]: !likes[postNum],
+  //           }));
+  //         }
+  //         window.location.reload();
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // };
+
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };
 
+  const currentUser = myInfo?.userNum;
   return (
     <>
       <MainAppBar />
@@ -258,7 +322,9 @@ function MyLikedParagraph() {
                   <TableRow
                     key={row.title}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                    onClick={() => {
+                      handleOpen(row);
+                    }}
                   >
                     <TableCell
                       component="th"

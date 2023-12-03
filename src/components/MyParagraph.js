@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
 
-import { Box, InputBase } from "@mui/material";
+import { Box, InputBase, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -21,29 +21,11 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-
+import Modal from "@mui/material/Modal";
 import { useNavigate, useLocation } from "react-router-dom";
-import Cookies from 'js-cookie';
-function createData(id, title, paragraph, writer, date, like) {
-  return { id, title, paragraph, writer, date, like };
-}
-
-const initialRows = [
-  createData(
-    1,
-    "신데렐라",
-    "잊지 말아야 할 것은, 인내와 선의가 항상 보상을 받는다는 것이다.",
-    "김글쓴",
-    "2023-03-21",
-    10
-  ),
-  createData(2, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 122),
-  createData(3, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 10),
-  createData(4, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 30),
-  createData(5, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 32),
-  createData(6, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 2),
-  createData(7, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 1),
-];
+import Cookies from "js-cookie";
+import Typography from "@mui/material/Typography";
+import { ToastContainer, toast } from "react-toastify";
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -86,7 +68,7 @@ const StyledInputBase = styled(InputBase, {
   },
 }));
 
-const csrftoken = Cookies.get('csrftoken');
+const csrftoken = Cookies.get("csrftoken");
 
 function MyParagraph({ PROXY }) {
   const navigate = new useNavigate();
@@ -94,18 +76,37 @@ function MyParagraph({ PROXY }) {
   const [paragraphList, setParagraphList] = useState([]);
 
   const itemsPerPage = 4;
-
+  const [myInfo, setMyInfo] = useState();
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({});
+  const [modalLikeStatus, setModalLikeStatus] = useState(false);
+  const [likes, setLikes] = useState({});
 
   const handleChangePage = (event, value) => {
     setPage(value);
   };
 
+  const handleOpen = (data) => {
+    setOpen(true);
+    setModalContent(data);
+    setModalLikeStatus(data.user_liked.includes(currentUser));
+  };
+
+  useEffect(() => {
+    console.log("mmooddalle", modalContent);
+  }, [modalContent]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
   useEffect(() => {
     setParagraphList([]);
     axios
-      .get(`http://127.0.0.1:8000/community/paragraphReadMy?page=${page}`, {
+      .get(`http://127.0.0.1:8000/community/paragraphReadLike?page=${page}`, {
         headers: {
           'X-CSRFToken': csrftoken
         },
@@ -119,7 +120,20 @@ function MyParagraph({ PROXY }) {
       .catch((error) => console.error(error));
   }, [page]);
 
-  const [likes, setLikes] = useState({});
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/user/memberSearch", {
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("myInfo : " + response.data);
+        setMyInfo(response.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const toggleLike = (id) => {
     setLikes({
@@ -128,19 +142,89 @@ function MyParagraph({ PROXY }) {
     });
   };
 
+  const sendLikeCommunity = (postNum) => {
+    if (!myInfo) {
+      toast.warning(
+        () => (
+          <div style={{ margin: "25px 0 0 10px" }}>
+            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+            <br />
+            <br />
+            <br />
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+              style={{
+                position: "absolute",
+                right: "10px",
+                bottom: "15px",
+                backgroundColor: "#EF9A9A",
+                color: "white",
+                border: "1px solid #EF9A9A",
+              }}
+            >
+              네
+            </Button>
+          </div>
+        ),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    } else {
+      toggleLike(postNum);
+      axios
+        .post(
+          "http://127.0.0.1:8000/community/paragraphLike",
+          {
+            postNum: postNum,
+          },
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          if (response.status === 200 || response.status === 201) {
+            setLikes((likes) => ({
+              ...likes,
+              [postNum]: !likes[postNum],
+            }));
+          }
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   const sendDeleteParagraphMy = (postNum) => {
     if (window.confirm("삭제하시겠습니까?")) {
       axios
-        .delete("http://127.0.0.1:8000/community/paragraphDelete", {
-          params: {
-            postNum: postNum,
-          }
-        }, {
-          headers: {
-            'X-CSRFToken': csrftoken
+        .delete(
+          "http://127.0.0.1:8000/community/paragraphDelete",
+          {
+            params: {
+              postNum: postNum,
+            },
           },
-          withCredentials: true
-        })
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        )
         .then((response) => {
           console.log(response);
           window.location.reload();
@@ -157,6 +241,7 @@ function MyParagraph({ PROXY }) {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };
 
+  const currentUser = myInfo?.userNum;
 
   return (
     <>
@@ -185,9 +270,9 @@ function MyParagraph({ PROXY }) {
                 <TableCell>No</TableCell>
                 <TableCell>도서명</TableCell>
                 <TableCell>인상깊은 구절</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>작성자</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>등록일</TableCell>
-                <TableCell style={{ textAlign: 'center' }}>좋아요</TableCell>
+                <TableCell style={{ textAlign: "center" }}>작성자</TableCell>
+                <TableCell style={{ textAlign: "center" }}>등록일</TableCell>
+                <TableCell style={{ textAlign: "center" }}>좋아요</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -196,7 +281,9 @@ function MyParagraph({ PROXY }) {
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                // onClick={() => navigate(`/CommunityDetail/${row.id}`, { state: row })}
+                  onClick={() => {
+                    handleOpen(row);
+                  }}
                 >
                   <TableCell
                     component="th"
@@ -225,11 +312,27 @@ function MyParagraph({ PROXY }) {
                     {truncate(row.username, 3)}
                   </TableCell>
                   <TableCell style={{ width: "80px", textAlign: "center" }}>
-                    {row.registDate_community.split('T')[0]}
+                    {row.registDate_community.split("T")[0]}
                   </TableCell>
                   <TableCell style={{ width: "50px", textAlign: "center" }}>
-                    {row.like_count}
+                    <div>
+                      <FavoriteIcon
+                        className="like"
+                        style={{
+                          color: row.user_liked.includes(currentUser)
+                            ? "#EF9A9A"
+                            : "gray",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(row.postNum);
+                          sendLikeCommunity(row.postNum);
+                        }}
+                      />
+                      <div style={{ marginTop: "-5px" }}>{row.like_count}</div>
+                    </div>
                   </TableCell>
+
                   <TableCell
                     style={{
                       width: "20px",
@@ -261,7 +364,72 @@ function MyParagraph({ PROXY }) {
           />
         </div>
       </Box>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            // border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="div"
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "22px",
+              fontWeight: "bold",
+            }}
+          >
+            <div>구절 정보</div>
 
+            {modalContent && (
+              <FavoriteIcon
+                style={{
+                  color: modalLikeStatus ? "#EF9A9A" : "gray",
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleLike(modalContent.postNum);
+                  sendLikeCommunity(modalContent.postNum);
+                  setModalLikeStatus(!modalLikeStatus);
+                }}
+              />
+            )}
+          </Typography>
+
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <span style={{ fontWeight: "bold" }}>도서명 | </span>
+            {modalContent.title}
+            <div>{modalContent.date}</div>
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <span style={{ fontWeight: "bold" }}>작가 | </span>
+            {modalContent.author}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <span style={{ fontWeight: "bold" }}>내용 | </span>
+            {modalContent.contents}
+          </Typography>
+
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+            <Button onClick={handleClose}>닫기</Button>
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 }

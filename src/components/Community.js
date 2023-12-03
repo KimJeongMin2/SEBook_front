@@ -489,7 +489,6 @@ function Community() {
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
                         onClick={() => {
-                          console.log("ddddddddaaaaaaaattttttaaaaaa", data); // 여기서 data가 제대로 출력되는지 확인
                           handleOpen(data);
                         }}
                       >
