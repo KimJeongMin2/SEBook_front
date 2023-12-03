@@ -550,6 +550,10 @@ function Community() {
                             width: "65px",
                             textAlign: "center",
                           }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            sendLikeCommunity(data.postNum);
+                          }}
                         >
                           <div>
                             {data.user_liked.includes(currentUser) ? (
@@ -654,8 +658,15 @@ function Community() {
               fontWeight: "bold",
             }}
           >
-            <div>구절 정보</div>
-
+            <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontWeight: "bold"
+            }}
+            >
+            {"구절 정보"}
             {modalContent && (
               <FavoriteIcon
                 style={{
@@ -669,6 +680,7 @@ function Community() {
                 }}
               />
             )}
+            </div>
           </Typography>
 
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>

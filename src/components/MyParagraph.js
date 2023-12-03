@@ -106,7 +106,7 @@ function MyParagraph({ PROXY }) {
   useEffect(() => {
     setParagraphList([]);
     axios
-      .get(`http://127.0.0.1:8000/community/paragraphReadLike?page=${page}`, {
+      .get(`http://127.0.0.1:8000/community/paragraphReadMy?page=${page}`, {
         headers: {
           'X-CSRFToken': csrftoken
         },
