@@ -76,12 +76,11 @@ const StyledInputBase = styled(InputBase, {
 
 function BookReportList() {
 
-    const navigate = new useNavigate();
 
     const [rows, setRows] = useState(initialRows);
     const [page, setPage] = useState(0); // Current page
     const [rowsPerPage, setRowsPerPage] = useState(6);
-
+const navigate = new useNavigate();
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
