@@ -82,13 +82,13 @@ function MyBookReport() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
-    const getPageData = () => {
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        return Array.isArray(bookReportList)
-            ? bookReportList.slice(start, end)
-            : [];
-    };
+    // const getPageData = () => {
+    //     const start = (currentPage - 1) * itemsPerPage;
+    //     const end = start + itemsPerPage;
+    //     return Array.isArray(bookReportList)
+    //         ? bookReportList.slice(start, end)
+    //         : [];
+    // };
 
     const handleChangePage = (event, value) => {
         setPage(value);
@@ -220,7 +220,7 @@ function MyBookReport() {
                             </TableRow>
                         </TableHead>
                         <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                            {getPageData()?.map((data, index) => {
+                            {bookReportList?.map((data, index) => {
                                 const isUserLikeReportsLiked =
                                     Array.isArray(likedBookReportList) &&
                                     likedBookReportList.some((report) => data.reportNum === report);
