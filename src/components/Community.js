@@ -123,7 +123,7 @@ function Community() {
     setModalContent(data);
     setModalLikeStatus(data.user_liked.includes(currentUser));
   };
-  
+
   useEffect(() => {
     console.log("mmooddalle", modalContent);
   }, [modalContent]);
@@ -310,27 +310,6 @@ function Community() {
     });
   };
 
-  // const toggleLike = (postNum) => {
-  //   console.log("postNum", postNum);
-
-  //   // 좋아요 상태 업데이트
-  //   setLikeStatus((prevStatus) => ({
-  //     ...prevStatus,
-  //     [postNum]: !prevStatus[postNum],
-  //   }));
-
-  //   // 좋아요 상태에 따른 작업 수행 (서버에 좋아요 상태 전송 등)
-  //   sendLikeCommunity(postNum);
-
-  //   // 좋아요 누른 리스트 업데이트
-  //   if (likedParagraphList.includes(postNum)) {
-  //     setLikedParagraphList(
-  //       likedParagraphList.filter((item) => item !== postNum)
-  //     );
-  //   } else {
-  //     setLikedParagraphList([...likedParagraphList, postNum]);
-  //   }
-  // };
 
   const resetData = () => {
     setCommunityList([]);
@@ -489,7 +468,7 @@ function Community() {
               </TableHead>
               <TableBody style={{ backgroundColor: "#F9F5F6" }}>
                 {(searchResults || communityList) &&
-                (searchResults || communityList).length > 0 ? (
+                  (searchResults || communityList).length > 0 ? (
                   (searchResults || communityList).map((data, index) => {
                     const isUserLikeParagraph =
                       Array.isArray(likedParagraphList) &&
@@ -500,7 +479,7 @@ function Community() {
                         (post) => data.postNum === post
                       );
 
-                      const isCurrentUserWriteParagraph = data.userNum_community === currentUser;
+                    const isCurrentUserWriteParagraph = data.userNum_community === currentUser;
 
                     return (
                       <TableRow
@@ -574,26 +553,13 @@ function Community() {
                           }}
                         >
                           <div>
-                            <FavoriteIcon
-                              className="like"
-                              style={{
-                                color: data.user_liked.includes(currentUser)
-                                  ? "#EF9A9A"
-                                  : "gray",
-                              }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleLike(data.postNum);
-                                sendLikeCommunity(data.postNum);
-                              }}
-                            />
-                            {/* {isUserLikeParagraph ? (
-                                <FavoriteIcon />
-                              ) : (
-                                <FavoriteBorderIcon />
-                              )}
-                            </IconButton> */}
-
+                            {data.user_liked.includes(currentUser) ? (
+                              <FavoriteIcon style={{ color: "#EF9A9A" }} />
+                            ) : (
+                              <FavoriteBorderIcon
+                                style={{ color: "#EF9A9A" }}
+                              />
+                            )}
                             <div style={{ marginTop: "-5px" }}>
                               {data.like_count}
                             </div>
@@ -610,7 +576,7 @@ function Community() {
                                 sendDeleteParagraphMy(data.postNum);
                               }}
                             />
-                            
+
                           ) : (
                             <></>
                           )}
@@ -682,7 +648,7 @@ function Community() {
             id="modal-modal-title"
             variant="h6"
             component="div"
-            sx={{
+            sxTypography={{
               display: "flex",
               justifyContent: "space-between",
               fontSize: "22px",
@@ -693,9 +659,9 @@ function Community() {
 
             {modalContent && (
               <FavoriteIcon
-              style={{
-                color: modalLikeStatus ? "#EF9A9A" : "gray",
-              }}
+                style={{
+                  color: modalLikeStatus ? "#EF9A9A" : "gray",
+                }}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleLike(modalContent.postNum);

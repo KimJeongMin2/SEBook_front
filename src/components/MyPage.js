@@ -148,6 +148,22 @@ export default function MyPage() {
       .catch((error) => console.error(error));
   }, [page]);
 
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/community/paragraphReadMy?page=${page}`, {
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        withCredentials: true
+      })
+      .then((response) => {
+        console.log(response.data.results);
+        setReadMyParagraph(response.data.results);
+        setTotalPages(response.data.total_pages);
+      })
+      .catch((error) => console.error(error));
+  }, [page]);
+
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };

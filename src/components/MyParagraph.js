@@ -89,32 +89,21 @@ const StyledInputBase = styled(InputBase, {
 const csrftoken = Cookies.get('csrftoken');
 
 function MyParagraph({ PROXY }) {
-  const location = useLocation();
   const navigate = new useNavigate();
 
-  const [paragraphList, setParagraphList] = useState(
-    []
-  );
+  const [paragraphList, setParagraphList] = useState([]);
 
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-
-  const getPageData = () => {
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    return Array.isArray(paragraphList)
-      ? paragraphList.slice(start, end)
-      : [];
-  };
 
   const handleChangePage = (event, value) => {
     setPage(value);
   };
 
   useEffect(() => {
+    setParagraphList([]);
     axios
       .get(`http://127.0.0.1:8000/community/paragraphReadMy?page=${page}`, {
         headers: {
@@ -129,7 +118,6 @@ function MyParagraph({ PROXY }) {
       })
       .catch((error) => console.error(error));
   }, [page]);
-
 
   const [likes, setLikes] = useState({});
 
@@ -204,7 +192,7 @@ function MyParagraph({ PROXY }) {
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-              {getPageData()?.map((row, index) => (
+              {paragraphList?.map((row, index) => (
                 <TableRow
                   key={row.title}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

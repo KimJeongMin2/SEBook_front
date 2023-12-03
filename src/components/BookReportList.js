@@ -183,13 +183,13 @@ function BookReportList() {
         withCredentials: true,
       })
       .then((response) => {
-        const writtenBookReportList = response.data.userBookReportList;
+        const writtenBookReportList = response.data.results;
 
         const reportNums = writtenBookReportList.map(
           (report) => report.reportNum
         );
         setWrittenBookReportList(reportNums);
-        console.log(reportNums);
+        console.log("나의 독후감 목록 " + reportNums);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -297,7 +297,7 @@ function BookReportList() {
               }
             );
           }
-          // window.location.reload();
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -640,7 +640,7 @@ function BookReportList() {
                                 {likeCnt[index]}
                               </div>
                             </div>
-                            {isUserWriteReportsLiked ? (
+                            {isUserWriteReportsLiked || likes[data.reportNum] ? (
                               <IconButton
                                 style={{ marginLeft: "10px" }}
                                 onClick={(e) => {

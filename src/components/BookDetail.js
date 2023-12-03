@@ -154,6 +154,9 @@ function BookDetail() {
         )
         .then((response) => {
           if (response.status === 200 || response.status === 201) {
+            if (isSelectedLike) {
+              navigate(-1);
+            }
             const newSelectedLike = !isSelectedLike;
             setIsSelectedLike(newSelectedLike);
             setLikeCount((prevCount) =>
@@ -326,13 +329,15 @@ function BookDetail() {
                   {isSelectedLike ? (
                     <FavoriteIcon
                       style={{ fontSize: "30px", color: "#EF9A9A" }}
-                      onClick={() => sendLikeBook(location.state.isbn13)}
-                    ></FavoriteIcon>
+                      onClick={() => {
+                        sendLikeBook(location.state.isbn13);
+                      }}
+                    />
                   ) : (
                     <FavoriteBorderIcon
                       style={{ fontSize: "30px", color: "#EF9A9A" }}
                       onClick={() => sendLikeBook(location.state.isbn13)}
-                    ></FavoriteBorderIcon>
+                    />
                   )}
                   <div
                     style={{
@@ -348,7 +353,7 @@ function BookDetail() {
             </div>
           </div>
         </div>
-      </Box>
+      </Box >
     </>
   );
 }
