@@ -224,10 +224,10 @@ function MyBookReport() {
                                 const isUserLikeReportsLiked =
                                     Array.isArray(likedBookReportList) &&
                                     likedBookReportList.some((report) => data.reportNum === report);
-                                const isUserWriteReportsLiked =
-                                    Array.isArray(writtenBookReportList) &&
-                                    writtenBookReportList.some((report) => data.reportNum === report);
-
+                                // const isUserWriteReportsLiked =
+                                //     Array.isArray(writtenBookReportList) &&
+                                //     writtenBookReportList.some((report) => data.reportNum === report);
+                                const isUserWriteReportsLiked = true;
                                 const rowData = {
                                     ...data,
                                     isUserLikeReportsLiked,

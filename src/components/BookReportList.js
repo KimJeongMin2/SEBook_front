@@ -250,6 +250,7 @@ function BookReportList() {
         .then((response) => {
           console.log(response);
           toggleLike(currentBookReportNum);  // Use currentBookReportNum here
+
           if (likes[currentBookReportNum]) {
             setLikeCnt((prevLikeCnt) => {
               const newLikeCnt = [...prevLikeCnt];
@@ -265,7 +266,7 @@ function BookReportList() {
               ),
               {
                 position: "top-right",
-                autoClose: 10000,
+                autoClose: 1000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -297,7 +298,7 @@ function BookReportList() {
               }
             );
           }
-          window.location.reload();
+          // window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -640,7 +641,7 @@ function BookReportList() {
                                 {likeCnt[index]}
                               </div>
                             </div>
-                            {isUserWriteReportsLiked || likes[data.reportNum] ? (
+                            {isUserWriteReportsLiked ? (
                               <IconButton
                                 style={{ marginLeft: "10px" }}
                                 onClick={(e) => {

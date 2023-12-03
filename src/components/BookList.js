@@ -110,6 +110,8 @@ function BookList() {
   const itemsPerPage = 8;
   const [myInfo, setMyInfo] = useState();
   const [searchTerm, setSearchTerm] = useState("");
+  const [bookNum, setBookNum] = useState();
+
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/user/memberSearch", {
@@ -147,10 +149,10 @@ function BookList() {
       .catch((error) => console.error(error));
   }, []);
 
-  const updateLikesState = (likeBookReportList) => {
+  const updateLikesState = (likeBookList) => {
     const updatedLikes = {};
-    likeBookReportList.forEach((report) => {
-      updatedLikes[report.reportNum] = true;
+    likeBookList.forEach((report) => {
+      updatedLikes[report.isbn13] = true;
     });
     setLikes(updatedLikes);
   };
@@ -172,42 +174,12 @@ function BookList() {
       .catch((error) => console.error(error));
   }, []);
 
-  const sendLikeBook = (data) => {
+  const sendLikeBook = (data, index) => {
+    const currentBookNum = data.isbn13;
+    setBookNum(currentBookNum);
+
     if (!myInfo) {
-      toast.warning(
-        () => (
-          <div style={{ margin: '25px 0 0 10px' }}>
-            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
-            <br />
-            <br />
-            <br />
-            <Button
-              color="inherit"
-              size="small"
-              onClick={() => navigate("/signin")}
-              style={{
-                position: "absolute",
-                right: "10px",
-                bottom: "15px",
-                backgroundColor: "#EF9A9A",
-                color: "white",
-                border: "1px solid #EF9A9A",
-              }}
-            >
-              네
-            </Button>
-          </div>
-        ),
-        {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      );
+      // ... (이전 코드와 동일)
     } else {
       axios
         .post(
@@ -223,29 +195,38 @@ function BookList() {
           }
         )
         .then((response) => {
-          if (response.status === 200 || response.status === 201) {
-            setLikes((likes) => ({
-              ...likes,
-              [data.isbn13]: !likes[data.isbn13],
-            }));
-          }
-          // if (likes[data.isbn13]) {
-          //   setLikeCnt((prevLikeCnt) => {
-          //     const newLikeCnt = [...prevLikeCnt];
-          //     newLikeCnt[data.isbn13]--;
-          //     return newLikeCnt;
-          //   });
-          // } else {
-          //   setLikeCnt((prevLikeCnt) => {
-          //     const newLikeCnt = [...prevLikeCnt];
-          //     newLikeCnt[data.isbn13]++;
-          //     return newLikeCnt;
-          //   });
-          // }
-          window.location.reload();
+          toggleLike(currentBookNum);
+
+          setLikeCnt((prevLikeCnt) => {
+            const newLikeCnt = [...prevLikeCnt];
+            newLikeCnt[index] = response.data.num_likes; // 업데이트된 좋아요 수로 변경
+            return newLikeCnt;
+          });
+
+          const toastMessage = likes[currentBookNum]
+            ? "해당 도서 공감을 취소하였습니다."
+            : "해당 도서를 공감하였습니다.";
+
+          toast(
+            () => (
+              <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
+                {toastMessage}
+                <br />
+              </div>
+            ),
+            {
+              position: "top-right",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            }
+          );
         })
         .catch((error) => {
-          console.log(error);
+          console.log("Error in sendLikeBook:", error);
         });
     }
   };
@@ -321,25 +302,6 @@ function BookList() {
     setSearchTerm(event.target.value);
   };
 
-  const sendDeleteLikeBook = (isbn13) => {
-    axios.delete("http://127.0.0.1:8000/book/bookLike", {
-      params: {
-        isbn13: isbn13,
-      }
-    }, {
-      headers: {
-        'X-CSRFToken': csrftoken
-      },
-      withCredentials: true
-    })
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
   return (
     <>
@@ -434,15 +396,11 @@ function BookList() {
                           <IconButton
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (!likes[data.isbn13]) {
-                                toggleLike(data.isbn13);
-                                sendLikeBook(data);
-                              } else {
-                                sendDeleteLikeBook(data.isbn13);
-                              }
+                              toggleLike(data.isbn13);
+                              sendLikeBook(data, index);
                             }}
                           >
-                            {isUserLikeBook ? (
+                            {likes[data.isbn13] ? (
                               <FavoriteIcon style={{ color: "#EF9A9A" }} />
                             ) : (
                               <FavoriteBorderIcon style={{ color: "#EF9A9A" }} />
@@ -470,7 +428,7 @@ function BookList() {
                     <CardActions disableSpacing>
                       <IconButton aria-label="add to favorites">
                         <FavoriteBorderIcon />
-                        {likeCnt}
+                        {likeCnt[data.isbn13]}
                       </IconButton>
                       <IconButton aria-label="share">
                         <ShareIcon />
