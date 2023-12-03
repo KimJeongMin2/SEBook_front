@@ -25,26 +25,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import Cookies from 'js-cookie';
-function createData(id, title, paragraph, writer, date, like) {
-  return { id, title, paragraph, writer, date, like };
-}
-
-const initialRows = [
-  createData(
-    1,
-    "신데렐라",
-    "잊지 말아야 할 것은, 인내와 선의가 항상 보상을 받는다는 것이다.",
-    "김글쓴",
-    "2023-03-21",
-    10
-  ),
-  createData(2, "도서명", "인상 깊었던 구절", "홍길동", "2023-03-21", 122),
-  createData(3, "도서명", "인상 깊었던 구절", "김정민", "2023-03-21", 10),
-  createData(4, "도서명", "인상 깊었던 구절", "신영옥", "2023-03-21", 30),
-  createData(5, "도서명", "인상 깊었던 구절", "정채연", "2023-03-21", 32),
-  createData(6, "도서명", "인상 깊었던 구절", "이길동", "2023-03-21", 2),
-  createData(7, "도서명", "인상 깊었던 구절", "최글쓴", "2023-03-21", 1),
-];
 
 const Search = styled("div", {
   shouldForwardProp: (prop) => prop !== "theme",
@@ -89,31 +69,32 @@ const StyledInputBase = styled(InputBase, {
 
 const csrftoken = Cookies.get('csrftoken');
 
-function MyLikedParagraph({ PROXY }) {
+function MyLikedParagraph() {
 
   const navigate = new useNavigate();
 
   const [paragraphList, setParagraphList] = useState([]);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const getPageData = () => {
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    return Array.isArray(paragraphList)
-      ? paragraphList.slice(start, end)
-      : [];
-  };
+  // const getPageData = () => {
+  //   const start = (currentPage - 1) * itemsPerPage;
+  //   const end = start + itemsPerPage;
+  //   return Array.isArray(paragraphList)
+  //     ? paragraphList.slice(start, end)
+  //     : [];
+  // };
 
   const handleChangePage = (event, value) => {
     setPage(value);
   };
 
   useEffect(() => {
+    setParagraphList([]);
     axios
       .get(`http://127.0.0.1:8000/community/paragraphReadLike?page=${page}`, {
         headers: {
@@ -196,7 +177,7 @@ function MyLikedParagraph({ PROXY }) {
                 </TableRow>
               </TableHead>
               <TableBody style={{ backgroundColor: "#F9F5F6" }}>
-                {getPageData()?.map((row, index) => (
+                {paragraphList?.map((row, index) => (
                   <TableRow
                     key={row.title}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
