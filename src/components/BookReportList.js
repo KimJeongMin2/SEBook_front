@@ -251,6 +251,14 @@ function BookReportList() {
           console.log(response);
           toggleLike(currentBookReportNum);  // Use currentBookReportNum here
 
+          setLikes((prevLikes) => {
+            const updatedLikes = { ...prevLikes };
+            updatedLikes[currentBookReportNum] = prevLikes[currentBookReportNum];
+            return updatedLikes;
+          });
+
+
+
           if (likes[currentBookReportNum]) {
             setLikeCnt((prevLikeCnt) => {
               const newLikeCnt = [...prevLikeCnt];

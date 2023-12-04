@@ -279,7 +279,7 @@ function MyLikedBookReport() {
                       >
                         <FavoriteIcon
                           style={{
-                            color: likes[data.reportNum] ? "gray" : "#EF9A9A",
+                            color: "#EF9A9A",
                           }}
                         />
                       </IconButton>
