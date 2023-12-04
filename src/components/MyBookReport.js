@@ -77,7 +77,7 @@ function MyBookReport() {
     );
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 4;
+    const itemsPerPage = 6
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -224,10 +224,10 @@ function MyBookReport() {
                                 const isUserLikeReportsLiked =
                                     Array.isArray(likedBookReportList) &&
                                     likedBookReportList.some((report) => data.reportNum === report);
-                                // const isUserWriteReportsLiked =
-                                //     Array.isArray(writtenBookReportList) &&
-                                //     writtenBookReportList.some((report) => data.reportNum === report);
-                                const isUserWriteReportsLiked = true;
+                                const isUserWriteReportsLiked =
+                                    Array.isArray(writtenBookReportList) &&
+                                    writtenBookReportList.some((report) => data.reportNum === report);
+
                                 const rowData = {
                                     ...data,
                                     isUserLikeReportsLiked,
