@@ -328,12 +328,15 @@ function BookReportList() {
         })
         .then((response) => {
           console.log(response);
+          alert("삭제되었습니다.");
           window.location.reload();
         })
         .catch((error) => {
           console.log(error);
         });
-    };
+    }else {
+      alert("취소합니다.");
+  }
   }
 
   const resetData = () => {
@@ -410,7 +413,7 @@ function BookReportList() {
   //   setCurrentPage(1);
   // }, [searchTerm]);
 
-
+  const currentUser = myInfo?.userNum;
   return (
     <>
       <MainAppBar />
@@ -502,11 +505,12 @@ function BookReportList() {
                       likedBookReportList.some(
                         (report) => data.reportNum === report
                       );
-                    const isUserWriteReportsLiked =
-                      Array.isArray(writtenBookReportList) &&
-                      writtenBookReportList.some(
-                        (report) => data.reportNum === report
-                      );
+                    // const isUserWriteReportsLiked =
+                    //   Array.isArray(writtenBookReportList) &&
+                    //   writtenBookReportList.some(
+                    //     (report) => data.reportNum === report
+                    //   );
+                    const isUserWriteReportsLiked =data.userNum_report === currentUser;
 
                     const rowData = {
                       ...data,
@@ -654,7 +658,7 @@ function BookReportList() {
                                 style={{ marginLeft: "10px" }}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  sendDeleteBookReport(index, data.reportNum);
+                                  sendDeleteBookReport(data.reportNum);
                                 }}
                               >
                                 <DeleteIcon style={{ color: "#FF9999" }} />
