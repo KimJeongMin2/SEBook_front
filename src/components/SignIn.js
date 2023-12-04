@@ -46,41 +46,41 @@ export default function SignIn() {
   const csrftoken = Cookies.get('csrftoken');
   const [myInfo, setMyInfo] = useState();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       userId: data.get("userId"),
       password: data.get("password"),
     });
-
+  
     const userId = data.get("userId");
     const password = data.get("password");
-
+  
     const reqData = new FormData();
-    reqData.append("username", userId)
-    reqData.append("password", password)
-
-    axios
-      .post(
-        "http://127.0.0.1:8000/user/login", reqData,
+    reqData.append("username", userId);
+    reqData.append("password", password);
+  
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/user/login", 
+        reqData,
         { withCredentials: true }
-      )
-      .then((response) => {
-        if (response.status === 200) {
-          console.log(response.data.userNum);
-          console.log(response.data.userName);
-          alert(`환영합니다!`);
-          setIsLoggedIn(true);
-          //setAuth({ userNum: response.data.userNum, userName: response.data.userName });
-          navigate((-1))
-        }
-      })
-      .catch((error) => {
-        console.error("Login error:", error);
-        alert("로그인 실패. 회원계정을 다시 한번 확인하세요.");
-      });
+      );
+  
+      if (response.status === 200) {
+        console.log(response.data.userNum);
+        console.log(response.data.userName);
+        alert(`환영합니다!`);
+        setIsLoggedIn(true);
+        navigate((-1));
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("로그인 실패. 회원계정을 다시 한번 확인하세요.");
+    }
   };
+  
 
   useEffect(() => {
     axios
