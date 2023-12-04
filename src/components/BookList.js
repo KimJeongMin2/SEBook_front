@@ -111,6 +111,7 @@ function BookList() {
   const [myInfo, setMyInfo] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [bookNum, setBookNum] = useState();
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   useEffect(() => {
     axios
@@ -147,7 +148,7 @@ function BookList() {
         setLikeCnt(likeCounts);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [currentPage, forceUpdate]);
 
   const updateLikesState = (likeBookList) => {
     const updatedLikes = {};
@@ -196,13 +197,13 @@ function BookList() {
         )
         .then((response) => {
           toggleLike(currentBookNum);
-
           setLikeCnt((prevLikeCnt) => {
             const newLikeCnt = [...prevLikeCnt];
             newLikeCnt[index] = response.data.num_likes; // 업데이트된 좋아요 수로 변경
             return newLikeCnt;
           });
 
+          setForceUpdate(forceUpdate + 1);
           const toastMessage = likes[currentBookNum]
             ? "해당 도서 공감을 취소하였습니다."
             : "해당 도서를 공감하였습니다.";
@@ -224,6 +225,7 @@ function BookList() {
               progress: undefined,
             }
           );
+
         })
         .catch((error) => {
           console.log("Error in sendLikeBook:", error);

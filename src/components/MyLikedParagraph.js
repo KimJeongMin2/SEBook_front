@@ -369,7 +369,7 @@ function MyLikedParagraph() {
                           sendDeleteParagraph(row.postNum);
                         }}
                       >
-                        <FavoriteIcon style={{ color: likes[row.isbn13] ? "gray" : "#EF9A9A" }} />
+                        <FavoriteIcon style={{ color: "#EF9A9A" }} />
                       </IconButton>
                       <div style={{ marginTop: '-10px' }}>{row.like_count}</div>
                     </TableCell>

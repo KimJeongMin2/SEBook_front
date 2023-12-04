@@ -97,7 +97,7 @@ function BookReportList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPages, setTotalPages] = useState(0); // Add this line
   const [searchResults, setSearchResults] = useState(null);
-
+  const [forceUpdate, setForceUpdate] = useState(0);
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/user/memberSearch", {
@@ -134,7 +134,7 @@ function BookReportList() {
         })
         .catch((error) => console.error(error));
     }
-  }, [currentPage]);
+  }, [currentPage, forceUpdate]);
 
 
 
@@ -251,12 +251,7 @@ function BookReportList() {
           console.log(response);
           toggleLike(currentBookReportNum);  // Use currentBookReportNum here
 
-          setLikes((prevLikes) => {
-            const updatedLikes = { ...prevLikes };
-            updatedLikes[currentBookReportNum] = prevLikes[currentBookReportNum];
-            return updatedLikes;
-          });
-
+          setForceUpdate(forceUpdate + 1);
 
 
           if (likes[currentBookReportNum]) {
@@ -306,6 +301,7 @@ function BookReportList() {
               }
             );
           }
+
           // window.location.reload();
         })
         .catch((error) => {
@@ -313,7 +309,6 @@ function BookReportList() {
         });
     }
   };
-
 
   const sendDeleteBookReport = (bookReportNum) => {
     if (window.confirm("삭제하시겠습니까?")) {
@@ -329,15 +324,12 @@ function BookReportList() {
         })
         .then((response) => {
           console.log(response);
-          alert("삭제되었습니다.");
           window.location.reload();
         })
         .catch((error) => {
           console.log(error);
         });
-    } else {
-      alert("취소합니다.");
-    }
+    };
   }
 
   const resetData = () => {
@@ -414,7 +406,7 @@ function BookReportList() {
   //   setCurrentPage(1);
   // }, [searchTerm]);
 
-  const currentUser = myInfo?.userNum;
+
   return (
     <>
       <MainAppBar />
@@ -506,12 +498,11 @@ function BookReportList() {
                       likedBookReportList.some(
                         (report) => data.reportNum === report
                       );
-                    // const isUserWriteReportsLiked =
-                    //   Array.isArray(writtenBookReportList) &&
-                    //   writtenBookReportList.some(
-                    //     (report) => data.reportNum === report
-                    //   );
-                    const isUserWriteReportsLiked = data.userNum_report === currentUser;
+                    const isUserWriteReportsLiked =
+                      Array.isArray(writtenBookReportList) &&
+                      writtenBookReportList.some(
+                        (report) => data.reportNum === report
+                      );
 
                     const rowData = {
                       ...data,
@@ -659,7 +650,7 @@ function BookReportList() {
                                 style={{ marginLeft: "10px" }}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  sendDeleteBookReport(data.reportNum);
+                                  sendDeleteBookReport(index, data.reportNum);
                                 }}
                               >
                                 <DeleteIcon style={{ color: "#FF9999" }} />
