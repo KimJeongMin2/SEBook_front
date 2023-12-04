@@ -314,6 +314,7 @@ function BookReportList() {
     }
   };
 
+
   const sendDeleteBookReport = (bookReportNum) => {
     if (window.confirm("삭제하시겠습니까?")) {
       axios
@@ -334,9 +335,9 @@ function BookReportList() {
         .catch((error) => {
           console.log(error);
         });
-    }else {
+    } else {
       alert("취소합니다.");
-  }
+    }
   }
 
   const resetData = () => {
@@ -510,7 +511,7 @@ function BookReportList() {
                     //   writtenBookReportList.some(
                     //     (report) => data.reportNum === report
                     //   );
-                    const isUserWriteReportsLiked =data.userNum_report === currentUser;
+                    const isUserWriteReportsLiked = data.userNum_report === currentUser;
 
                     const rowData = {
                       ...data,
