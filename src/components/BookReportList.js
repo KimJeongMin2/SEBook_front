@@ -250,6 +250,7 @@ function BookReportList() {
         .then((response) => {
           console.log(response);
           toggleLike(currentBookReportNum);  // Use currentBookReportNum here
+
           if (likes[currentBookReportNum]) {
             setLikeCnt((prevLikeCnt) => {
               const newLikeCnt = [...prevLikeCnt];
@@ -265,7 +266,7 @@ function BookReportList() {
               ),
               {
                 position: "top-right",
-                autoClose: 10000,
+                autoClose: 1000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -297,7 +298,7 @@ function BookReportList() {
               }
             );
           }
-          window.location.reload();
+          // window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -319,12 +320,15 @@ function BookReportList() {
         })
         .then((response) => {
           console.log(response);
+          alert("삭제되었습니다.");
           window.location.reload();
         })
         .catch((error) => {
           console.log(error);
         });
-    };
+    }else {
+      alert("취소합니다.");
+  }
   }
 
   const resetData = () => {
@@ -401,7 +405,7 @@ function BookReportList() {
   //   setCurrentPage(1);
   // }, [searchTerm]);
 
-
+  const currentUser = myInfo?.userNum;
   return (
     <>
       <MainAppBar />
@@ -493,11 +497,12 @@ function BookReportList() {
                       likedBookReportList.some(
                         (report) => data.reportNum === report
                       );
-                    const isUserWriteReportsLiked =
-                      Array.isArray(writtenBookReportList) &&
-                      writtenBookReportList.some(
-                        (report) => data.reportNum === report
-                      );
+                    // const isUserWriteReportsLiked =
+                    //   Array.isArray(writtenBookReportList) &&
+                    //   writtenBookReportList.some(
+                    //     (report) => data.reportNum === report
+                    //   );
+                    const isUserWriteReportsLiked =data.userNum_report === currentUser;
 
                     const rowData = {
                       ...data,
@@ -640,12 +645,12 @@ function BookReportList() {
                                 {likeCnt[index]}
                               </div>
                             </div>
-                            {isUserWriteReportsLiked || likes[data.reportNum] ? (
+                            {isUserWriteReportsLiked ? (
                               <IconButton
                                 style={{ marginLeft: "10px" }}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  sendDeleteBookReport(index, data.reportNum);
+                                  sendDeleteBookReport(data.reportNum);
                                 }}
                               >
                                 <DeleteIcon style={{ color: "#FF9999" }} />
