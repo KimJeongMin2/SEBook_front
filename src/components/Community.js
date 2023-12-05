@@ -87,7 +87,7 @@ function Community() {
 
     const [communityList, setCommunityList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 4;
+    const itemsPerPage = 5;
     const [totalPages, setTotalPages] = useState(0);
     const [likes, setLikes] = useState({});
     const [open, setOpen] = useState(false);
