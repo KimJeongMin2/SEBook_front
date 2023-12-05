@@ -671,7 +671,7 @@ function BookReportList() {
                                 style={{ marginLeft: "10px" }}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  sendDeleteBookReport(index, data.reportNum);
+                                  sendDeleteBookReport(data.reportNum);
                                 }}
                               >
                                 <DeleteIcon style={{ color: "#FF9999" }} />
