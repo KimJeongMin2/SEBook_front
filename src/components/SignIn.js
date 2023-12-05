@@ -73,7 +73,8 @@ export default function SignIn() {
         console.log(response.data.userName);
         alert(`환영합니다!`);
         setIsLoggedIn(true);
-        navigate((-1));
+        navigate(("/"));
+        window.location.reload();
       }
     } catch (error) {
       console.error("Login error:", error);
