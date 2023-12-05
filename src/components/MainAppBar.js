@@ -61,13 +61,18 @@ function MainAppBar() {
       });
   };
 
-
-
   return (
     <AppBar position="fixed">
-      <Toolbar
-        sx={{ width: "100%", backgroundColor: "#F8E8EE", display: "flex" }}
-      >
+  <Toolbar
+    sx={{
+      width: "100%",
+      backgroundColor: "#F8E8EE",
+      display: "flex",
+      justifyContent: "space-between",
+    }}
+  >
+    <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <Typography
           variant="h6"
           noWrap
@@ -80,90 +85,96 @@ function MainAppBar() {
             letterSpacing: ".1rem",
             color: "black",
             textDecoration: "none",
-            marginLeft: "680px",
           }}
         >
           SEBook
         </Typography>
-        <AutoStoriesIcon
-          style={{ color: "black", marginLeft: "-10px" }}
-        ></AutoStoriesIcon>
-        <Box sx={{ flexGrow: 0, marginLeft: "600px" }}>
-          {isLoggedIn ? (
-            <>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} style={{ marginLeft: '40px' }}>
-                  <Avatar alt="Remy Sharp" src="https://cdn-icons-png.flaticon.com/512/1361/1361876.png" />
-                  <div style={{ marginLeft: "10px", fontSize: "15px" }}></div>
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <MenuItem key={1} onClick={handleCloseUserMenu}>
-                  <div style={{ width: "200px", height: "100px" }}>
-                    <div
-                      style={{
-                        height: "50px",
-                        textAlign: "center",
-                        lineHeight: "50px",
-                      }}
-                    >
-                      {myInfo?.name}님
+        <AutoStoriesIcon style={{ color: "black" }}></AutoStoriesIcon>
+      </div>
+    </div>
+          <Box sx={{ flexGrow: 0 }}>
+            {isLoggedIn ? (
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ p: 0 }}
+                    style={{ marginLeft: "40px" }}
+                  >
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="https://cdn-icons-png.flaticon.com/512/1361/1361876.png"
+                    />
+                    <div style={{ marginLeft: "10px", fontSize: "15px" }}></div>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem key={1} onClick={handleCloseUserMenu}>
+                    <div style={{ width: "200px", height: "100px" }}>
+                      <div
+                        style={{
+                          height: "50px",
+                          textAlign: "center",
+                          lineHeight: "50px",
+                        }}
+                      >
+                        {myInfo?.name}님
+                      </div>
+                      <div style={{ textAlign: "center" }}>
+                        사용자 계정 : {myInfo?.userId}
+                      </div>
                     </div>
-                    <div style={{ textAlign: "center" }}>
-                      사용자 계정 : {myInfo?.userId}
-                    </div>
-                  </div>
-                </MenuItem>
-                <MenuItem key={2} onClick={logout}>
-                  <Typography textAlign="center">LOGOUT</Typography>
-                </MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <div style={{ display: "flex", marginRight: "40px" }}>
-              <Button
-                variant="contained"
-                style={{
-                  width: "90px",
-                  height: "30px",
-                  backgroundColor: "#EF9A9A",
-                  color: "#ffffff",
-                  marginRight: "10px",
-                }}
-                onClick={() => navigate("/signin")}
-              >
-                로그인
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  width: "90px",
-                  height: "30px",
-                  backgroundColor: "#EF9A9A",
-                  color: "#ffffff",
-                }}
-                onClick={() => navigate("/signup")}
-              >
-                회원가입
-              </Button>
-            </div>
-          )}
-        </Box>
+                  </MenuItem>
+                  <MenuItem key={2} onClick={logout}>
+                    <Typography textAlign="center">LOGOUT</Typography>
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <div style={{ display: "flex", marginRight: "40px" }}>
+                <Button
+                  variant="contained"
+                  style={{
+                    width: "90px",
+                    height: "30px",
+                    backgroundColor: "#EF9A9A",
+                    color: "#ffffff",
+                    marginRight: "10px",
+                  }}
+                  onClick={() => navigate("/signin")}
+                >
+                  로그인
+                </Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    width: "90px",
+                    height: "30px",
+                    backgroundColor: "#EF9A9A",
+                    color: "#ffffff",
+                  }}
+                  onClick={() => navigate("/signup")}
+                >
+                  회원가입
+                </Button>
+              </div>
+            )}
+          </Box>
       </Toolbar>
     </AppBar>
   );
