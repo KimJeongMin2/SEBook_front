@@ -635,7 +635,14 @@ function MainPage() {
                   style={{ width: "220px" }}
                 >
                   <CardHeader
-                    title={truncate(data.title, 13)}
+                    title={<>
+                      <div style={{ display: 'flex' }}>
+                        <div style={{ borderRadius: '5px', display: 'flex', width: '20px', height: '20px', backgroundColor: '#EF9A9A', lineHeight: '20px', marginRight: '5px' }}>
+                          <span style={{ fontSize: '16px', paddingLeft: '5px' }}>{(index + 1)}</span>
+                        </div>
+                        {` ` + truncate(data.title, 11)}
+                      </div>
+                    </>}
                     subheader={truncate(data.author, 10)}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
@@ -746,14 +753,21 @@ function MainPage() {
               margin: "30px 0 100px",
             }}
           >
-            {bookTop5List?.map((data) => (
+            {bookTop5List?.map((data, index) => (
               <Grid onClick={() => handleOpenBookReport(data)}>
                 <Card
                   sx={{ maxWidth: 280, margin: 1 }}
                   style={{ width: "220px" }}
                 >
                   <CardHeader
-                    title={data.reportTitle}
+                    title={<>
+                      <div style={{ display: 'flex' }}>
+                        <div style={{ borderRadius: '5px', display: 'flex', width: '20px', height: '20px', backgroundColor: '#EF9A9A', lineHeight: '20px', marginRight: '5px' }}>
+                          <span style={{ fontSize: '16px', paddingLeft: '5px' }}>{(index + 1)}</span>
+                        </div>
+                        {` ` + truncate(data.reportTitle, 11)}
+                      </div>
+                    </>}
                     subheader={data.title}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
