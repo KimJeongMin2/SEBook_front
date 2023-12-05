@@ -277,24 +277,23 @@ function MyBookReport() {
                                     <TableRow
                                         key={data.title}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: rowData })}
                                     >
-                                        <TableCell component="th" scope="row">
+                                        <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: rowData })}>
                                             {(page - 1) * itemsPerPage + index + 1}
                                         </TableCell>
-                                        <TableCell component="th" scope="row">
+                                        <TableCell component="th" scope="row" onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: rowData })}>
                                             {truncate(data.reportTitle, 20)}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: rowData })}>
                                             {truncate(data.title, 18)}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: rowData })}>
                                             {truncate(data.author, 6)}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: rowData })}>
                                             {truncate(data.publisher, 6)}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell onClick={() => navigate(`/BookReportDetail/${data.isbn13}`, { state: rowData })}>
                                             {data.registDate_report.split('T')[0]}
                                         </TableCell>
                                         <TableCell style={{ width: "50px", textAlign: "center" }}>
