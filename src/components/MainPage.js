@@ -554,7 +554,7 @@ function MainPage() {
                           sendLikeBook(data.isbn13);
                         }}
                       />
-                      <div style={{ marginLeft: '5px' }}>{data.like_num}</div>
+                      <div style={{ marginLeft: '5px' }}>{data.num_likes}</div>
                     </CardActions>
                   </Card>
                 </Grid>
@@ -872,7 +872,7 @@ function MainPage() {
                     <span style={{ fontSize: '16px' }}>{selectedBookReport.title}</span>
                   </div>
                   <div style={{ marginBottom: "5px" }}>
-                    {selectedBookReport.writer}
+                    {truncate(selectedBookReport.writer, 13)}
                   </div>
                   <div>
                     <span style={{ fontWeight: "bold", fontSize: '16px' }}>내용 | </span>
