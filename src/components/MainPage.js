@@ -614,7 +614,7 @@ function MainPage() {
             marginTop: "50px",
           }}
         >
-          좋아요 많이 받은 도서 Top5!
+          도서 Top5!
         </Typography>
         <Grid container spacing={2} justifyContent="center">
           <Box
@@ -635,7 +635,7 @@ function MainPage() {
                   style={{ width: "220px" }}
                 >
                   <CardHeader
-                    title={truncate(data.title, 15)}
+                    title={truncate(data.title, 13)}
                     subheader={truncate(data.author, 10)}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
