@@ -407,6 +407,7 @@ function BookReportList() {
   // }, [searchTerm]);
 
 
+  const currentUser = myInfo?.userNum;
   return (
     <>
       <MainAppBar />
@@ -633,7 +634,7 @@ function BookReportList() {
                                   sendLikeBookReport(index, data.reportNum);
                                 }}
                               >
-                                {likes[data.reportNum] ? (
+                                {data.user_liked.includes(currentUser) ? (
                                   <FavoriteIcon style={{ color: "#EF9A9A" }} />
                                 ) : (
                                   <FavoriteBorderIcon
@@ -642,7 +643,7 @@ function BookReportList() {
                                 )}
                               </IconButton>
                               <div style={{ textAlign: "center" }}>
-                                {likeCnt[index]}
+                              {data.like_count}
                               </div>
                             </div>
                             {isUserWriteReportsLiked ? (
