@@ -121,7 +121,7 @@ function MyLikedBookReport() {
     });
   };
 
-  const sendDeleteBookReport = (bookReportNum) => {
+  const sendLikeBookReport = (bookReportNum) => {
     axios
       .post(
         "http://127.0.0.1:8000/bookReport/bookReportLike",
@@ -232,7 +232,7 @@ function MyLikedBookReport() {
                 <TableCell style={{ width: "100px", textAlign: "center" }}>출판사</TableCell>
                 <TableCell style={{ width: "50px", textAlign: "center" }}>글쓴이</TableCell>
                 <TableCell style={{ width: "80px", textAlign: "center" }}>등록일</TableCell>
-                <TableCell style={{ width: "45px", textAlign: "center" }}>좋아요</TableCell>
+                <TableCell style={{ width: "50px", textAlign: "center" }}>좋아요</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -274,7 +274,7 @@ function MyLikedBookReport() {
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleLike(data.reportNum);
-                          sendDeleteBookReport(data.reportNum);
+                          sendLikeBookReport(data.reportNum);
                         }}
                       >
                         <FavoriteIcon

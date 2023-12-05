@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import MainAppBar from "./MainAppBar";
 import TabBar from "./TabBar";
-
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-
+import IconButton from "@mui/material/IconButton";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -65,8 +66,8 @@ const StyledInputBase = styled(InputBase, {
 const csrftoken = Cookies.get('csrftoken');
 
 function MyBookReport() {
-
-
+    const [myInfo, setMyInfo] = useState();
+    const currentUser = myInfo?.userNum;
     const [likedBookReportList, setLikedBookReportList] = useState([]);
     const [writtenBookReportList, setWrittenBookReportList] = useState([]);
     const location = useLocation();
@@ -82,13 +83,21 @@ function MyBookReport() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
-    // const getPageData = () => {
-    //     const start = (currentPage - 1) * itemsPerPage;
-    //     const end = start + itemsPerPage;
-    //     return Array.isArray(bookReportList)
-    //         ? bookReportList.slice(start, end)
-    //         : [];
-    // };
+    useEffect(() => {
+        axios
+            .get("http://127.0.0.1:8000/user/memberSearch", {
+                headers: {
+                    "X-CSRFToken": csrftoken,
+                },
+                withCredentials: true,
+            })
+            .then((response) => {
+                console.log("myInfo : " + response.data);
+                setMyInfo(response.data);
+            })
+            .catch((error) => console.error(error));
+    }, []);
+
 
     const handleChangePage = (event, value) => {
         setPage(value);
@@ -117,6 +126,35 @@ function MyBookReport() {
             updatedLikes[report.reportNum] = true;
         });
         setLikes(updatedLikes);
+    };
+
+    const sendLikeBookReport = (bookReportNum) => {
+        axios
+            .post(
+                "http://127.0.0.1:8000/bookReport/bookReportLike",
+                {
+                    reportNum: bookReportNum,
+                },
+                {
+                    headers: {
+                        "X-CSRFToken": csrftoken,
+                    },
+                    withCredentials: true,
+                }
+            )
+            .then((response) => {
+                if (response.status === 200 || response.status === 201) {
+                    setLikes({
+                        ...likes,
+                        [bookReportNum]: !likes[bookReportNum],
+                    });
+                }
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
     };
 
     useEffect(() => {
@@ -165,7 +203,7 @@ function MyBookReport() {
         });
     };
 
-    const sendDeleteBook = (reportNum) => {
+    const sendDeleteBookReport = (reportNum) => {
         if (window.confirm("삭제하시겠습니까?")) {
 
             axios.delete("http://127.0.0.1:8000/bookReport/bookReportDelete", {
@@ -216,6 +254,7 @@ function MyBookReport() {
                                 <TableCell style={{ width: '95px' }}>작가</TableCell>
                                 <TableCell style={{ width: '100px' }}>출판사</TableCell>
                                 <TableCell style={{ width: '75px' }}>등록일</TableCell>
+                                <TableCell style={{ width: "50px", textAlign: "center" }}>좋아요</TableCell>
                                 <TableCell style={{ width: '10px' }}></TableCell>
                             </TableRow>
                         </TableHead>
@@ -258,10 +297,28 @@ function MyBookReport() {
                                         <TableCell>
                                             {data.registDate_report.split('T')[0]}
                                         </TableCell>
+                                        <TableCell style={{ width: "50px", textAlign: "center" }}>
+                                            <IconButton
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleLike(data.reportNum);
+                                                    sendLikeBookReport(data.reportNum);
+                                                }}
+                                            >
+                                                {data.user_liked.includes(currentUser) ? (
+                                                    <FavoriteIcon style={{ color: "#EF9A9A" }} />
+                                                ) : (
+                                                    <FavoriteBorderIcon
+                                                        style={{ color: "#EF9A9A" }}
+                                                    />
+                                                )}
+                                            </IconButton>
+                                            <div style={{ marginTop: "-5px" }}>{data.like_count}</div>
+                                        </TableCell>
                                         <TableCell>
                                             <DeleteIcon
                                                 style={{ color: "#FF9999" }}
-                                                onClick={() => sendDeleteBook(data.reportNum)}
+                                                onClick={() => sendDeleteBookReport(data.reportNum)}
                                             />
                                         </TableCell>
                                     </TableRow>

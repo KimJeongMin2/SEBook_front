@@ -265,19 +265,14 @@ function Community() {
                     }
                 )
                 .then((response) => {
-                    if (response.status === 200 || response.status === 201) {
-                        setLikeStatus((likes) => ({
-                            ...likes,
-                            [postNum]: !likes[postNum],
-                        }));
-                    }
                     setForceUpdate(forceUpdate + 1);
 
-                    if (likeStatus[postNum]) {
+                    if (likes[postNum]) {
                         toast(
                             () => (
                                 <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
                                     해당 구절 공감을 취소하였습니다.
+                                    <br />
                                     <br />
                                 </div>
                             ),
@@ -295,13 +290,31 @@ function Community() {
                         toast(
                             () => (
                                 <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
-                                    해당 구절을 공감하였습니다.
+                                    <div>해당 구절을 공감하였습니다.</div>
+                                    <div>공감한 구절을 보러 가시겠습니까?</div>
                                     <br />
+                                    <br />
+                                    <br />
+                                    <Button
+                                        color="inherit"
+                                        size="small"
+                                        onClick={() => navigate("/MyLikedParagraph")}
+                                        style={{
+                                            position: "absolute",
+                                            right: "10px",
+                                            bottom: "15px",
+                                            backgroundColor: "#EF9A9A",
+                                            color: "white",
+                                            border: "1px solid #EF9A9A",
+                                        }}
+                                    >
+                                        네
+                                    </Button>
                                 </div>
                             ),
                             {
                                 position: "top-right",
-                                autoClose: 1000,
+                                autoClose: 3000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
                                 pauseOnHover: true,
@@ -342,7 +355,7 @@ function Community() {
     };
 
     const toggleLike = (id) => {
-        setLikeStatus({
+        setLikes({
             ...likes,
             [id]: !likes[id],
         });
