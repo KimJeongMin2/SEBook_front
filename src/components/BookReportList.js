@@ -265,7 +265,9 @@ function BookReportList() {
                 <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
                   해당 독후감 공감을 취소하였습니다.
                   <br />
+                  <br />
                 </div>
+
               ),
               {
                 position: "top-right",
@@ -286,13 +288,31 @@ function BookReportList() {
             toast(
               () => (
                 <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
-                  해당 독후감을 공감하였습니다.
+                  <div>해당 독후감을 공감하였습니다.</div>
+                  <div>공감한 독후감을 보러 가시겠습니까?</div>
                   <br />
+                  <br />
+                  <br />
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={() => navigate("/MyLikedBookReport")}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      bottom: "15px",
+                      backgroundColor: "#EF9A9A",
+                      color: "white",
+                      border: "1px solid #EF9A9A",
+                    }}
+                  >
+                    네
+                  </Button>
                 </div>
               ),
               {
                 position: "top-right",
-                autoClose: 1000,
+                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -643,7 +663,7 @@ function BookReportList() {
                                 )}
                               </IconButton>
                               <div style={{ textAlign: "center" }}>
-                              {data.like_count}
+                                {data.like_count}
                               </div>
                             </div>
                             {isUserWriteReportsLiked ? (

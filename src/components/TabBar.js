@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import { useLocation } from 'react-router-dom';
 import axios from "axios";
 import Cookies from 'js-cookie';
+import zIndex from "@mui/material/styles/zIndex";
 
 const csrftoken = Cookies.get('csrftoken');
 function CustomTabPanel(props) {
@@ -53,16 +54,16 @@ function TabBar() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/user/memberSearch",{
+      .get("http://127.0.0.1:8000/user/memberSearch", {
         headers: {
-          'X-CSRFToken': csrftoken  
+          'X-CSRFToken': csrftoken
         },
         withCredentials: true
       })
       .then((response) => {
         console.log("myInfo : " + response.data);
         setMyInfo(response.data);
-        setIsLoggedIn(true); 
+        setIsLoggedIn(true);
       })
       .catch((error) => {
         console.error(error);
@@ -119,6 +120,7 @@ function TabBar() {
         justifyContent: 'center',
         backgroundColor: 'white',
       }}
+      style={{ display: 'relative', zIndex: 3 }}
     >
       <Tabs
         value={value}

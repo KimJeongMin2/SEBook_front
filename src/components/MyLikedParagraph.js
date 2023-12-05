@@ -309,12 +309,12 @@ function MyLikedParagraph() {
             <Table sx={{ minWidth: 700 }} aria-label="simple table">
               <TableHead style={{ backgroundColor: "#F8E8EE" }}>
                 <TableRow>
-                  <TableCell>No</TableCell>
-                  <TableCell>도서명</TableCell>
-                  <TableCell>인상깊은 구절</TableCell>
-                  <TableCell>작가</TableCell>
-                  <TableCell>등록일</TableCell>
-                  <TableCell>좋아요</TableCell>
+                  <TableCell style={{ width: "10px" }}>No</TableCell>
+                  <TableCell style={{ width: "180px" }}>도서명</TableCell>
+                  <TableCell style={{ width: "600px" }}>인상깊은 구절</TableCell>
+                  <TableCell style={{ width: "100px" }}>작가</TableCell>
+                  <TableCell style={{ width: "90px" }}>등록일</TableCell>
+                  <TableCell style={{ width: "60px" }}>좋아요</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody style={{ backgroundColor: "#F9F5F6" }}>
@@ -330,7 +330,6 @@ function MyLikedParagraph() {
                       component="th"
                       scope="row"
                       style={{
-                        width: "10px",
                         borderRight: "1px solid #F8E8EE",
                         textAlign: "center",
                       }}
@@ -340,27 +339,27 @@ function MyLikedParagraph() {
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "180px", borderRight: "1px solid #F8E8EE" }}
+                      style={{ borderRight: "1px solid #F8E8EE" }}
                     >
                       {truncate(row.title, 12)}
                     </TableCell>
                     <TableCell
-                      style={{ width: "600px", borderRight: "1px solid #F8E8EE" }}
+                      style={{ borderRight: "1px solid #F8E8EE" }}
                     >
                       {truncate(row.contents, 22)}
                     </TableCell>
                     <TableCell
-                      style={{ width: "100px", borderRight: "1px solid #F8E8EE" }}
+                      style={{ borderRight: "1px solid #F8E8EE" }}
                     >
                       {truncate(row.author, 5)}
                     </TableCell>
                     <TableCell
-                      style={{ width: "90px", borderRight: "1px solid #F8E8EE" }}
+                      style={{ borderRight: "1px solid #F8E8EE" }}
                     >
                       {row.registDate_community?.split("T")[0]}
                     </TableCell>
                     <TableCell
-                      style={{ textAlign: 'center', width: "50px", borderRight: "1px solid #F8E8EE" }}
+                      style={{ textAlign: 'center', borderRight: "1px solid #F8E8EE" }}
                     >
                       <IconButton
                         onClick={(e) => {

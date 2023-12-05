@@ -180,7 +180,40 @@ function BookList() {
     setBookNum(currentBookNum);
 
     if (!myInfo) {
-      // ... (이전 코드와 동일)
+      toast.warning(
+        () => (
+          <div style={{ margin: "25px 0 0 10px" }}>
+            로그인 후 이용 가능한 서비스입니다. 로그인하러 가시겠습니까?
+            <br />
+            <br />
+            <br />
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/signin")}
+              style={{
+                position: "absolute",
+                right: "10px",
+                bottom: "15px",
+                backgroundColor: "#EF9A9A",
+                color: "white",
+                border: "1px solid #EF9A9A",
+              }}
+            >
+              네
+            </Button>
+          </div>
+        ),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
     } else {
       axios
         .post(
@@ -204,27 +237,64 @@ function BookList() {
           });
 
           setForceUpdate(forceUpdate + 1);
-          const toastMessage = likes[currentBookNum]
-            ? "해당 도서 공감을 취소하였습니다."
-            : "해당 도서를 공감하였습니다.";
+          if (likes[currentBookNum]) {
+            toast(
+              () => (
+                <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
+                  해당 도서 공감을 취소하였습니다.
+                  <br />
+                  <br />
+                </div>
 
-          toast(
-            () => (
-              <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
-                {toastMessage}
-                <br />
-              </div>
-            ),
-            {
-              position: "top-right",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            }
-          );
+              ),
+              {
+                position: "top-right",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              }
+            );
+          } else {
+            toast(
+              () => (
+                <div style={{ width: '300px', margin: "25px 0 0 10px" }}>
+                  <div>해당 도서를 공감하였습니다.</div>
+                  <div>공감한 도서를 보러 가시겠습니까?</div>
+                  <br />
+                  <br />
+                  <br />
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={() => navigate("/MyLikedBookList")}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      bottom: "15px",
+                      backgroundColor: "#EF9A9A",
+                      color: "white",
+                      border: "1px solid #EF9A9A",
+                    }}
+                  >
+                    네
+                  </Button>
+                </div>
+              ),
+              {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              }
+            );
+          }
+
 
         })
         .catch((error) => {
@@ -398,7 +468,6 @@ function BookList() {
                           <IconButton
                             onClick={(e) => {
                               e.stopPropagation();
-                              toggleLike(data.isbn13);
                               sendLikeBook(data, index);
                             }}
                           >
