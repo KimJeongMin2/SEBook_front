@@ -671,7 +671,7 @@ function MainPage() {
                           sendLikeBook(data.isbn13);
                         }}
                       />
-                      <div style={{ marginLeft: '5px', fontSize: '15px' }}>{data.like_count}</div>
+                      <div style={{ marginLeft: '5px', fontSize: '15px' }}>{data.num_likes}</div>
                     </IconButton>
                   </CardActions>
                 </Card>
