@@ -780,7 +780,7 @@ function MainPage() {
                         {` ` + truncate(data.reportTitle, 11)}
                       </div>
                     </>}
-                    subheader={data.title}
+                    subheader={truncate(data.title, 11)}
                     titleTypographyProps={{ variant: "body1" }}
                     subheaderTypographyProps={{ variant: "body2" }}
                   />
