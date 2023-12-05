@@ -528,9 +528,8 @@ function MainPage() {
                       height="200px"
                       src={data.cover}
                       alt="Paella dish"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 5 }}
-                      transition={{ delay: index * 0.2 }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
                     />
                     <CardActions disableSpacing>
                       <FavoriteIcon
