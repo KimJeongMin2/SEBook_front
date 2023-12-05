@@ -94,6 +94,7 @@ function MyLikedBookList({ PROXY }) {
         const likeBookList = response.data.likeBookList;
         const isbn13List = likeBookList.map(book => book.isbn13);
         setReadLikeBook(response.data.likeBookList);
+        console.log("공감한", response.data.likeBookList)
         setLikeBookList(isbn13List);
         updateLikesState(likeBookList);
       })

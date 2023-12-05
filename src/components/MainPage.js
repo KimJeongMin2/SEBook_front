@@ -166,7 +166,7 @@ function MainPage() {
     axios
       .get("http://127.0.0.1:8000/book/BestsellerListRead")
       .then((response) => {
-        console.log("bestSeller: " + response.data.topRatedBookReports);
+        console.log("bestSeller: " + response.data.bestsellerList);
         setBestsellerList(response.data.bestsellerList);
       })
       .catch((error) => console.error(error));
