@@ -312,6 +312,7 @@ function MyLikedParagraph() {
                   <TableCell style={{ width: "10px" }}>No</TableCell>
                   <TableCell style={{ width: "180px" }}>도서명</TableCell>
                   <TableCell style={{ width: "600px" }}>인상깊은 구절</TableCell>
+                  <TableCell style={{ width: "100px" }}>글쓴이</TableCell>
                   <TableCell style={{ width: "100px" }}>작가</TableCell>
                   <TableCell style={{ width: "90px" }}>등록일</TableCell>
                   <TableCell style={{ width: "60px" }}>좋아요</TableCell>
@@ -347,6 +348,11 @@ function MyLikedParagraph() {
                       style={{ borderRight: "1px solid #F8E8EE" }}
                     >
                       {truncate(row.contents, 22)}
+                    </TableCell>
+                    <TableCell
+                      style={{ borderRight: "1px solid #F8E8EE" }}
+                    >
+                      {truncate(row.username, 5)}
                     </TableCell>
                     <TableCell
                       style={{ borderRight: "1px solid #F8E8EE" }}
